@@ -20,7 +20,7 @@ import javax.validation.Valid;
  * @since 2019/10/31日5:33
  */
 @RestController
-@Api(tags = "智能仓库-总库存管理界面")
+@Api(tags = "(废弃)智能仓库-总库存管理界面")
 @RequestMapping(value = "/stock")
 @Slf4j
 public class MaterialStockController {

@@ -12,6 +12,7 @@ import com.jc.api.mapper.SwmsBasicSupplierInfoMapper;
 import com.jc.api.service.restservice.ISwmsBasicSupplierInfoService;
 import io.netty.util.internal.StringUtil;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -103,18 +104,28 @@ public class SwmsBasicSupplierInfoService implements ISwmsBasicSupplierInfoServi
     @Override
     public List<SwmsBasicSupplierInfo> getAll(SwmsBasicSupplierInfo entity) {
         QueryWrapper<SwmsBasicSupplierInfo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.setEntity(entity);
-        //todo
+        if (StringUtils.isNotEmpty(entity.getMaterialSupplierCode())) {
+            queryWrapper.likeRight("material_supplier_code", entity.getMaterialSupplierCode());
+        }
+        if (StringUtils.isNotEmpty(entity.getMaterialSupplierName())) {
+            queryWrapper.likeRight("material_supplier_name", entity.getMaterialSupplierName());
+        }
+        if (entity.getAutoFlag() != null) {
+            queryWrapper.eq("auto_flag", entity.getAutoFlag());
+        }
         return swmsBasicSupplierInfoMapper.selectList(queryWrapper);
 
     }
 
     @Override
-    public IPage<SwmsBasicSupplierInfo> getAllByPage(Page page, SwmsBasicSupplierInfo entity) {
+    public IPage<SwmsBasicSupplierInfo> getAllByPage(Page page, String supplierName) {
         QueryWrapper<SwmsBasicSupplierInfo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.setEntity(entity);
-        //todo
-        return swmsBasicSupplierInfoMapper.selectPage(page,queryWrapper);
+        if (supplierName != null) {
+            queryWrapper.likeRight("material_supplier_name", supplierName);
+        }
+        IPage iPage = swmsBasicSupplierInfoMapper.selectPage(page, queryWrapper);
+        System.out.println(iPage.getRecords());
+        return iPage;
     }
 
     @Override

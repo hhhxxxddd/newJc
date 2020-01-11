@@ -22,7 +22,7 @@ import javax.validation.Valid;
  * @since 2019/10/31日16:32
  */
 @RestController
-@Api(tags = "智能仓库-物料信息管理界面")
+@Api(tags = "(废弃)智能仓库-物料信息管理界面")
 @RequestMapping(value = "/materialInfo")
 @Slf4j
 public class MaterialInfoController {

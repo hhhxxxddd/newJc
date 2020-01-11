@@ -19,7 +19,7 @@ import javax.validation.Valid;
  * @since 2019/11/2日22:47
  */
 @RestController
-@Api(tags = "智能仓库-物料类型管理界面")
+@Api(tags = "(废弃)智能仓库-物料类型管理界面")
 @RequestMapping(value = "/type")
 @Slf4j
 public class MaterialTypeController {

@@ -22,7 +22,7 @@ import javax.validation.constraints.NotBlank;
  * @since 19.12.8日1:46
  */
 @RestController
-@Api(tags = "智能仓库-物料供应车间管理界面")
+@Api(tags = "(废弃)智能仓库-物料供应车间管理界面")
 @RequestMapping(value = "/materialInfoWorkshop")
 @Slf4j
 public class MaterialInfoWorkshopController {

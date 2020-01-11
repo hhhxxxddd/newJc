@@ -21,7 +21,7 @@ import java.util.Set;
  */
 @RestController
 @RequestMapping(value = "/inRecord")
-@Api(tags = "智能仓库-入库记录界面")
+@Api(tags = "(废弃)智能仓库-入库记录界面")
 @Slf4j
 public class StockInRecordController {
     @Autowired

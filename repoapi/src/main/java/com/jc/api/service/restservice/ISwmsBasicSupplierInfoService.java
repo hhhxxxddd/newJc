@@ -47,10 +47,10 @@ public interface ISwmsBasicSupplierInfoService {
     /**
      * 条件查询-分页
      * @param page 分页参数
-     * @param entity 物料供应商参数
+     * @param supplierName 物料供应商名称
      * @return page
      */
-    IPage<SwmsBasicSupplierInfo> getAllByPage(Page page, SwmsBasicSupplierInfo entity);
+    IPage<SwmsBasicSupplierInfo> getAllByPage(Page page, String supplierName);
 
     /**
      * 删除

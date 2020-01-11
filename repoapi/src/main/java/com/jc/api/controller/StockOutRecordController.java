@@ -20,7 +20,7 @@ import javax.validation.Valid;
  */
 @RestController
 @RequestMapping(value = "/outRecord")
-@Api(tags = "智能仓库-出库记录界面")
+@Api(tags = "(废弃)智能仓库-出库记录界面")
 @Slf4j
 public class StockOutRecordController {
     @Autowired

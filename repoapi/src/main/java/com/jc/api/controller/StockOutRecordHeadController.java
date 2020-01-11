@@ -26,7 +26,7 @@ import java.util.List;
  */
 @RestController
 @RequestMapping(value = "/outManage")
-@Api(tags = "智能仓库-出库管理界面")
+@Api(tags = "(废弃)智能仓库-出库管理界面")
 @Slf4j
 public class StockOutRecordHeadController {
     @Autowired

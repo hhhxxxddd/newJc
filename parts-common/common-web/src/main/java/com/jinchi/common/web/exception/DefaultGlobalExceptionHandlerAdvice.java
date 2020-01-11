@@ -6,11 +6,9 @@ import com.jinchi.common.core.exception.SystemErrorEnum;
 import com.jinchi.common.core.vo.Result;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DuplicateKeyException;
-import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.MissingServletRequestParameterException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.multipart.MultipartException;
 
 /**
@@ -52,17 +50,17 @@ public class DefaultGlobalExceptionHandlerAdvice {
         return Result.fail(ex.getErrorType());
     }
 
-    // 未定义的异常都默认系统异常
-    @ExceptionHandler(value = {Exception.class})
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Result exception() {
-        return Result.fail();
-    }
-
-    // 发生错误直接返回系统异常
-    @ExceptionHandler(value = {Throwable.class})
-    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Result throwable() {
-        return Result.fail();
-    }
+//    // 未定义的异常都默认系统异常
+//    @ExceptionHandler(value = {Exception.class})
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    public Result exception() {
+//        return Result.fail();
+//    }
+//
+//    // 发生错误直接返回系统异常
+//    @ExceptionHandler(value = {Throwable.class})
+//    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+//    public Result throwable() {
+//        return Result.fail();
+//    }
 }
