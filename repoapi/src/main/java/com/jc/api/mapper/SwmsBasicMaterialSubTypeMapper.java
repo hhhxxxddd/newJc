@@ -1,8 +1,11 @@
 package com.jc.api.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jc.api.entity.SwmsBasicMaterialSubType;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 import java.util.List;
@@ -27,4 +30,6 @@ public interface SwmsBasicMaterialSubTypeMapper extends BaseMapper<SwmsBasicMate
      java.util.List<com.jc.api.entity.SwmsBasicMaterialSubType>
      **/
     List<SwmsBasicMaterialSubType> findList(SwmsBasicMaterialSubType subType);
+
+    IPage<SwmsBasicMaterialSubType> selectPageVo(Page<?> page, @Param(value = "subTypeName")String subTypeName);
 }

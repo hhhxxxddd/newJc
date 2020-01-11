@@ -24,4 +24,21 @@
             </if>
         </where>
     </select>
+
+    <select id="selectPageVo" resultType="com.jc.api.entity.SwmsBasicMaterialSubType">
+        SELECT
+            subType.id AS "id",
+            subType.sub_type_name AS "subTypeName",
+            subType.sub_type_code AS "subTypeCode",
+            subType.type_id AS "typeId",
+            subType.auto_flag AS "autoFlag",
+            type.type_name AS "typeName"
+        FROM SWMS_basic_material_sub_type subType
+        LEFT JOIN SWMS_basic_material_type type ON subType.type_id = type.id
+        <where>
+            <if test="subTypeName != null and subTypeName != ''">
+                subType.sub_type_name LIKE #{subTypeName}"%"
+            </if>
+        </where>
+    </select>
 </mapper>

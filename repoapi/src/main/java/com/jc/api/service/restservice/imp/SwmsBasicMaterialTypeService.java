@@ -7,6 +7,7 @@ import com.jc.api.entity.SwmsBasicMaterialType;
 import com.jc.api.exception.custom.DataAssociationException;
 import com.jc.api.exception.custom.DataDuplicateException;
 import com.jc.api.mapper.SwmsBasicMaterialTypeMapper;
+import com.jc.api.service.restservice.ISwmsBasicMaterialTypeService;
 import com.netflix.discovery.converters.Auto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -21,8 +22,7 @@ import java.util.List;
  */
 @Service
 @Slf4j
-@SuppressWarnings("all")
-public class SwmsBasicMaterialTypeService implements SwmsBasicMaterialTypeService {
+public class SwmsBasicMaterialTypeService implements ISwmsBasicMaterialTypeService {
 
     @Auto
     private SwmsBasicMaterialTypeMapper swmsBasicMaterialTypeMapper;

@@ -9,6 +9,7 @@ import com.jc.api.exception.custom.DataAssociationException;
 import com.jc.api.exception.custom.DataDuplicateException;
 import com.jc.api.mapper.SwmsBasicMaterialSubTypeMapper;
 import com.jc.api.mapper.SwmsBasicMaterialTypeMapper;
+import com.jc.api.service.restservice.ISwmsBasicMaterialSubTypeService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +25,7 @@ import java.util.List;
 @Service
 @Slf4j
 @SuppressWarnings("all")
-public class SwmsBasicMaterialSubTypeService implements SwmsBasicMaterialSubTypeService {
+public class SwmsBasicMaterialSubTypeService implements ISwmsBasicMaterialSubTypeService {
 
     @Autowired
     private SwmsBasicMaterialSubTypeMapper swmsBasicMaterialSubTypeMapper;
@@ -51,7 +52,7 @@ public class SwmsBasicMaterialSubTypeService implements SwmsBasicMaterialSubType
 
     @Override
     public IPage<SwmsBasicMaterialSubType> getAllByPage(Page<SwmsBasicMaterialSubType> page, SwmsBasicMaterialSubType swmsBasicMaterialSubType) {
-        return null;
+        return swmsBasicMaterialSubTypeMapper.selectPageVo(page,swmsBasicMaterialSubType.getSubTypeName());
     }
 
     /**
