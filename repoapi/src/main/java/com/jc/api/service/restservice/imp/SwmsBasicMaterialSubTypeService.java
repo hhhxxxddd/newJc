@@ -9,7 +9,6 @@ import com.jc.api.exception.custom.DataAssociationException;
 import com.jc.api.exception.custom.DataDuplicateException;
 import com.jc.api.mapper.SwmsBasicMaterialSubTypeMapper;
 import com.jc.api.mapper.SwmsBasicMaterialTypeMapper;
-import com.jc.api.service.restservice.SwmsBasicMaterialSubTypeService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -25,7 +24,7 @@ import java.util.List;
 @Service
 @Slf4j
 @SuppressWarnings("all")
-public class SwmsBasicMaterialSubTypeServiceImp implements SwmsBasicMaterialSubTypeService {
+public class SwmsBasicMaterialSubTypeService implements SwmsBasicMaterialSubTypeService {
 
     @Autowired
     private SwmsBasicMaterialSubTypeMapper swmsBasicMaterialSubTypeMapper;

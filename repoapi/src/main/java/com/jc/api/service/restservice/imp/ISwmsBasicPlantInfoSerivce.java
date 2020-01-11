@@ -7,7 +7,7 @@ import com.jc.api.entity.SwmsBasicPlantInfo;
 import com.jc.api.exception.custom.DataAssociationException;
 import com.jc.api.exception.custom.DataDuplicateException;
 import com.jc.api.mapper.SwmsBasicPlantInfoMapper;
-import com.jc.api.service.restservice.SwmsBasicPlantInfoService;
+import com.jc.api.service.restservice.ISwmsBasicPlantInfoService;
 import io.netty.util.internal.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -24,7 +24,7 @@ import java.util.List;
 @Service
 @Slf4j
 @SuppressWarnings("all")
-public class SwmsBasicPlantInfoSerivceImp implements SwmsBasicPlantInfoService {
+public class ISwmsBasicPlantInfoSerivce implements ISwmsBasicPlantInfoService {
 
     @Autowired
     private SwmsBasicPlantInfoMapper swmsBasicPlantInfoMapper;

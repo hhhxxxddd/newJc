@@ -11,7 +11,7 @@ import java.util.List;
  * @Date: 2020/1/11 15:25
  * @Description: 车间Service层
  */
-public interface SwmsBasicPlantInfoService {
+public interface ISwmsBasicPlantInfoService {
 
     /**
      * @Description:    查询所有-不分页

@@ -11,7 +11,7 @@ import java.util.List;
  * @Date: 2020/1/11 17:49
  * @Description:    物料子类型Service层
  */
-public interface SwmsBasicMaterialSubTypeService {
+public interface ISwmsBasicMaterialSubTypeService {
 
     /**
      * @Description:    物料子类型-不分页

@@ -1,7 +1,7 @@
 package com.jc.api.controller;
 
 import com.jc.api.entity.SwmsBasicMaterialType;
-import com.jc.api.service.restservice.SwmsBasicMaterialTypeService;
+import com.jc.api.service.restservice.ISwmsBasicMaterialTypeService;
 import com.jinchi.common.core.vo.Result;
 import io.swagger.annotations.*;
 import lombok.extern.slf4j.Slf4j;
@@ -23,13 +23,13 @@ import javax.validation.constraints.NotBlank;
 public class SwmsBasicMaterialTypeController {
 
     @Autowired
-    private SwmsBasicMaterialTypeService swmsBasicMaterialTypeService;
+    private ISwmsBasicMaterialTypeService ISwmsBasicMaterialTypeService;
 
     @ApiOperation(value = "获取所有物料类型", notes = "获取所有物料类型")
     @ApiResponses(@ApiResponse(code = 200, message = "处理成功", response = Result.class))
     @GetMapping(value = "/getAll")
     public Result getAll(){
-        return Result.success(swmsBasicMaterialTypeService.getAll(new SwmsBasicMaterialType()));
+        return Result.success(ISwmsBasicMaterialTypeService.getAll(new SwmsBasicMaterialType()));
     }
 
     @ApiOperation(value = "获取物料类型-条件", notes = "条件获取所有物料类型")
@@ -37,7 +37,7 @@ public class SwmsBasicMaterialTypeController {
     @ApiImplicitParam(name = "swmsBasicMaterialType", value = "查询条件", required = true, dataType = "SwmsBasicMaterialType")
     @PostMapping(value = "/conditions")
     public Result query(SwmsBasicMaterialType swmsBasicMaterialType){
-        return Result.success(swmsBasicMaterialTypeService.getAll(swmsBasicMaterialType));
+        return Result.success(ISwmsBasicMaterialTypeService.getAll(swmsBasicMaterialType));
     }
 
 //    @ApiOperation(value = "获取供应车间-条件/分页", notes = "条件获取供应车间记录-分页")
@@ -55,7 +55,7 @@ public class SwmsBasicMaterialTypeController {
     @PostMapping(value = "/add")
     public Result add(@Valid @RequestBody SwmsBasicMaterialType swmsBasicMaterialType) {
         swmsBasicMaterialType.setAutoFlag(false);
-        return Result.success(swmsBasicMaterialTypeService.add(swmsBasicMaterialType));
+        return Result.success(ISwmsBasicMaterialTypeService.add(swmsBasicMaterialType));
     }
 
     @ApiOperation(value = "仅供测试使用-自动新增物料类型信息", notes = "自动新增,存在则无动作,不存在则新增")
@@ -63,7 +63,7 @@ public class SwmsBasicMaterialTypeController {
     @ApiResponses(@ApiResponse(code = 200, message = "处理成功", response = Result.class))
     @PostMapping(value = "/autoAdd")
     public Result autoAdd(@RequestParam @NotBlank(message = "物料类型代号不能为空白") String typeCode) {
-        return Result.success(swmsBasicMaterialTypeService.autoAdd(new SwmsBasicMaterialType().setTypeCode(typeCode)));
+        return Result.success(ISwmsBasicMaterialTypeService.autoAdd(new SwmsBasicMaterialType().setTypeCode(typeCode)));
     }
 
     @ApiOperation(value = "更新物料类型信息", notes = "更新")
@@ -72,7 +72,7 @@ public class SwmsBasicMaterialTypeController {
     @ApiResponses(@ApiResponse(code = 200, message = "处理成功", response = Result.class))
     @PutMapping(value = "/{id}")
     public Result update(@RequestBody SwmsBasicMaterialType swmsBasicMaterialType) {
-        return Result.success(swmsBasicMaterialTypeService.update(swmsBasicMaterialType));
+        return Result.success(ISwmsBasicMaterialTypeService.update(swmsBasicMaterialType));
     }
 
     @ApiOperation(value = "删除物料类型信息", notes = "根据id删除物料类型信息")
@@ -81,6 +81,6 @@ public class SwmsBasicMaterialTypeController {
     @DeleteMapping(value = "/{id}")
     public Result delete(@PathVariable Integer id) {
         log.debug("根据id删除物料类型记录:{}", id);
-        return Result.success(swmsBasicMaterialTypeService.delete(id));
+        return Result.success(ISwmsBasicMaterialTypeService.delete(id));
     }
 }
