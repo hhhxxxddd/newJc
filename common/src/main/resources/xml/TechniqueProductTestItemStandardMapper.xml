@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinchi.common.mapper.TechniqueProductTestItemStandardMapper">
+    <!--批量新增-->
+    <update id="batchInsert" parameterType="List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO jc_integration_db.technique_product_test_item_standard(test_item_id, value, product_standard_id)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.testItemId},#{item.value},#{item.productStandardId})
+        </foreach>
+    </update>
+
+    <!--根据标准表id删除-->
+    <delete id="deleteByRecordId" parameterType="Integer">
+        DELETE FROM jc_integration_db.technique_product_test_item_standard
+        WHERE product_standard_id = #{recordId}
+    </delete>
+
+    <!--根据标准表id查询-->
+    <select id="findByRecordId" parameterType="Integer" resultType="TechniqueProductTestItemStandard">
+        SELECT * FROM jc_integration_db.technique_product_test_item_standard as tptis
+        WHERE product_standard_id = #{recordId}
+    </select>
+
+    <insert id="insert" parameterType="com.jinchi.common.domain.TechniqueProductTestItemStandard">
+     insert into jc_integration_db.technique_product_test_item_standard(test_item_id,value,product_standard_id)
+     values (#{item.testItemId},#{item.value},#{item.productStandardId})
+    </insert>
+</mapper>

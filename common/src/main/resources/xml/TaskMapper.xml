@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinchi.common.mapper.TaskMapper">
+    <!--批量新增审核任务-->
+    <insert id="insertAll" parameterType="List" >
+        INSERT INTO
+        jc_integration_db.quality_task(batch_number_id, operator, operation_description,type, previous, next)
+        VALUES
+        <foreach collection="list" index="index" item="task" separator="," close="" open="">
+            (
+            #{task.batchNumberId},
+            #{task.operator},
+            #{task.operationDescription},
+            #{task.type},
+            #{task.previous},
+            #{task.next}
+            )
+        </foreach>
+    </insert>
+
+    <!--根据批号删除审核任务-->
+    <delete id="deleteByBatchNumberId" parameterType="Integer">
+        DELETE FROM jc_integration_db.quality_task
+        WHERE jc_integration_db.quality_task.batch_number_id = #{batchNumberId}
+    </delete>
+
+    <!--根据批号批量删除-->
+    <delete id="deleteByBatchNumberIds" parameterType="List">
+        DELETE FROM jc_integration_db.quality_task
+        WHERE jc_integration_db.quality_task.batch_number_id IN
+        <foreach collection="list" index="index" item="item" separator="," close=")" open="(">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--根据批号id查询-->
+    <select id="findByBatchNumberId" parameterType="Integer" resultType="Task">
+        SELECT * FROM jc_integration_db.quality_task WHERE batch_number_id =
+        #{batchNumberId}
+    </select>
+
+    <!--查询所有-->
+    <select id="findAll" resultType="Task">
+        SELECT * FROM  jc_integration_db.quality_task
+    </select>
+
+    <!--根据用户id和是否可见查询-->
+    <select id="toDoList" resultType="Task">
+        SELECT * FROM jc_integration_db.quality_task
+        WHERE operator = #{userId}
+    </select>
+
+    <!--根据批号id查询 生成DTO-->
+    <select id="toDoListDetails" parameterType="Integer" resultType="TaskDTO">
+        SELECT
+        qt.operator as userId,
+        au.name as personName,
+        qt.type as taskType,
+        qt.operation_description as responsibility
+        FROM jc_integration_db.quality_task as qt
+        LEFT JOIN jc_auth_db.auth_user as au
+        ON qt.operator=au.id
+        WHERE qt.batch_number_id = #{batchNumberId}
+        ORDER BY qt.id
+    </select>
+</mapper>

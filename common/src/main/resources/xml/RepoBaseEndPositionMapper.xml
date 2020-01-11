@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinchi.common.mapper.RepoBaseEndPositionMapper">
+    <select id="findAllByExample" parameterType="RepoBaseEndPosition" resultType="RepoBaseEndPosition">
+        select p.* from jc_integration_db.quality_base_end_position as p
+        where 1=1
+        <if test="outType != null">
+            and out_type = #{outType}
+        </if>
+        <if test="endPosition != null and endPosition != ''">
+            and end_position like '${endPosition}%'
+        </if>
+    </select>
+    <select id="findById" resultType="com.jinchi.common.domain.RepoBaseEndPosition">
+        select * from jc_integration_db.quality_base_end_position
+        where id = #{id}
+    </select>
+</mapper>

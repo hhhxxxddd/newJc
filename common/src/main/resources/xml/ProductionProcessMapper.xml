@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jinchi.common.mapper.ProductionProcessMapper">
+
+    <delete id="deleteById" parameterType="Integer">
+        delete from quality_base_production_process where id = #{id}
+    </delete>
+
+    <select id="findById" parameterType="Integer" resultType="com.jinchi.common.domain.ProductionProcess">
+        select * from quality_base_production_process where id = #{0}
+    </select>
+
+    <select id="findAll" resultType="com.jinchi.common.domain.ProductionProcess">
+        select * from quality_base_production_process
+    </select>
+
+    <insert id="insert" parameterType="com.jinchi.common.domain.ProductionProcess">
+        insert into quality_base_production_process(name) values(#{name})
+    </insert>
+
+    <update id="update" parameterType="com.jinchi.common.domain.ProductionProcess">
+        update quality_base_production_process set name = #{name} where id = #{id}
+    </update>
+
+    <select id="findAllByName" parameterType="String" resultType="com.jinchi.common.domain.ProductionProcess">
+        select * from quality_base_production_process where name like '%${name}%'
+    </select>
+
+    <delete id="batchDeleteProductionProcess">
+        delete from quality_base_production_process where id in (
+        <foreach collection="list" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+
+</mapper>

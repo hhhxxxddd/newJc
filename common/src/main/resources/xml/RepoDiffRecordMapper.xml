@@ -1,0 +1,53 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 指定工作空间，要与接口名相同-->
+<mapper namespace="com.jinchi.common.mapper.RepoDiffRecordMapper">
+    <select id="getBySerialNumber" parameterType="java.lang.Integer" resultType="com.jinchi.common.domain.RepoDiffRecord">
+        SELECT * FROM repo_diff_record where serial_number_id = #{0}
+    </select>
+
+    <insert id="insert" parameterType="com.jinchi.common.domain.RepoDiffRecord" useGeneratedKeys="true" keyProperty="id">
+        insert into jc_integration_db.repo_diff_record(serial_number_id,creator,real_weight,supposed_weight,weight_diff,create_time)
+        value(#{serialNumberId},#{creator},#{realWeight},#{supposedWeight},#{weightDiff},#{createTime})
+    </insert>
+
+    <select id="getAll" resultType="com.jinchi.common.domain.RepoDiffRecord">
+        select * from repo_diff_record
+    </select>
+    <update id="update" parameterType="com.jinchi.common.dto.repository.RepoStockDTO" >
+        UPDATE repo_diff_record
+        set real_weight = #{repoDiffRecord.realWeight},
+            supposed_weight = #{repoDiffRecord.supposedWeight}
+        where serial_number_id = #{repoDiffRecord.serialNumberId}
+    </update>
+
+    <select id="getAllByFactors" resultType="com.jinchi.common.domain.RepoDiffRecord">
+        SELECT *
+        FROM jc_integration_db.repo_diff_record as rdr
+        <include refid="part1Conditions"/>
+        <if test="pageBean!=null">
+            <if test="pageBean.sortField!=null and pageBean.sortType!=null">
+                order by rdr.${pageBean.sortField} ${pageBean.sortType}
+            </if>
+            LIMIT #{pageBean.startIndex}, #{pageBean.pageSize}
+        </if>
+    </select>
+
+    <select id="countSum" resultType="Integer">
+        SELECT count(*)
+        FROM jc_integration_db.repo_diff_record as rdr
+        <include refid="part1Conditions"/>
+    </select>
+
+    <sql id="part1Conditions">
+            LEFT JOIN jc_integration_db.repo_base_serial_number as rbsn
+            ON rdr.serial_number_id = rbsn.id
+        WHERE 1=1
+        <if test="materialName!=null and materialName!=''">
+            AND rbsn.material_name LIKE '%${materialName}%'
+        </if>
+            AND rbsn.material_class = #{materialClass}
+    </sql>
+
+</mapper>

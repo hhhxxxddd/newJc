@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jinchi.common.mapper.DeliveryFactoryMapper">
+
+    <delete id="deleteById" parameterType="Integer">
+        delete from quality_base_delivery_factory where id = #{id}
+    </delete>
+
+    <select id="findById" parameterType="Integer" resultType="com.jinchi.common.domain.DeliveryFactory">
+        select * from quality_base_delivery_factory where id = #{id}
+</select>
+
+    <select id="findAll" resultType="DeliveryFactory">
+        select * from quality_base_delivery_factory
+    </select>
+
+    <insert id="insert" parameterType="com.jinchi.common.domain.DeliveryFactory" useGeneratedKeys="true" keyProperty="id">
+        insert into quality_base_delivery_factory(name) values(#{name})
+    </insert>
+
+    <update id="update" parameterType="com.jinchi.common.domain.DeliveryFactory">
+        update quality_base_delivery_factory set name = #{name} where id = #{id}
+    </update>
+
+    <select id="findAllByName" parameterType="String" resultType="com.jinchi.common.domain.DeliveryFactory">
+        select * from quality_base_delivery_factory where name like '%${name}%'
+    </select>
+
+    <select id="byFullName" parameterType="String" resultType="DeliveryFactory">
+        SELECT * FROM jc_integration_db.quality_base_delivery_factory
+        WHERE name = #{name}
+    </select>
+
+    <delete id="batchDeleteDeliveryFactory">
+        delete from quality_base_delivery_factory where id in (
+        <foreach collection="list" item="id" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+
+</mapper>

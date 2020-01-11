@@ -1,0 +1,84 @@
+primary:
+  spring:
+    datasource:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      type: com.alibaba.druid.pool.DruidDataSource
+      platform: mysql
+      url: jdbc:mysql://127.0.0.1:3306/jc_integration_db?userUnicode=true&characterEncoding=UTF8&useSSL=false&useAffectedRows=true&useLegacyDatetimeCode=false&serverTimezone=CTT&useJDBCCompliantTimezoneShift=true
+      username: root
+      password: 123456
+      druid:
+        test-on-borrow: true
+        validationQuery: SELECT 1
+        test-while-idle: true
+        time-between-eviction-runs-millis: 300000
+        #连接池空闲连接的有效时间 ，设置30分钟
+        min-evictable-idle-time-millis: 1800000
+    #      druid:
+    #       time-between-eviction-runs-millis: 300000
+    #      #连接池空闲连接的有效时间 ，设置30分钟
+    #       min-evictable-idle-time-millis: 1800000
+    application:
+      name: COMMON-SERVICE
+
+
+secondary:
+  spring:
+    datasource:
+      driver-class-name: com.mysql.cj.jdbc.Driver
+      type: com.alibaba.druid.pool.DruidDataSource
+      platform: mysql
+      url: jdbc:mysql://127.0.0.1:3306/jc_auth_db?userUnicode=true&characterEncoding=UTF8&useSSL=false&useAffectedRows=true&useLegacyDatetimeCode=false&serverTimezone=CTT&useJDBCCompliantTimezoneShift=true
+      username: root
+      password: 123456
+      druid:
+        test-on-borrow: true
+        validationQuery: SELECT 1
+        test-while-idle: true
+        time-between-eviction-runs-millis: 300000
+        #连接池空闲连接的有效时间 ，设置30分钟
+        min-evictable-idle-time-millis: 1800000
+    application:
+      name: AUTH-SERVICE
+server:
+  port: 8082
+  servlet:
+    context-path:
+  tomcat:
+    max-http-post-size: -1
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8090/eureka
+spring:
+  application:
+    name: COMMON-SERVICE
+  servlet:
+    multipart:
+      enabled: true
+      max-file-size: 10MB
+      max-request-size: 10MB
+  main:
+    allow-bean-definition-overriding: true
+  #redis配置
+  redis:
+    database: 0
+    host: 127.0.0.1
+    port: 6379
+    password:
+    #    jedis:
+    #      pool:
+    #        max-active:8
+    #        max-wait: 8
+    #        max-idle: 8
+    timeout: 1200
+    pool:
+      max-active: 8
+      max-idle: 8
+      max-wait: -1
+enable:
+  timeService: true
+realTime:
+  url: http://192.168.190.173:10086/api/Snapshot

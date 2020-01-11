@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinchi.common.mapper.UnqualifiedTestReportRecordMapper">
+    <!--新增-->
+    <insert id="insert" parameterType="UnqualifiedTestReportRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO
+        jc_integration_db.quality_unqualified_test_report_record
+        (sample_delivering_record_id,
+         batch_number_id,
+         purchase_report_record_id,
+         judger,
+         judge_date,
+         is_qualified,
+         status,
+         quality_level,
+         decision
+         )
+        VALUE
+        (
+        #{sampleDeliveringRecordId},
+        #{batchNumberId},
+        #{purchaseReportRecordId},
+        #{judger},
+        #{judgeDate},
+        #{isQualified},
+        #{status},
+        #{qualityLevel},
+        #{decision})
+    </insert>
+
+    <update id="update" parameterType="UnqualifiedTestReportRecord">
+        UPDATE jc_integration_db.quality_unqualified_test_report_record
+        SET decision = #{decision},is_qualified = #{isQualified},
+        judger = #{judger},judge_date = #{judgeDate},quality_level = #{qualityLevel}
+        WHERE id=#{id}
+    </update>
+
+    <!--根据批号id-->
+    <select id="findByBatchNumberId" parameterType="Integer" resultType="UnqualifiedTestReportRecord">
+        SELECT * FROM jc_integration_db.quality_unqualified_test_report_record qutrr
+        WHERE qutrr.batch_number_id = #{batchNumberId}
+    </select>
+
+    <!--查询所有-->
+    <select id="getAll" resultType="UnqualifiedTestReportRecord" >
+        SELECT * FROM jc_integration_db.quality_unqualified_test_report_record as qutrr
+        <if test="createPerson!=null and createPerson!=''">
+            LEFT JOIN jc_integration_db.quality_common_batch_number as qcbn
+            ON qutrr.batch_number_id = qcbn.id
+            JOIN jc_auth_db.auth_user as au
+            ON qcbn.create_person_id = au.id
+            WHERE au.name LIKE '${createPerson}%'
+        </if>
+        <if test="pageBean!=null">
+            <if test="pageBean.sortField!=null and pageBean.sortType!=null">
+                order by qcbn.${pageBean.sortField} ${pageBean.sortType}
+            </if>
+            LIMIT #{pageBean.startIndex}, #{pageBean.pageSize}
+        </if>
+    </select>
+
+    <select id="countSum" resultType="Integer">
+        SELECT COUNT(*) FROM jc_integration_db.quality_unqualified_test_report_record as qutrr
+        <if test="createPerson!=null and createPerson!=''">
+            LEFT JOIN jc_integration_db.quality_common_batch_number as qcbn
+            ON qutrr.batch_number_id = qcbn.id
+            JOIN jc_auth_db.auth_user as au
+            ON qcbn.create_person_id = au.id
+            WHERE au.name LIKE '${createPerson}%'
+        </if>
+    </select>
+
+    <!--根据id查询-->
+    <select id="findById"  parameterType="Integer" resultType="UnqualifiedTestReportRecord" >
+        SELECT * FROM jc_integration_db.quality_unqualified_test_report_record as qutrr
+        WHERE id = #{id} LIMIT 0,1
+    </select>
+
+
+</mapper>

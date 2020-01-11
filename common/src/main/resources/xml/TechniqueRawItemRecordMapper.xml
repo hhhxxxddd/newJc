@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinchi.common.mapper.TechniqueRawItemRecordMapper">
+
+    <!--批量新增-->
+    <insert id="batchInsert" parameterType="List">
+        INSERT INTO jc_integration_db.technique_raw_item_record(raw_material_id, test_item_id)
+        VALUES
+        <foreach collection="list"  separator="," index="index" item="item">
+            (#{item.rawMaterialId},#{item.testItemId})
+        </foreach>
+    </insert>
+
+    <!--根据物料id查询-->
+    <select id="byRawId" parameterType="Integer" resultType="TechniqueRawItemRecord">
+        SELECT * FROM jc_integration_db.technique_raw_item_record AS trir
+        WHERE trir.raw_material_id=#{rawId}
+    </select>
+</mapper>

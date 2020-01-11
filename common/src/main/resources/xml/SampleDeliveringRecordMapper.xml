@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 指定工作空间，要与接口名相同-->
+<mapper namespace="com.jinchi.common.mapper.SampleDeliveringRecordMapper">
+
+    <!--新增-->
+    <insert id="insert" parameterType="SampleDeliveringRecord" useGeneratedKeys="true" keyProperty="id" keyColumn="id">
+        INSERT INTO jc_integration_db.quality_sample_delivering_record(
+        sample_delivering_date, 
+        deliverer_id, 
+        delivery_factory_id, 
+        serial_number_id, 
+        test_items, 
+        exception_comment, 
+        handle_comment, 
+        accept_status, 
+        type,temp_batch_number)
+        VALUES (#{sampleDeliveringDate},#{delivererId},#{deliveryFactoryId},#{serialNumberId},#{testItems},#{exceptionComment},#{handleComment},#{acceptStatus},#{type},#{tempBatchNumber});
+    </insert>
+
+    <!--更新-->
+    <update id="update" parameterType="SampleDeliveringRecord">
+        UPDATE jc_integration_db.quality_sample_delivering_record
+        <set>
+            <if test="sampleDeliveringDate!=null">
+                sample_delivering_date = #{sampleDeliveringDate},
+            </if>
+            <if test="delivererId!=null">
+                deliverer_Id = #{delivererId},
+            </if>
+            <if test="deliveryFactoryId!=null">
+                delivery_factory_id = #{deliveryFactoryId},
+            </if>
+            <if test="serialNumberId!=null">
+                serial_number_id=#{serialNumberId},
+            </if>
+            <if test="testItems!=null and testItems!=''">
+                test_items=#{testItems},
+            </if>
+            <if test="exceptionComment!=null and exceptionComment!=''">
+                exception_comment = #{exceptionComment},
+            </if>
+            <if test="handleComment!=null and handleComment!=''">
+                handle_comment = #{handleComment},
+            </if>
+            <if test="acceptStatus!=null">
+                accept_status = #{acceptStatus},
+            </if>
+            <if test="type!=null">
+                 type = #{type},
+        </if>
+        </set>
+        WHERE id=#{id}
+    </update>
+
+
+    <!--根据id删除-->
+    <delete id="deleteById" parameterType="Integer">
+        DELETE FROM jc_integration_db.quality_sample_delivering_record
+        WHERE jc_integration_db.quality_sample_delivering_record.id = #{id}
+    </delete>
+    
+    <!--根据ids删除-->
+    <delete id="deleteByIds" parameterType="List">
+        DELETE FROM jc_integration_db.quality_sample_delivering_record
+        WHERE jc_integration_db.quality_sample_delivering_record.id IN 
+        <foreach collection="list" separator="," open="(" close=")" item="item" index="index">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--根据id  类型 接受状态 查询-->
+    <select id="getByIdAndTypeAndAccept" resultType="SampleDeliveringRecord">
+        SELECT *
+        FROM jc_integration_db.quality_sample_delivering_record AS a
+        WHERE a.id = #{id}
+        <if test="type!=null">
+            AND type = #{type}
+        </if>
+        <if test="acceptStatus!=null">
+            AND accept_status =#{acceptStatus}
+        </if>
+        Limit 0,1
+    </select>
+
+
+    <!--查询所有 条件为类型-接收状态-工厂名称-->
+    <select id="getAllByFactors" resultType="SampleDeliveringRecord">
+        SELECT *
+        FROM jc_integration_db.quality_sample_delivering_record as qsdr
+        <include refid="part1Conditions"/>
+        <if test="pageBean!=null">
+            <if test="pageBean.sortField!=null and pageBean.sortType!=null">
+                order by qsdr.${pageBean.sortField} ${pageBean.sortType}
+            </if>
+            LIMIT #{pageBean.startIndex}, #{pageBean.pageSize}
+        </if>
+    </select>
+
+    <select id="countSum" resultType="Integer">
+        SELECT count(*)
+        FROM jc_integration_db.quality_sample_delivering_record as qsdr
+        <include refid="part1Conditions"/>
+    </select>
+
+
+    <sql id="part1Conditions">
+        <if test="factoryName!=null and factoryName!=''">
+            LEFT JOIN jc_integration_db.quality_base_delivery_factory as qbdf
+            ON qsdr.delivery_factory_id = qbdf.id
+        </if>
+        WHERE 1=1
+        <if test="acceptStatus!=null">
+            AND qsdr.accept_status=#{acceptStatus}
+        </if>
+        <if test="type!=null">
+            AND qsdr.type=#{type}
+        </if>
+        <if test="factoryName!=null and factoryName!=''">
+            AND qbdf.name LIKE '${factoryName}%'
+        </if>
+    </sql>
+
+    <!--根据批号id查询-杜敏-->
+    <select id="getById" parameterType="Integer" resultType="SampleDeliveringRecord">
+        SELECT *
+        FROM quality_sample_delivering_record AS a
+        WHERE a.id = #{0} Limit 1
+    </select>
+
+    <select id="byBatchIds" parameterType="List" resultType="SampleDeliveringRecord">
+        SELECT * FROM
+        jc_integration_db.quality_sample_delivering_record as qsdr
+        WHERE id IN <foreach collection="list" open="(" separator="," close=")" index="index" item="item">
+        #{item}
+    </foreach>
+    </select>
+
+    <select id="selectByBatch" resultType="com.jinchi.common.domain.SampleDeliveringRecord">
+    select s.* from quality_sample_delivering_record as s ,quality_common_batch_number_extra as c
+    where s.id = c.common_batch_id and c.batch like #{batch}
+    order by s.sample_delivering_date desc
+    limit #{start},#{end}
+  </select>
+
+</mapper>

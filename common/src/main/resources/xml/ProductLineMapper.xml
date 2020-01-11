@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 指定工作空间，要与接口名相同-->
+<mapper namespace="com.jinchi.common.mapper.ProductLineMapper">
+
+    <!--新增产品线-->
+    <insert id="insert" parameterType="com.jinchi.common.domain.ProductLine" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO quality_base_product_line (name)
+        VALUES (#{name});
+    </insert>
+
+    <!-- 更新产品线 -->
+    <update id="update" parameterType="com.jinchi.common.domain.ProductLine">
+        UPDATE quality_base_product_line
+        SET name = #{name}
+        WHERE ID = #{id}
+    </update>
+
+    <!-- 根据id删除产品线 -->
+    <delete id="deleteById" parameterType="Integer">
+        DELETE
+        FROM quality_base_product_line
+        WHERE ID = #{0}
+    </delete>
+
+    <delete id="deleteByIds" parameterType="int[]">
+        DELETE
+        FROM quality_base_product_line
+        WHERE ID in
+        <foreach collection="array" item="ids" index="id" open="(" separator="," close=")">#{ids}</foreach>
+    </delete>
+
+    <!-- 根据id查找产品线 -->
+    <select id="byId" parameterType="Integer" resultType="com.jinchi.common.domain.ProductLine">
+        SELECT a.id AS id, a.name AS name
+        FROM quality_base_product_line AS a
+        WHERE ID = #{0}
+    </select>
+
+    <!--查询所有产品线-->
+    <select id="getAll" resultType="com.jinchi.common.domain.ProductLine">
+        SELECT a.id AS id, a.name AS name
+        FROM quality_base_product_line AS a
+        ORDER BY ID ASC;
+    </select>
+
+    <!--根据产品线名称查询所有产品线-->
+    <select id="getByNameLike" resultType="com.jinchi.common.domain.ProductLine">
+        SELECT a.id AS id, a.name AS name
+        FROM quality_base_product_line AS a
+        WHERE name LIKE concat(concat('%', #{name}), '%')
+        ORDER BY ID ASC;
+    </select>
+</mapper>

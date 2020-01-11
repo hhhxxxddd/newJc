@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 指定工作空间，要与接口名相同-->
+<mapper namespace="com.jinchi.common.mapper.RepoStockMapper">
+
+    <!--查询所有-->
+    <select id="findAllByMaterialClass" parameterType="Integer" resultType="RepoStockDTO">
+        select b.id,a.material_name,a.material_class,a.serial_number,b.weight
+        from repo_base_serial_number as a join repo_stock as b
+        on a.id = b.serial_number_id
+        <if test="materialClass!=null">
+            AND a.material_class = #{materialClass}
+        </if>
+    </select>
+
+    <!--根据名称模糊和类型查询所有-->
+    <select id="findAllByName"  resultType="RepoStockDTO">
+        select b.id,a.material_name,a.material_class,a.serial_number,b.weight
+        from repo_base_serial_number as a join repo_stock as b
+        on a.id = b.serial_number_id
+        where 1 = 1
+        <if test="materialClass!=null">
+            AND a.material_class = #{materialClass}
+        </if>
+        <if test="materialName!=null and materialName!=''">
+            AND a.material_name like '%${materialName}%'
+        </if>
+    </select>
+
+    <select id="countSum" resultType="Integer">
+        select count(*)
+        from repo_base_serial_number as a join repo_stock as b
+        on a.id = b.serial_number_id
+        where 1 = 1
+        <if test="materialClass!=null">
+            AND a.material_class = #{materialClass}
+        </if>
+        <if test="materialName!=null and materialName!=''">
+            AND a.material_name like '%${materialName}%'
+        </if>
+    </select>
+
+    <!--根据编号id查询 huxudong-->
+    <select id="findBySerialNumberId" parameterType="Integer" resultType="RepoStock">
+        select * FROM jc_integration_db.repo_stock where serial_number_id = #{serialNumberId} Limit 1
+    </select>
+
+    <!--根据基本编号表新增一种库存 huxudong-->
+    <insert id="addNewStock" parameterType="RepoStock" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO jc_integration_db.repo_stock(material_type, serial_number_id, weight)
+        VALUE (#{materialType},#{serialNumberId},#{weight})
+    </insert>
+
+    <!--更新库存数量和重量  huxudong-->
+    <update id="updateStock" parameterType="RepoStock" >
+        UPDATE jc_integration_db.repo_stock AS stc SET
+        weight = #{weight}
+        WHERE id = #{id}
+    </update>
+
+    <!--根据主键查询 huxudong-->
+    <select id="findById" parameterType="Integer" resultType="RepoStock">
+        SELECT * FROM jc_integration_db.repo_stock as rs
+        WHERE id = #{id} limit 0,1
+    </select>
+</mapper>

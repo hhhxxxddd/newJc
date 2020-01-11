@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 指定工作空间，要与接口名相同-->
+<mapper namespace="com.jinchi.common.mapper.RepoRedTableMapper">
+
+    <!--新增红单记录-->
+    <insert id="insert" parameterType="RepoRedTable" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO repo_red_table (batch_number_id, serial_number_id, weight_loss, note)
+        VALUES (#{batchNumberId}, #{serialNumberId}, #{weightLoss}, #{note});
+    </insert>
+
+    <!-- 更新红单记录 -->
+    <update id="update" parameterType="RepoRedTable">
+        UPDATE repo_red_table
+        SET batch_number_id = #{batchNumberId},
+            serial_number_id= #{serialNumberId},
+            weight_loss=#{weightLoss},
+            note=#{note}
+        WHERE ID = #{id};
+    </update>
+
+    <!-- 根据id删除红单记录 -->
+    <delete id="deleteById" parameterType="Integer">
+        DELETE
+        FROM repo_red_table
+        WHERE ID = #{0}
+    </delete>
+
+    <!-- 根据ids数组删除红单记录 -->
+    <delete id="deleteByIds" parameterType="int[]">
+        delete
+        from repo_red_table
+        where id in
+        <foreach collection="array" item="ids" index="id" open="(" separator="," close=")">#{ids}</foreach>
+    </delete>
+
+    <!-- 根据id查询红单记录-->
+    <select id="getById" parameterType="Integer" resultType="com.jinchi.common.domain.RepoRedTable">
+        select *
+        from repo_red_table
+        where id = #{0}
+    </select>
+
+    <!-- 根据id查询红单记录-->
+    <select id="getByBatchNumberId" parameterType="Integer" resultType="com.jinchi.common.domain.RepoRedTable">
+        select *
+        from repo_red_table as a
+        where a.batch_number_id = #{0}
+        limit 0,1
+    </select>
+
+    <!--查询所有红单记录-->
+    <select id="getAll" resultType="RepoRedTable">
+        SELECT a.* FROM repo_red_table AS a
+        join repo_base_serial_number as b on a.serial_number_id = b.id
+        and b.material_class = #{materialType}
+        <if test="pageBean != null">
+            order by ${pageBean.sortField} ${pageBean.sortType}
+            limit #{pageBean.startIndex}, #{pageBean.pageSize}
+        </if>
+    </select>
+
+    <!--查询所有红单记录总数-->
+    <select id="getAllCount" resultType="Integer">
+        SELECT count(*)
+        FROM repo_red_table AS a
+                 join repo_base_serial_number as b on a.serial_number_id = b.id
+            and b.material_class = #{materialType}
+    </select>
+
+    <!--根据材料编号字段查询红单记录-->
+    <select id="getBySerialNumberLike" resultType="RepoRedTable">
+        SELECT a.*
+        FROM repo_red_table AS a
+        join repo_base_serial_number as b on a.serial_number_id = b.id and b.material_class=#{materialClass}
+        WHERE CONCAT(IFNULL(b.serial_number, '')) LIKE concat(concat(#{serialNumber}), '%')
+        <if test="pageBean != null">
+            order by #{pageBean.sortField} #{pageBean.sortType}
+            limit #{pageBean.startIndex}, #{pageBean.pageSize}
+        </if>
+    </select>
+    <!--根据材料编号字段查询红单记录-->
+    <select id="getBySerialNumberLikeCount" resultType="Integer">
+        SELECT count(*)
+        FROM repo_red_table AS a
+                 join repo_base_serial_number as b on a.serial_number_id = b.id and b.material_class = #{materialClass}
+        WHERE CONCAT(IFNULL(b.serial_number, '')) LIKE concat(concat(#{serialNumber}), '%')
+    </select>
+
+</mapper>

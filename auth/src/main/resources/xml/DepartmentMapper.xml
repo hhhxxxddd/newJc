@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.jinchi.auth.mapper.DepartmentMapper">
+
+    <delete id="deleteById" parameterType="Integer">
+        delete from auth_department where id = #{id}
+    </delete>
+
+    <select id="byId" parameterType="Integer" resultType="Department">
+        select * from auth_department where id = #{id}
+    </select>
+
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="Department">
+        insert into auth_department(department_name,extra_info) value (#{departmentName},#{extraInfo})
+    </insert>
+
+    <update id="update" parameterType="Department">
+        update auth_department set department_name = #{departmentName},extra_info = #{extraInfo} where id = #{id}
+    </update>
+
+    <select id="byNameLike"  resultType="Department">
+        select * from auth_department
+        where 1=1
+        <if test="departmentName!=null and departmentName!=''">
+        And department_name like '${departmentName}%'
+        </if>
+        <if test="pageBean!=null">
+            <if test="pageBean.sortField!=null and pageBean.sortType!=null">
+                order by ${pageBean.sortField} ${pageBean.sortType}
+            </if>
+            LIMIT #{pageBean.startIndex}, #{pageBean.pageSize}
+        </if>
+    </select>
+
+    <select id="countSum" resultType="Integer">
+        SELECT count(*) FROM auth_department
+        where 1=1
+        <if test="departmentName!=null and departmentName!=''">
+            And department_name like '${departmentName}%'
+        </if>
+    </select>
+
+    <delete id="batchDelete">
+        delete from auth_department where id in (
+        <foreach collection="list" item="ids" separator=",">
+            #{id}
+        </foreach>
+        )
+    </delete>
+
+</mapper>

@@ -1,0 +1,130 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinchi.common.mapper.ProcedureTestRecordMapper">
+
+    <!--新增制程检测-->
+    <insert id="insert" parameterType="ProcedureTestRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO
+        jc_integration_db.quality_procedure_test_record
+        (batch_number_id,
+        delivery_factory_id,
+        procedure_id,
+        serial_number_id,
+        sampler,
+        tester,
+        sample_point_name,
+        test_frequency,
+        comment,
+        isIteration)
+        VALUE
+            (#{batchNumberId},
+            #{deliveryFactoryId},
+            #{procedureId},
+            #{serialNumberId},
+            #{sampler},
+            #{tester},
+            #{samplePointName},
+            #{testFrequency},
+            #{comment},
+            #{isIteration}
+            )
+    </insert>
+
+    <!--批量更新为迭代历史数据-->
+    <update id="updateIteration" parameterType="List" >
+        UPDATE jc_integration_db.quality_procedure_test_record
+        SET isIteration = 1
+        WHERE id
+        IN (<foreach collection="list" open="" close="" index="index" item="item" separator=",">
+        #{item.id}
+    </foreach>)
+    </update>
+
+    <!--根据批号查询制程检测-->
+    <select id="findByBatchNumberId" parameterType="Integer" resultType="ProcedureTestRecord">
+        SELECT * FROM jc_integration_db.quality_procedure_test_record as qptr
+        WHERE qptr.batch_number_id = #{batchNumberId}
+    </select>
+
+    <!--根据批号id删除-->
+    <delete id="deleteByBatchNumberId" parameterType="Integer">
+        DELETE FROM jc_integration_db.quality_procedure_test_record
+        WHERE jc_integration_db.quality_procedure_test_record.batch_number_id = #{batchNumberId}
+    </delete>
+
+    <!--根据批号ids删除-->
+    <delete id="deleteByBatchNumberIds" parameterType="List">
+        DELETE FROM jc_integration_db.quality_procedure_test_record
+        WHERE jc_integration_db.quality_procedure_test_record.batch_number_id
+        IN
+        <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--检测项目相关==========================================================-->
+
+    <!--批量新增制程检测的检测项目-->
+    <insert id="insertAllTestItems" parameterType="List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO jc_integration_db.quality_procedure_test_item_record(test_item_id, procedure_test_record_id)
+        VALUES
+        <foreach collection="list" index="index" item="item" separator=",">
+            (
+            #{item.testItemId},
+            #{item.procedureTestRecordId}
+            )
+        </foreach>
+    </insert>
+
+    <!--根据制程检测的id查询检测项目-->
+    <select id="testItemsOfProcedureTest" parameterType="Integer" resultType="ProcedureTestItemRecord">
+        SELECT qptir.id,
+        qptir.test_item_id AS testItemId,
+        qptir.procedure_test_record_id AS procedureTestRecordId
+        FROM jc_integration_db.quality_procedure_test_item_record as qptir
+        WHERE qptir.procedure_test_record_id=#{procedureTestId}
+    </select>
+
+    <!--根据制程检测的ids删除其检测项目-->
+    <delete id="deleteTestItemRecord" parameterType="List">
+        DELETE FROM jc_integration_db.quality_procedure_test_item_record
+        WHERE procedure_test_record_id IN
+        <foreach collection="list" separator="," item="item" index="index" open="(" close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <delete id="deleteOneTestItemRecord" parameterType="Integer">
+        DELETE FROM jc_integration_db.quality_procedure_test_item_record
+        WHERE procedure_test_record_id = #{procedureTestId}
+    </delete>
+
+    <!--根据工厂,工序,取样点,受检物料,是否为迭代数据,送审状态,排除当前id后查询-->
+    <select id="isUnique" resultType="ProcedureTestRecord">
+        SELECT qptr.* FROM jc_integration_db.quality_procedure_test_record as qptr
+        LEFT JOIN jc_integration_db.quality_common_batch_number as qcbn
+        ON qptr.batch_number_id = qcbn.id
+        WHERE 1=1
+        <if test="factoryId!=null">
+            AND qptr.delivery_factory_id =#{factoryId}
+        </if>
+        <if test="procedureId!=null">
+            AND qptr.procedure_id =#{procedureId}
+        </if>
+        <if test="samplePoint!=null and samplePoint!=''">
+            AND qptr.sample_point_name = #{samplePoint}
+        </if>
+        <if test="serialNumberId!=null">
+            AND qptr.serial_number_id = #{serialNumberId}
+        </if>
+        <if test="isIteration!=null">
+            AND qptr.isIteration = #{isIteration}
+        </if>
+        <if test="status!=null">
+            AND qcbn.status = #{status}
+        </if>
+        <if test="id!=null">
+            AND qptr.id != #{id}
+        </if>
+    </select>
+</mapper>

@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinchi.common.mapper.AuthRoleMapper">
+    <select id="findById" parameterType="Integer" resultType="AuthRoleDTO">
+        SELECT
+        id as roleId,
+        role_name as roleName,
+        description as description
+        FROM jc_auth_db.auth_role as ar
+        WHERE id = #{roleId}
+    </select>
+
+    <select id="byName" parameterType="String" resultType="AuthRoleDTO">
+        SELECT
+        id as roleId,
+        role_name as roleName,
+        description as description
+        From jc_auth_db.auth_role
+        WHERE role_name = #{roleName}
+    </select>
+</mapper>

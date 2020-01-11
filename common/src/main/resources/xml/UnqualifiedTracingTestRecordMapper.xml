@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinchi.common.mapper.UnqualifiedTracingTestRecordMapper">
+    <!--根据追踪id查询-->
+    <select id="byTraceId" parameterType="Integer" resultType="UnqualifiedTracingTestRecord">
+        SELECT * FROM jc_integration_db.quanlity_unqualified_tracing_test_record as qutrr
+        WHERE qutrr.unqualified_tracing_record_id = #{0}
+        LIMIT 0,1
+    </select>
+
+    <!--批量新增-->
+    <insert id="batchSave" parameterType="List">
+        INSERT INTO jc_integration_db.quanlity_unqualified_tracing_test_record(unqualified_test_report_record_id,unqualified_tracing_record_id)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.unqualifiedTestReportRecordId},#{item.unqualifiedTracingRecordId})
+        </foreach>
+    </insert>
+</mapper>

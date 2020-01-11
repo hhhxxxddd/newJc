@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 指定工作空间，要与接口名相同-->
+<mapper namespace="com.jinchi.common.mapper.TechniqueBaseRawMaterialMapper">
+
+    <!--新增产品线-->
+    <insert id="insert" parameterType="TechniqueBaseRawMaterial" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO technique_base_raw_material (name)
+        VALUES (#{name});
+    </insert>
+
+    <!-- 更新产品线 -->
+    <update id="update" parameterType="TechniqueBaseRawMaterial">
+        UPDATE technique_base_raw_material
+        SET name = #{name}
+        WHERE ID = #{id}
+    </update>
+
+    <!-- 根据id删除产品线 -->
+    <delete id="deleteById" parameterType="Integer">
+        DELETE
+        FROM technique_base_raw_material
+        WHERE ID = #{0}
+    </delete>
+
+    <delete id="deleteByIds" parameterType="int[]">
+        DELETE
+        FROM technique_base_raw_material
+        WHERE ID in
+        <foreach collection="array" item="ids" index="id" open="(" separator="," close=")">#{ids}</foreach>
+    </delete>
+
+    <!-- 根据id查找产品线 -->
+    <select id="getById" parameterType="Integer" resultType="TechniqueBaseRawMaterial">
+        SELECT *
+        FROM technique_base_raw_material
+        WHERE ID = #{0}
+    </select>
+
+    <!--查询所有产品线-->
+    <select id="getAll" resultType="TechniqueBaseRawMaterial">
+        SELECT *
+        FROM technique_base_raw_material
+        ORDER BY ID ASC;
+    </select>
+
+    <!--根据全名查询-->
+    <select id="getByName" resultType="TechniqueBaseRawMaterial">
+        SELECT *
+        FROM technique_base_raw_material
+        WHERE name = #{name}
+        limit 0,1
+    </select>
+
+    <!--根据名称模糊查询-->
+    <select id="getByNameLike" resultType="TechniqueBaseRawMaterial">
+        SELECT *
+        FROM technique_base_raw_material
+        <if test="name!=null and name!=''">
+            WHERE name LIKE '${name}%'
+        </if>
+    </select>
+</mapper>

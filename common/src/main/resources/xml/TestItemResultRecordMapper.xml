@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 指定工作空间，要与接口名相同-->
+<mapper namespace="com.jinchi.common.mapper.TestItemResultRecordMapper">
+
+    <!--新增-->
+    <insert id="insert" parameterType="com.jinchi.common.domain.TestItemResultRecord">
+        INSERT INTO quality_test_item_result_record(id, test_item_id, test_report_record_id, test_result, is_valid)
+        VALUES (#{id}, #{testItemId}, #{testReportRecordId}, #{testResult}, #{isValid});
+    </insert>
+
+    <!--按照批号获取 -->
+    <select id="getByTestReportId" parameterType="java.lang.Integer" resultType="TestItemResultRecord">
+        SELECT *
+        FROM quality_test_item_result_record
+        WHERE test_report_record_id = #{testReportRecordId}
+        order by id asc;
+    </select>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="TestItemResultRecord">
+        UPDATE quality_test_item_result_record
+        set test_result = #{testResult}
+        where id = #{id}
+    </update>
+
+    <!--批量更新-->
+    <update id="batchUpdate" parameterType="List">
+        update jc_integration_db.quality_test_item_result_record
+        set test_result=
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end,">
+            when  #{item.id} then
+            #{item.testResult}
+        </foreach>
+        is_audit =
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+            when #{item.id} then
+            #{item.isAudit}
+        </foreach>
+        where id in
+        <foreach collection="list" item="item" separator="," close=")" open="(" index="index">
+            #{item.id}
+        </foreach>
+    </update>
+
+    <!--批量更新是否合格-->
+    <update id="batchUpdateIsValid" parameterType="List">
+        update jc_integration_db.quality_test_item_result_record
+        set is_valid=
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+            when #{item.id} then
+            #{item.isValid}
+        </foreach>
+        where id in
+        <foreach collection="list" item="item" separator="," close=")" open="(" index="index">
+            #{item.id}
+        </foreach>
+    </update>
+
+    <!--批量新增-->
+    <insert id="batchInsert" parameterType="List">
+        INSERT INTO jc_integration_db.quality_test_item_result_record(test_item_id, test_report_record_id, test_result,is_audit)
+        VALUES
+        <foreach collection="list" separator="," index="index" item="item">
+            (
+            #{item.testItemId},
+            #{item.testReportRecordId},
+            #{item.testResult},
+            #{item.isAudit}
+            )
+        </foreach>
+    </insert>
+
+    <select id="findById" parameterType="Integer" resultType="TestItemResultRecord">
+        select *
+        from quality_test_item_result_record
+        where id = #{id}
+    </select>
+
+    <delete id="deleteById" parameterType="Integer">
+        delete
+        from quality_test_item_result_record
+        where id = #{id}
+    </delete>
+
+    <delete id="deleteByIds" parameterType="int[]">
+        DELETE
+        FROM quality_test_item_result_record
+        WHERE ID in
+        <foreach collection="array" item="ids" index="id" open="(" separator="," close=")">#{ids}</foreach>
+    </delete>
+</mapper>

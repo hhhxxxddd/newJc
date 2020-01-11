@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 指定工作空间，要与接口名相同-->
+<mapper namespace="com.jinchi.auth.mapper.RoleMapper">
+
+
+
+<!--增删改查分割线==================================================================-->
+    <!--新增角色-->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="Role">
+        insert into auth_role(role_name,description) values(#{roleName},#{description});
+    </insert>
+
+    <!-- 更新角色 -->
+    <update id="update" parameterType="Role">
+        update auth_role set role_name=#{roleName},description = #{description} where id=#{id}
+    </update>
+
+    <!-- 查询一个id -->
+    <select id="byId" parameterType="Integer" resultType="Role">
+        select * from auth_role where id=#{id}
+    </select>
+
+    <!--查询所有角色-->
+    <!--<select id="findAll" resultType="com.jinchi.auth.domain.Role">-->
+        <!--SELECT * FROM AUTH_ROLE ORDER BY ID ASC;-->
+    <!--</select>-->
+    <select id="findAll" resultType="Role">
+        select * from auth_role order by id asc;
+    </select>
+
+    <!--根据角色名称模糊查询所有-->
+    <select id="byNameLike"  resultType="Role">
+        select * from auth_role
+        where 1=1
+        <if test="roleName!=null and roleName!=''">
+            AND role_name like '${roleName}%'
+        </if>
+        <if test="pageBean!=null">
+            <if test="pageBean.sortField!=null and pageBean.sortType!=null">
+                order by ${pageBean.sortField} ${pageBean.sortType}
+            </if>
+            LIMIT #{pageBean.startIndex}, #{pageBean.pageSize}
+        </if>
+    </select>
+
+    <select id="countSum" resultType="Integer">
+        SELECT count(*) FROM auth_role
+        where 1=1
+        <if test="roleName!=null and roleName!=''">
+            And role_name like '${roleName}%'
+        </if>
+    </select>
+
+
+    <!-- 删除角色 -->
+    <delete id="deleteById" parameterType="Integer">
+        delete from auth_role where id=#{id}
+    </delete>
+
+    <!--批量删除-->
+    <delete id="deleteByIds" parameterType="List" >
+        delete from auth_role where id in <foreach collection="ids" open="(" item="id" index="index" close=")" separator=",">
+        #{id}
+    </foreach>
+    </delete>
+
+<!--权限分割线=======================================================================-->
+
+    <!--权限类-->
+    <resultMap id="Authorities" type="Authorities">
+        <id property="menuId" column="menuId"/>
+        <result property="menuName" column="menuName"/>
+        <result property="prefix" column="prefix"/>
+        <collection property="operations" ofType="Operation">
+            <id property="id" column="operationId"/>
+            <result property="operationName" column="operationName"/>
+            <result property="operationCode" column="operationCode"/>
+        </collection>
+    </resultMap>
+
+    <!--权限类的内容-->
+    <sql id="authoritiesContent">
+        SELECT
+        auth_menu.id as menuId,
+        auth_menu.menu_name menuName,
+        auth_menu.prefix,
+        auth_operation.id as operationId,
+        auth_operation.operation_name operationName,
+        auth_operation.operation_code operationCode
+    </sql>
+
+
+    <!--查找角色下所有权限-->
+    <select id="authoritiesOfRole" parameterType="Integer" resultMap="Authorities">
+        <include refid="authoritiesContent"/>
+        FROM jc_auth_db.auth_role
+        JOIN jc_auth_db.auth_role_menu_operation
+        ON auth_role_menu_operation.role_id = auth_role.id
+--      这里从角色菜单权限找到角色id为{0}的所有
+        JOIN jc_auth_db.auth_menu
+        ON auth_role_menu_operation.menu_id = auth_menu.id
+        JOIN jc_auth_db.auth_operation
+        ON auth_role_menu_operation.operation_id = auth_operation.id
+        WHERE auth_role.id=#{id}
+    </select>
+
+    <!--查找所有权限-->
+    <select id="authorities" resultMap="Authorities">
+        <include refid="authoritiesContent"/>
+        FROM jc_auth_db.auth_menu
+        JOIN jc_auth_db.auth_role_menu_operation
+        ON auth_role_menu_operation.menu_id = auth_menu.id
+        JOIN jc_auth_db.auth_operation
+        ON auth_role_menu_operation.operation_id = auth_operation.id
+        WHERE auth_menu.menu_type!=1
+    </select>
+
+
+
+<!--权限分配分割线=================================================================-->
+    <!--通过角色找分配的用户(包含已分配和未分配)-->
+    <select id="findUsersByRole" parameterType="Integer" resultType="SimpleUserDTO">
+        SELECT auth_user.id,auth_user.username,auth_user.name
+        FROM auth_role
+        JOIN auth_user_role
+        ON auth_role.id = auth_user_role.role_id
+        JOIN auth_user
+        ON auth_user.id = auth_user_role.user_id
+        WHERE auth_role.id = #{roleId}
+    </select>
+
+    <!--给角色分配用户-->
+    <insert id="assignUser2Role" parameterType="UserRole">
+        replace INTO auth_user_role(user_id,role_id) VALUES
+        <foreach collection="userRoles" open="" close="" separator="," index="index" item="userRole">
+            (#{userRole.userId},
+            #{userRole.roleId})
+        </foreach>
+    </insert>
+
+    <!--给角色分配用户(删除)-->
+    <delete id="cancelAssign">
+        DELETE  FROM auth_user_role  WHERE role_id=#{roleId}
+        AND user_id NOT IN <foreach collection="userIds" item="item" index="index" separator="," open="(" close=")">
+        #{item}
+    </foreach>
+    </delete>
+
+    <!--给角色分配一条权限-->
+    <insert id="addOneOperation">
+        replace  INTO  auth_role_menu_operation(role_id,menu_id,operation_id) VALUES (#{roleId},#{menuId},#{operationId})
+    </insert>
+    <!--给角色删除一条权限-->
+    <delete id="cancelOneOperation">
+        DELETE FROM auth_role_menu_operation WHERE role_id=#{roleId} AND menu_id=#{menuId} AND operation_id=#{operationId}
+    </delete>
+
+
+
+</mapper>

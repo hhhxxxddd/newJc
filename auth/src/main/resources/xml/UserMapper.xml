@@ -1,0 +1,249 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+
+<!-- 指定工作空间，要与接口名相同-->
+<mapper namespace="com.jinchi.auth.mapper.UserMapper">
+
+
+    <!--增删改查分割线===================================================================================-->
+    <!-- 新增用户 -->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.jinchi.auth.domain.User">
+        INSERT INTO jc_auth_db.auth_user(department_id,USERNAME,PASSWORD,PHONE,NAME,id_card_number ) VALUES(#{user.departmentId},#{user.username},#{user.password},#{user.phone},#{user.name},#{user.idCardNumber});
+    </insert>
+
+    <!-- 更新用户 -->
+    <update id="update" parameterType="User">
+        UPDATE jc_auth_db.auth_user
+        SET USERNAME=#{user.username} ,
+        PHONE = #{user.phone},
+        department_id = #{user.departmentId},
+        NAME = #{user.name},
+        <if test="user.password!=null and user.password!=''">
+            password = #{user.password},
+        </if>
+        id_card_number = #{user.idCardNumber}
+        WHERE ID=#{user.id}
+    </update>
+
+    <!-- 根据id查询 -->
+    <!--<select id="find" parameterType="Integer" resultType="com.jinchi.auth.dto.UserDTO">-->
+    <!--SELECT * FROM jc_auth_db.auth_user WHERE ID=#{0}-->
+    <!--</select>-->
+    <select id="find" parameterType="Integer" resultType="com.jinchi.auth.dto.UserDTO">
+        select * from auth_user where id=#{0}
+    </select>
+
+    <!--查询所有-->
+    <select id="findAll" resultType="com.jinchi.auth.dto.UserDTO">
+        select * from jc_auth_db.auth_user;
+    </select>
+
+    <!-- 删除用户-->
+    <delete id="delete" parameterType="Integer">
+        delete from jc_auth_db.auth_user where id=#{0}
+    </delete>
+
+    <!--根据名称模糊查询-->
+    <select id="findByName" parameterType="String" resultType="com.jinchi.auth.dto.UserDTO">
+        select * from jc_auth_db.auth_user where name like  concat(concat('%',#{name},'%'))
+    </select>
+
+
+    <!--权限分割线===========================================================================================-->
+    <!--用户和角色map-->
+    <resultMap id="userAndRole" type="User">
+        <id property="id" column="id"/>
+        <result property="username" column="username"/>
+        <result property="password" column="password"/>
+        <collection property="roles" ofType="Role" javaType="ArrayList">
+            <id property="id" column="_id"/>
+            <result property="roleName" column="roleName"/>
+        </collection>
+    </resultMap>
+
+    <!--根据名称查询用户-->
+    <select id="findByFullName" parameterType="String" resultType="com.jinchi.auth.domain.User">
+        select * from jc_auth_db.auth_user where username =#{username} limit 1
+    </select>
+
+    <!--&lt;!&ndash;根据用户查找其权限&ndash;&gt;-->
+    <!--<select id="findUserAuths" parameterType="Integer" resultType="com.jinchi.auth.dto.MenuAndOperationDTO">-->
+    <!--Select distinct m.id as menuId, m.menu_name as menuName,m.prefix as prefix,-->
+    <!--o.id as operationId, o.operation_name as operationName,-->
+    <!--o.operation_code as operationCode,-->
+    <!--concat('ROLE_',m.prefix,'_',o.operation_code) as "authorization"-->
+    <!--from auth_user u join jc_auth_db.auth_user_role ur on u.id = ur.user_id-->
+    <!--join jc_auth_db.auth_role r on r.id=ur.role_id-->
+    <!--join jc_auth_db.auth_role_menu_operation rmo on rmo.role_id=r.id-->
+    <!--join auth_menu m on m.id=rmo.menu_id-->
+    <!--join auth_operation o-->
+    <!--on o.id = rmo.operation_id where u.id= #{id}-->
+    <!--</select>-->
+
+
+    <!--根据用户查找其权限,字符串形式-->
+    <select id="findUserAuthsString" parameterType="Integer" resultType="String">
+        select distinct concat('ROLE_',auth_menu.prefix,'_',auth_operation.operation_code)
+        from jc_auth_db.auth_user
+        join jc_auth_db.auth_user_role
+        on jc_auth_db.auth_user.id = jc_auth_db.auth_user_role.user_id
+
+        join jc_auth_db.auth_role
+        on jc_auth_db.auth_user_role.role_id = auth_role.id
+        join jc_auth_db.auth_role_menu_operation
+        on jc_auth_db.auth_role_menu_operation.role_id=auth_role.id
+
+        join jc_auth_db.auth_menu
+        on auth_role_menu_operation.menu_id = auth_menu.id
+
+        join jc_auth_db.auth_operation
+        on auth_role_menu_operation.operation_id = auth_operation.id
+
+        where jc_auth_db.auth_user.id = #{id}
+    </select>
+
+    <!--根据id查询用户所有角色(简单版)-->
+    <select id="findUserSimpleRoles" parameterType="Integer" resultType="com.jinchi.auth.dto.SimpleRoleDTO">
+    select
+	jc_auth_db.auth_role.id as roleId,
+	jc_auth_db.auth_role.role_name as roleName
+    from
+	jc_auth_db.auth_role
+	join jc_auth_db.auth_user_role on jc_auth_db.auth_role.id = jc_auth_db.auth_user_role.role_id
+    where
+	jc_auth_db.auth_user_role.user_id = #{0}
+    </select>
+
+    <!--根据id查询用户所有角色(字符串形式)-->
+    <select id="findUserRolesString" parameterType="Integer" resultType="String">
+    select
+	concat(jc_auth_db.auth_role.role_name)
+    from
+	jc_auth_db.auth_role
+	join jc_auth_db.auth_user_role on jc_auth_db.auth_role.id = jc_auth_db.auth_user_role.role_id
+    where
+	jc_auth_db.auth_user_role.user_id = #{id}
+    </select>
+
+    <!--根据用户查询到账号密码和其所有角色-->
+    <select id="findRolesByUserName" parameterType="String" resultMap="userAndRole">
+        select jc_auth_db.auth_user.id,
+        jc_auth_db.auth_user.username,
+        jc_auth_db.auth_user.password,
+        jc_auth_db.auth_role.id,
+        jc_auth_db.auth_role.role_name
+        from jc_auth_db.auth_user
+        join jc_auth_db.auth_user_role
+        on jc_auth_db.auth_user.id =jc_auth_db.auth_user_role.user_id
+        join jc_auth_db.auth_role
+        on jc_auth_db.auth_user_role.role_id = auth_role.id
+        where username = #{username};
+    </select>
+
+
+    <!--初始化登陆分割线====================================================================================-->
+
+    <resultMap id="loginInitialMap" type="LoginInitialDTO">
+        <id property="userId" column="userId"/>
+        <result property="name" column="name"/>
+        <result property="username" column="username"/>
+        <collection property="RoleList" ofType="SimpleRoleDTO" column="userId"
+                    select="findUserSimpleRoles"/>
+    </resultMap>
+
+    <!--查询用户初始化需要的数据-->
+    <select id="getLoginInitial" parameterType="Integer" resultMap="loginInitialMap">
+        select u.id as userid ,u.name,u.username from jc_auth_db.auth_user as u where u.id = #{userId}
+    </select>
+
+
+    <!--菜单反向查找分割线==========================================================================================-->
+
+    <sql id="foreach">
+        <foreach collection="ids" open="(" close=")" separator="," index="index" item="value">
+            #{value}
+        </foreach>
+    </sql>
+
+    <!--创建临时子查询表-->
+    <sql id="menusOfUserTable">
+        (select
+        id,
+        menu_name,
+        menu_type,
+        parent,
+        path
+
+        from
+        jc_auth_db.auth_menu
+        where
+        id in
+        <include refid="foreach"/>
+        or id in ( select distinct parent from auth_menu where id in
+        <include refid="foreach"/>
+        )) as m
+    </sql>
+
+
+    <!--查询所有菜单(在子查询中)-->
+    <select id="findPrivateMenus" parameterType="List" resultType="MenuDTO">
+        select m.id as menuid,
+        m.menu_name as menuname,
+        m.menu_type as menutype,
+        m.parent,
+        m.path
+        from
+        <include refid="menusOfUserTable"/>
+    </select>
+
+
+    <!--根据用户id找到子菜单的Ids-->
+    <select id="subMenusByUserId" parameterType="Integer" resultType="Menu">
+    select
+    distinct
+	rmo.menu_id as id,
+	m.menu_type as menuType,
+	m.parent    as parent
+    from
+	jc_auth_db.auth_role_menu_operation as rmo
+	join jc_auth_db.auth_menu as m on rmo.menu_id = m.id
+	WHERE rmo.role_id in (
+    select
+    distinct
+	ur.role_id
+    from
+	auth_user as u
+	join jc_auth_db.auth_user_role as ur on u.id = ur.user_id
+    where
+	u.id = #{userId})
+    </select>
+
+    <!--根据角色id和菜单id查询所有操作-->
+    <select id="operationsByRoleIdAndMenuId" resultType="RoleMenuOperation">
+        SELECT * FROM jc_auth_db.auth_role_menu_operation as armo
+        WHERE armo.role_id=#{roleId} And armo.menu_id = #{menuId}
+    </select>
+
+    <select id="allOperations" resultType="Operation">
+        SELECT * FROM jc_auth_db.auth_operation
+    </select>
+
+
+    <!--返回所有Id不等于传入数组的user-->
+    <select id="findAllIdNotIn" parameterType="ArrayList" resultType="com.jinchi.auth.dto.SimpleUserDTO">
+        SELECT jc_auth_db.auth_user.ID,jc_auth_db.auth_user.USERNAME,jc_auth_db.auth_user.NAME
+        FROM jc_auth_db.auth_user
+        WHERE ID NOT IN
+        <foreach collection="list" index="index" item="id" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </select>
+
+    <select id="byCard" resultType="user">
+        SELECT * FROM jc_auth_db.auth_user
+        WHERE id_card_number = #{idCardNumber}
+        LIMIT 0,1
+    </select>
+
+</mapper>

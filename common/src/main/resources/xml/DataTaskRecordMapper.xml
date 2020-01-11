@@ -1,0 +1,81 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinchi.common.mapper.DataTaskRecordMapper">
+
+    <!--根据id查询-->
+    <select id="findById" parameterType="Integer" resultType="DataTaskRecord">
+        SELECT * FROM jc_integration_db.quality_data_task_record
+        WHERE id=#{id}
+    </select>
+
+    <!--根据数据批号id查询-->
+    <select id="findByDataBatchNumberId" parameterType="Integer" resultType="DataTaskRecord">
+        SELECT * FROM jc_integration_db.quality_data_task_record
+        WHERE data_batch_number_id=#{dataBatchNumberId}  LIMIT 0,1
+    </select>
+    <!--根据数据批号ids查询-->
+    <select id="findByDataBatchNumberIds" parameterType="List" resultType="DataTaskRecord">
+        SELECT * FROM jc_integration_db.quality_data_task_record
+        WHERE data_batch_number_id
+        IN <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+        #{item}
+    </foreach>
+    </select>
+
+    <!--新增一个任务&&流程-->
+    <insert id="insert" parameterType="DataTaskRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO jc_integration_db.quality_data_task_record(data_batch_number_id, task_batch_number_id, create_time, create_person)
+        VALUE (#{dataBatchNumberId},#{taskBatchNumberId},#{createTime},#{createPerson})
+    </insert>
+
+    <!--批量新增-->
+    <insert id="insertAll" parameterType="List">
+        INSERT INTO jc_integration_db.quality_data_task_record(data_batch_number_id, task_batch_number_id, create_time,create_person)
+        VALUES
+        <foreach collection="list" item="keys" separator="," index="index">
+            (
+            #{keys.dataBatchNumberId},
+            #{keys.taskBatchNumberId},
+            #{keys.createTimfe},
+            #{keys.createPerson}
+            )
+        </foreach>
+    </insert>
+
+    <!--多条件批量删除-->
+    <delete id="deleteByBatch" >
+        DELETE FROM jc_integration_db.quality_data_task_record WHERE 1=1
+        <if test="id!=null and dataId!=''">
+            AND jc_integration_db.quality_data_task_record.id = #{id}
+        </if>
+        <if test="dataId!=null and dataId!=''">
+            AND jc_integration_db.quality_data_task_record.data_batch_number_id =#{dataId}
+        </if>
+        <if test="taskId!=null and taskId!=''">
+            AND jc_integration_db.quality_data_task_record.task_batch_number_id =#{taskId}
+        </if>
+    </delete>
+
+    <!--根据任务id批量删除-->
+    <delete id="deleteByDataBatchNumberIds" parameterType="List">
+        DELETE FROM jc_integration_db.quality_data_task_record WHERE
+        jc_integration_db.quality_data_task_record.data_batch_number_id
+        IN <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+        #{item}
+    </foreach>
+    </delete>
+
+    <!--根据流程id批量删除-->
+    <delete id="deleteByTaskBatchNumberIds" parameterType="List">
+        DELETE FROM jc_integration_db.quality_data_task_record WHERE
+        jc_integration_db.quality_data_task_record.task_batch_number_id
+        IN <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+        #{item}
+    </foreach>
+    </delete>
+
+    <delete id="deleteById" parameterType="Integer">
+        DELETE FROM jc_integration_db.quality_data_task_record
+        where id = #{0}
+    </delete>
+</mapper>

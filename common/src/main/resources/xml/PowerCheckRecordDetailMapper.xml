@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.jinchi.common.mapper.PowerCheckRecordDetailMapper" >
+  <resultMap id="BaseResultMap" type="com.jinchi.common.domain.PowerCheckRecordDetail" >
+      <constructor>
+          <idArg column="code" jdbcType="BIGINT" javaType="java.lang.Long"/>
+          <arg column="record_code" jdbcType="BIGINT" javaType="java.lang.Long"/>
+          <arg column="place" jdbcType="VARCHAR" javaType="java.lang.String"/>
+          <arg column="check_item" jdbcType="VARCHAR" javaType="java.lang.String"/>
+          <arg column="check_content" jdbcType="VARCHAR" javaType="java.lang.String"/>
+          <arg column="check_value" jdbcType="TINYINT" javaType="java.lang.Byte"/>
+          <arg column="check_result" jdbcType="VARCHAR" javaType="java.lang.String"/>
+          <arg column="data_type" jdbcType="TINYINT" javaType="java.lang.Byte"/>
+      </constructor>
+  </resultMap>
+  <sql id="Example_Where_Clause" >
+    <where >
+      <foreach collection="oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Update_By_Example_Where_Clause" >
+    <where >
+      <foreach collection="example.oredCriteria" item="criteria" separator="or" >
+        <if test="criteria.valid" >
+          <trim prefix="(" suffix=")" prefixOverrides="and" >
+            <foreach collection="criteria.criteria" item="criterion" >
+              <choose >
+                <when test="criterion.noValue" >
+                  and ${criterion.condition}
+                </when>
+                <when test="criterion.singleValue" >
+                  and ${criterion.condition} #{criterion.value}
+                </when>
+                <when test="criterion.betweenValue" >
+                  and ${criterion.condition} #{criterion.value} and #{criterion.secondValue}
+                </when>
+                <when test="criterion.listValue" >
+                  and ${criterion.condition}
+                  <foreach collection="criterion.value" item="listItem" open="(" close=")" separator="," >
+                    #{listItem}
+                  </foreach>
+                </when>
+              </choose>
+            </foreach>
+          </trim>
+        </if>
+      </foreach>
+    </where>
+  </sql>
+  <sql id="Base_Column_List" >
+    code, record_code, place, check_item, check_content, check_value, check_result, data_type
+  </sql>
+  <select id="selectByExample" resultMap="BaseResultMap" parameterType="com.jinchi.common.domain.PowerCheckRecordDetailExample" >
+    select
+    <if test="distinct" >
+      distinct
+    </if>
+      'true' as QUERYID,
+    <include refid="Base_Column_List" />
+    from power_check_record_detail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+    <if test="orderByClause != null" >
+      order by ${orderByClause}
+    </if>
+  </select>
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from power_check_record_detail
+        where code = #{code,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+    delete from power_check_record_detail
+    where code = #{code,jdbcType=BIGINT}
+  </delete>
+  <delete id="deleteByExample" parameterType="com.jinchi.common.domain.PowerCheckRecordDetailExample" >
+    delete from power_check_record_detail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </delete>
+    <insert id="insert" parameterType="com.jinchi.common.domain.PowerCheckRecordDetail">
+        <selectKey resultType="java.lang.Long" keyProperty="code" order="AFTER">
+            SELECT LAST_INSERT_ID()
+        </selectKey>
+        insert into power_check_record_detail (record_code, place, check_item,
+        check_content, check_value, check_result,
+        data_type)
+        values (#{recordCode,jdbcType=BIGINT}, #{place,jdbcType=VARCHAR}, #{checkItem,jdbcType=VARCHAR},
+        #{checkContent,jdbcType=VARCHAR}, #{checkValue,jdbcType=TINYINT}, #{checkResult,jdbcType=VARCHAR},
+        #{dataType,jdbcType=TINYINT})
+    </insert>
+  <insert id="insertSelective" parameterType="com.jinchi.common.domain.PowerCheckRecordDetail" >
+    <selectKey resultType="java.lang.Long" keyProperty="code" order="AFTER" >
+      SELECT LAST_INSERT_ID()
+    </selectKey>
+    insert into power_check_record_detail
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="recordCode != null" >
+        record_code,
+      </if>
+      <if test="place != null" >
+        place,
+      </if>
+      <if test="checkItem != null" >
+        check_item,
+      </if>
+      <if test="checkContent != null" >
+        check_content,
+      </if>
+      <if test="checkValue != null" >
+        check_value,
+      </if>
+      <if test="checkResult != null" >
+        check_result,
+      </if>
+      <if test="dataType != null" >
+        data_type,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="recordCode != null" >
+        #{recordCode,jdbcType=BIGINT},
+      </if>
+      <if test="place != null" >
+        #{place,jdbcType=VARCHAR},
+      </if>
+      <if test="checkItem != null" >
+        #{checkItem,jdbcType=VARCHAR},
+      </if>
+      <if test="checkContent != null" >
+        #{checkContent,jdbcType=VARCHAR},
+      </if>
+      <if test="checkValue != null" >
+        #{checkValue,jdbcType=TINYINT},
+      </if>
+      <if test="checkResult != null" >
+        #{checkResult,jdbcType=VARCHAR},
+      </if>
+      <if test="dataType != null" >
+        #{dataType,jdbcType=TINYINT},
+      </if>
+    </trim>
+  </insert>
+  <select id="countByExample" parameterType="com.jinchi.common.domain.PowerCheckRecordDetailExample" resultType="java.lang.Integer" >
+    select count(*) from power_check_record_detail
+    <if test="_parameter != null" >
+      <include refid="Example_Where_Clause" />
+    </if>
+  </select>
+  <update id="updateByExampleSelective" parameterType="map" >
+    update power_check_record_detail
+    <set >
+      <if test="record.code != null" >
+        code = #{record.code,jdbcType=BIGINT},
+      </if>
+      <if test="record.recordCode != null" >
+        record_code = #{record.recordCode,jdbcType=BIGINT},
+      </if>
+      <if test="record.place != null" >
+        place = #{record.place,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkItem != null" >
+        check_item = #{record.checkItem,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkContent != null" >
+        check_content = #{record.checkContent,jdbcType=VARCHAR},
+      </if>
+      <if test="record.checkValue != null" >
+        check_value = #{record.checkValue,jdbcType=TINYINT},
+      </if>
+      <if test="record.checkResult != null" >
+        check_result = #{record.checkResult,jdbcType=VARCHAR},
+      </if>
+      <if test="record.dataType != null" >
+        data_type = #{record.dataType,jdbcType=TINYINT},
+      </if>
+    </set>
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByExample" parameterType="map" >
+    update power_check_record_detail
+    set code = #{record.code,jdbcType=BIGINT},
+      record_code = #{record.recordCode,jdbcType=BIGINT},
+      place = #{record.place,jdbcType=VARCHAR},
+      check_item = #{record.checkItem,jdbcType=VARCHAR},
+      check_content = #{record.checkContent,jdbcType=VARCHAR},
+      check_value = #{record.checkValue,jdbcType=TINYINT},
+      check_result = #{record.checkResult,jdbcType=VARCHAR},
+      data_type = #{record.dataType,jdbcType=TINYINT}
+    <if test="_parameter != null" >
+      <include refid="Update_By_Example_Where_Clause" />
+    </if>
+  </update>
+  <update id="updateByPrimaryKeySelective" parameterType="com.jinchi.common.domain.PowerCheckRecordDetail" >
+    update power_check_record_detail
+    <set >
+      <if test="recordCode != null" >
+        record_code = #{recordCode,jdbcType=BIGINT},
+      </if>
+      <if test="place != null" >
+        place = #{place,jdbcType=VARCHAR},
+      </if>
+      <if test="checkItem != null" >
+        check_item = #{checkItem,jdbcType=VARCHAR},
+      </if>
+      <if test="checkContent != null" >
+        check_content = #{checkContent,jdbcType=VARCHAR},
+      </if>
+      <if test="checkValue != null" >
+        check_value = #{checkValue,jdbcType=TINYINT},
+      </if>
+      <if test="checkResult != null" >
+        check_result = #{checkResult,jdbcType=VARCHAR},
+      </if>
+      <if test="dataType != null" >
+        data_type = #{dataType,jdbcType=TINYINT},
+      </if>
+    </set>
+      where code = #{code,jdbcType=BIGINT}
+  </update>
+    <update id="updateByPrimaryKey" parameterType="com.jinchi.common.domain.PowerCheckRecordDetail">
+    update power_check_record_detail
+    set record_code = #{recordCode,jdbcType=BIGINT},
+      place = #{place,jdbcType=VARCHAR},
+      check_item = #{checkItem,jdbcType=VARCHAR},
+      check_content = #{checkContent,jdbcType=VARCHAR},
+      check_value = #{checkValue,jdbcType=TINYINT},
+      check_result = #{checkResult,jdbcType=VARCHAR},
+      data_type = #{dataType,jdbcType=TINYINT}
+    where code = #{code,jdbcType=BIGINT}
+  </update>
+</mapper>

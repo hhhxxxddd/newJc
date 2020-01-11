@@ -1,0 +1,46 @@
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    platform: mysql
+    url: jdbc:mysql://47.107.237.60:3306/jc_auth_db?userUnicode=true&characterEncoding=UTF8&useSSL=false&useAffectedRows=true&useLegacyDatetimeCode=false&serverTimezone=CTT
+    username: root
+    password: Znjs_2019
+    # 初始化，最小，最大连接数
+    initialSize: 3
+    minidle: 3
+    maxActive: 100
+    # 获取数据库连接等待的超时时间
+    maxWait: 60000
+    testOnBorrow: true
+    testWhileIdle: true
+    # 配置多久进行一次检测，检测需要关闭的空闲连接 单位毫秒
+    timeBetweenEvictionRunsMillis: 60000
+    validationQuery: SELECT 1
+    # 配置监控统计拦截的filters,去掉后，监控界面的sql无法统计
+    filters: stat,wall,log4j
+  application:
+    name: AUTH-SERVICE
+#  security:
+#    user:
+#      password: 123
+#      name: 1
+server:
+  port: 8081
+  servlet:
+    context-path:
+mybatis:
+  #mybatis别名包路径
+  type-aliases-package: com.jinchi.auth.domain,com.jinchi.auth.dto,com.jinchi.auth.mapper
+  # xml文件所在的路径
+  mapper-locations: classpath:xml/*.xml
+  #驼峰命名
+  configuration:
+    map-underscore-to-camel-case: true
+#微服务
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8090/eureka

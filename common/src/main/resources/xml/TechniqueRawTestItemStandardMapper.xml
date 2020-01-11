@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinchi.common.mapper.TechniqueRawTestItemStandardMapper">
+    <!--批量新增-->
+    <update id="batchInsert" parameterType="List">
+        INSERT INTO jc_integration_db.technique_raw_test_item_standard(test_item_id, value, raw_standard_record_id)
+        VALUES
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.testItemId},#{item.value},#{item.rawStandardRecordId})
+        </foreach>
+    </update>
+
+    <!--根据标准表id删除-->
+    <delete id="deleteByRecordId" parameterType="Integer">
+        DELETE FROM jc_integration_db.technique_raw_test_item_standard
+        WHERE raw_standard_record_id = #{recordId}
+    </delete>
+
+    <!--根据标准表id查询-->
+    <select id="findByRecordId" parameterType="Integer" resultType="TechniqueRawTestItemStandard">
+        SELECT * FROM jc_integration_db.technique_raw_test_item_standard as trtis
+        WHERE raw_standard_record_id = #{recordId}
+    </select>
+
+    <select id="getValueByStandardIdByTestItemsId" resultType="java.lang.String">
+      select value from jc_integration_db.technique_raw_test_item_standard
+       where raw_standard_record_id = #{standardId} and test_item_id = #{testItemsId}
+    </select>
+</mapper>

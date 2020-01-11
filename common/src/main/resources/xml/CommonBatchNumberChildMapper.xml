@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinchi.common.mapper.CommonBatchNumberChildMapper">
+    <insert id="insert" parameterType="CommonBatchNumberChild" useGeneratedKeys="true" keyColumn="id">
+        insert into jc_integration_db.quality_common_batch_number_child(common_batch_number_id, child_id)
+        <trim prefix="values (" suffix=")" suffixOverrides="," >
+            <if test="commonBatchNumberId != null" >
+                #{commonBatchNumberId},
+            </if>
+            <if test="childId!= null" >
+                #{childId},
+            </if>
+        </trim>
+    </insert>
+
+    <select id="selectByExample" parameterType="CommonBatchNumberChild" resultType="CommonBatchNumberChild">
+        select * from jc_integration_db.quality_common_batch_number_child
+        where 1=1
+        <if test="commonBatchNumberId != null">
+            And common_batch_number_id = #{commonBatchNumberId}
+        </if>
+        <if test="childId != null">
+            And child_id = #{childId}
+        </if>
+    </select>
+
+    <select id="selectByBatchNumberId" parameterType="Integer" resultType="CommonBatchNumberChild">
+        select * from jc_integration_db.quality_common_batch_number_child
+        where common_batch_number_id = #{batchNumberId} order by id DESC limit 1
+    </select>
+
+    <select id="selectByChildId" parameterType="Integer" resultType="CommonBatchNumberChild">
+        select * from jc_integration_db.quality_common_batch_number_child
+        where child_id = #{childId} order by id DESC limit 1
+    </select>
+
+    <delete id="deleteByBatchNumberId" parameterType="Integer">
+        delete from jc_integration_db.quality_common_batch_number_child
+        where common_batch_number_id = #{batchNumberId}
+    </delete>
+
+    <delete id="deleteByChildId" parameterType="Integer">
+        delete from jc_integration_db.quality_common_batch_number_child
+        where child_id = #{childId}
+    </delete>
+</mapper>

@@ -1,0 +1,110 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 指定工作空间，要与接口名相同-->
+<mapper namespace="com.jinchi.common.mapper.PurchaseReportRecordMapper">
+
+    <!--新增原料进货记录-->
+    <insert id="insert" parameterType="PurchaseReportRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO quality_purchase_test_report_record (batch_number_id, test_material_id, manufacturer_id, quantity, weight, norm, judger,
+                                                         judgement, judge_date, dev_judger, dev_judgement, dev_judge_date,receive_date)
+        VALUES (#{batchNumberId}, #{testMaterialId}, #{manufacturerId}, #{quantity}, #{weight}, #{norm}, #{judger},
+                #{judgement}, #{judgeDate}, #{devJudger}, #{devJudgement}, #{devJudgeDate},#{receiveDate});
+    </insert>
+
+    <!-- 更新原料进货记录 -->
+    <update id="update" parameterType="PurchaseReportRecord">
+        UPDATE quality_purchase_test_report_record
+        SET batch_number_id=#{batchNumberId},
+            test_material_id=#{testMaterialId},
+            manufacturer_id=#{manufacturerId},
+            quantity=#{quantity},
+            weight=#{weight},
+            norm=#{norm},
+            judger=#{judger},
+            judgement=#{judgement},
+            judge_date=#{judgeDate},
+            dev_judger=#{devJudger},
+            dev_judgement=#{devJudgement},
+            dev_judge_date=#{devJudgeDate},
+            receive_date=#{receiveDate}
+        WHERE ID = #{id};
+    </update>
+
+    <!-- 根据id删除原料进货记录 -->
+    <select id="deleteById" parameterType="Integer">
+        DELETE
+        FROM quality_purchase_test_report_record
+        WHERE ID = #{0};
+    </select>
+
+    <select id="deleteByIds" parameterType="int[]">
+        DELETE
+        FROM quality_purchase_test_report_record
+        WHERE ID in
+        <foreach collection="array" item="ids" index="id" open="(" separator="," close=")">#{ids}</foreach>
+    </select>
+
+    <!-- 根据id删除原料进货记录-->
+    <select id="getById" parameterType="Integer" resultType="PurchaseReportRecord">
+        SELECT *
+        FROM quality_purchase_test_report_record
+        WHERE ID = #{0}
+    </select>
+
+
+
+    <!--根据批号id查询-->
+    <select id="getByBatchNumberId" parameterType="Integer" resultType="PurchaseReportRecord">
+        SELECT *
+        FROM jc_integration_db.quality_purchase_test_report_record as a
+        WHERE a.batch_number_id = #{batchNumberId}
+        limit 0,1
+    </select>
+
+    <!--根据物料ids查询-->
+    <select id="getByMaterialIds" resultType="PurchaseReportRecord">
+        SELECT *
+        FROM jc_integration_db.quality_purchase_test_report_record as qptrr
+        <include refid="part2"/>
+        AND qptrr.test_material_id IN <foreach collection="materialIds" index="index" item="item" separator="," open="(" close=")">
+        #{item}
+    </foreach>
+        <include refid="part1"/>
+    </select>
+
+    <!--查询所有-->
+    <select id="getAll" resultType="PurchaseReportRecord">
+        SELECT *
+        FROM jc_integration_db.quality_purchase_test_report_record as qptrr
+        <include refid="part2"/>
+        <include refid="part1"/>
+    </select>
+
+    <select id="countSum" resultType="Integer">
+        SELECT count(*)
+        FROM jc_integration_db.quality_purchase_test_report_record as qptrr
+        <include refid="part2"/>
+        <if test="materialIds!=null">
+            AND
+            qptrr.test_material_id IN <foreach collection="materialIds" index="index" item="item" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+        </if>
+    </select>
+
+    <sql id="part1">
+        <if test="pageBean!=null">
+            <if test="pageBean.sortField!=null and pageBean.sortType!=null">
+                order by qptrr.${pageBean.sortField} ${pageBean.sortType}
+            </if>
+            LIMIT #{pageBean.startIndex}, #{pageBean.pageSize}
+        </if>
+    </sql>
+
+    <sql id="part2">
+        JOIN jc_integration_db.quality_common_batch_number as qcbn ON
+        qptrr.batch_number_id = qcbn.id
+        WHERE qcbn.status != '2'
+    </sql>
+</mapper>

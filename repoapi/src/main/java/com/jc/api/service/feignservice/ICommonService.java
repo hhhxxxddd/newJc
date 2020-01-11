@@ -1,0 +1,38 @@
+package com.jc.api.service.feignservice;
+
+import com.alibaba.fastjson.JSONObject;
+import com.jc.api.config.FallBack;
+import com.jc.api.config.FeignConfig;
+import org.springframework.cloud.openfeign.FeignClient;
+import org.springframework.web.bind.annotation.*;
+
+/**
+ * @author XudongHu
+ * @className ICommonService
+ * @apiNote Feign接口 访问common模块
+ * @modifer
+ * @since 2019/10/17 15:03
+ */
+@FeignClient(value = "COMMON-SERVICE", configuration = FeignConfig.class, fallback = FallBack.class)
+public interface ICommonService {
+    /**
+     * 提交出库审核
+     */
+    // 注意加utf-8 不然String 中文编码会失败,consumer表示发送 produces表示接收
+    @RequestMapping(value = "/jc/outAudit", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+    @ResponseBody
+    String outAudit(@RequestBody JSONObject jsonObject);
+
+    //查询产线
+    @RequestMapping(value = "/jc/productionLine", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+    String productionLine(@RequestParam Integer id);
+    //查询出库点
+    @RequestMapping(value = "/jc/endPosition", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+    String endPosition(@RequestParam Integer id);
+    //查询创建人
+    @RequestMapping(value = "/jc/personName", method = RequestMethod.POST, produces = "application/json;charset=utf-8")
+    String personName(@RequestParam Integer id);
+
+    /*@RequestMapping(value = "/redis/feign",method = RequestMethod.GET)
+    String feign(@RequestParam String msg);*/
+}

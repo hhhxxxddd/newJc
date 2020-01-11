@@ -1,0 +1,23 @@
+server:
+  port: 8099
+  servlet:
+    context-path:
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8090/eureka
+spring:
+  datasource:
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    platform: mysql
+    url: jdbc:mysql://47.107.237.60:3306/jc_repo_db?userUnicode=true&characterEncoding=UTF8&useSSL=false&useAffectedRows=true&useLegacyDatetimeCode=false&serverTimezone=CTT
+    username: root
+    password: Znjs_2019
+  application:
+    name: REPOAPI-SERVICE
+feign:
+  hystrix:
+    enabled: true

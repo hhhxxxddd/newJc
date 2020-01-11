@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinchi.common.mapper.EquipmentBaseInstrumentMapper">
+    <!--新增-->
+    <insert id="add" parameterType="EquipmentBaseInstrument" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO jc_integration_db.equipment_base_instrument(name, code)
+        VALUE (#{name},#{code})
+    </insert>
+
+    <!--根据code全称查询-->
+    <select id="byFullCode" parameterType="String" resultType="EquipmentBaseInstrument">
+        SELECT * FROM jc_integration_db.equipment_base_instrument as ebi
+        WHERE ebi.code = #{code}
+        LIMIT 0,1
+    </select>
+
+    <!--根据id查询-->
+    <select id="byId" parameterType="Integer" resultType="EquipmentBaseInstrument">
+        SELECT * FROM jc_integration_db.equipment_base_instrument as ebi
+        WHERE ebi.id = #{0}
+        LIMIT 0,1
+    </select>
+
+    <!--更新-->
+    <update id="update" parameterType="EquipmentBaseInstrument">
+        UPDATE jc_integration_db.equipment_base_instrument
+        SET name =#{name}
+        WHERE id = #{id}
+    </update>
+
+    <!--删除-->
+    <delete id="deleteById" parameterType="Integer">
+        DELETE FROM jc_integration_db.equipment_base_instrument
+        WHERE id = #{0}
+    </delete>
+
+    <!--批量删除-->
+    <delete id="batchDelete" parameterType="List">
+        DELETE FROM jc_integration_db.equipment_base_instrument
+        WHERE id IN
+        <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+        #{item}
+    </foreach>
+    </delete>
+
+    <!--查询所有-->
+    <select id="all" resultType="EquipmentBaseInstrument">
+        SELECT * FROM jc_integration_db.equipment_base_instrument
+    </select>
+</mapper>

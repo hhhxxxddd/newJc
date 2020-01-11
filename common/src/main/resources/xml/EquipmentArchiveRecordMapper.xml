@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinchi.common.mapper.EquipmentArchiveRecordMapper">
+    <!--根据档案名称查询-->
+    <select id="byName"  resultType="EquipmentArchiveRecord">
+        SELECT * FROM jc_integration_db.equipment_archive_record as ear
+        WHERE ear.name = #{name}
+        <if test="id!=null">
+            AND ear.id != #{id}
+        </if>
+        LIMIT 0,1
+    </select>
+
+    <!--新增-->
+    <insert id="insert" parameterType="EquipmentArchiveRecord" keyProperty="id" useGeneratedKeys="true" >
+        INSERT INTO jc_integration_db.equipment_archive_record(name, instrument_id, install_time, warranty_period, supply_manufacturer_id, repair_manufacturer_id, manual_name)
+        VALUE (#{name},#{instrumentId},#{installTime},#{warrantyPeriod},#{supplyManufacturerId},#{repairManufacturerId},#{manualName})
+    </insert>
+
+    <!--更新-->
+    <update id="update" parameterType="EquipmentArchiveRecord">
+        UPDATE jc_integration_db.equipment_archive_record
+        SET name = #{name},
+        instrument_id = #{instrumentId},
+        install_time = #{installTime},
+        warranty_period = #{warrantyPeriod},
+        supply_manufacturer_id = #{supplyManufacturerId},
+        repair_manufacturer_id = #{repairManufacturerId},
+        manual_name = #{manualName}
+        WHERE id = #{id}
+    </update>
+
+    <!--查询所有-->
+    <select id="all" resultType="EquipmentArchiveRecord">
+        SELECT * FROM jc_integration_db.equipment_archive_record as ear
+        WHERE 1=1
+        <if test="name!=null and name!=''">
+            and ear.name LIKE '${name}%'
+        </if>
+        <if test="pageBean!=null">
+            <if test="pageBean.sortField!=null and pageBean.sortType!=null">
+                ORDER BY ${pageBean.sortField} ${pageBean.sortType}
+            </if>
+            LIMIT #{pageBean.startIndex},#{pageBean.pageSize}
+        </if>
+    </select>
+
+    <!--计算总数-->
+    <select id="countSum" resultType="Integer">
+        SELECT count(*) FROM jc_integration_db.equipment_archive_record as ear
+        WHERE 1=1
+        <if test="name!=null and name!=''">
+            and ear.name LIKE '${name}%'
+        </if>
+    </select>
+
+    <!--根据主键查询-->
+    <select id="byId" parameterType="Integer" resultType="EquipmentArchiveRecord">
+        SELECT * FROM jc_integration_db.equipment_archive_record as ear
+        WHERE ear.id=#{0}
+    </select>
+
+    <!--根据主键删除-->
+    <delete id="deleteById" parameterType="Integer">
+        DELETE FROM jc_integration_db.equipment_archive_record
+        WHERE id = #{0}
+    </delete>
+
+    <!--根据主键批量删除-->
+    <delete id="batchDelete" parameterType="List">
+        DELETE FROM jc_integration_db.equipment_archive_record
+        WHERE id IN <foreach collection="list" open="(" close=")" separator="," index="index" item="item">
+        #{item}
+    </foreach>
+    </delete>
+</mapper>

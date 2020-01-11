@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinchi.common.mapper.RepoOutApplyMapper">
+    <insert id="insert" parameterType="RepoOutApply" useGeneratedKeys="true" keyProperty="id">
+        insert into jc_integration_db.repo_out_apply(batch_number_id, serial_number_id, weight)
+        value(#{batchNumberId},#{serialNumberId},#{weight})
+    </insert>
+
+    <select id="findAllByNameLikeAndType" resultType="RepoOutApply">
+        select roa.* from jc_integration_db.repo_out_apply as roa
+        join jc_integration_db.repo_base_serial_number as rbsn on
+        roa.serial_number_id=rbsn.id
+        join jc_integration_db.repo_stock as rs on
+        rs.serial_number_id=rbsn.id
+        where 1=1
+        <if test="materialName!=null and materialName!=''">
+            and rbsn.material_name like '%${materialName}%'
+        </if>
+        <if test="materialType!=null">
+            and rs.material_type=#{materialType}
+        </if>
+    </select>
+
+    <delete id="deleteById" parameterType="Integer">
+        delete from jc_integration_db.repo_out_apply
+        where jc_integration_db.repo_out_apply.id = #{id}
+    </delete>
+
+    <delete id="deleteByIds">
+        delete from jc_integration_db.repo_out_apply
+        where jc_integration_db.repo_out_apply.id in
+        <foreach collection="list" open="(" close=")" item="item" index="index" separator=",">
+            #{item}
+        </foreach>
+    </delete>
+
+
+    <!--根据批号id查询-->
+    <select id="findAllByBatchNumberId" parameterType="Integer" resultType="RepoOutApply">
+        select * from jc_integration_db.repo_out_apply as roa
+        where roa.batch_number_id=#{batchNumberId}
+    </select>
+
+    <!--根据批号id删除-->
+    <delete id="deleteByBatchNumberId" parameterType="Integer">
+        delete from jc_integration_db.repo_out_apply
+        where jc_integration_db.repo_out_apply.batch_number_id = #{batchNumberId}
+    </delete>
+
+    <!--根据批号ids批量删除-->
+    <delete id="deleteByBatchNumberIds" parameterType="List">
+        delete from jc_integration_db.repo_out_apply
+        where jc_integration_db.repo_out_apply.batch_number_id in
+        <foreach collection="list" separator="," open="(" close=")" index="index" item="item">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--根据SerialNumberId查询-->
+    <select id="getBySerialNumberId" parameterType="Integer" resultType="com.jinchi.common.domain.RepoOutApply">
+        select *
+        from repo_out_apply
+        where serial_number_id = #{serialNumberId} limit 1
+    </select>
+</mapper>

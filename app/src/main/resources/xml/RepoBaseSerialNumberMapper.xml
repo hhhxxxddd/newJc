@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinchi.app.mapper.RepoBaseSerialNumberMapper">
+
+    <!--新增物料-->
+    <insert id="insert" parameterType="RepoBaseSerialNumber" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO jc_integration_db.repo_base_serial_number
+        (serial_number, material_name, material_class, manufacturer_name)
+        VALUE (#{serialNumber},#{materialName},#{materialClass},#{manufacturerName})
+    </insert>
+
+    <!--主键删除-->
+    <delete id="deleteById" parameterType="Integer">
+        DELETE FROM jc_integration_db.repo_base_serial_number
+        WHERE id = #{id}
+    </delete>
+
+    <!--主键批量删除-->
+    <delete id="deleteByIds">
+        DELETE FROM jc_integration_db.repo_base_serial_number
+        WHERE id IN
+        <foreach collection="list" separator="," index="index" item="item" close=")" open="(">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--根据id查询-->
+    <select id="findById" resultType="RepoBaseSerialNumber">
+        SELECT * FROM jc_integration_db.repo_base_serial_number
+        WHERE id = #{id}
+    </select>
+
+    <select id="byIds" resultType="RepoBaseSerialNumber">
+        SELECT * FROM jc_integration_db.repo_base_serial_number
+        WHERE id IN
+        <foreach collection="list" item="item" index="index" open="(" close=")" separator=",">
+            #{item}
+        </foreach>
+    </select>
+
+    <select id="findAll" parameterType="Integer" resultType="RepoBaseSerialNumber">
+        SELECT * FROM jc_integration_db.repo_base_serial_number
+        where 1=1
+        <if test="materialClass!=null">
+            AND material_class = #{materialClass}
+        </if>
+
+
+    </select>
+
+    <!--多条件查询-->
+    <select id="findByFactors" parameterType="RepoBaseSerialNumber" resultType="RepoBaseSerialNumber">
+        SELECT * FROM jc_integration_db.repo_base_serial_number
+        WHERE 1=1
+        <if test="serialNumber!=null and serialNumber!=''">
+            AND serial_number=#{serialNumber}
+        </if>
+        <if test="materialName!=null and materialName!=''">
+            AND material_name LIKE '${materialName}%'
+        </if>
+        <if test="materialClass!=null">
+            AND material_class = #{materialClass}
+        </if>
+        <if test="manufacturerName!=null and manufacturerName!=''">
+            AND manufacturer_name LIKE '${manufacturerName}%'
+        </if>
+    </select>
+
+    <!--根据物料全称和类型查询-->
+    <select id="bySerialNumber" resultType="RepoBaseSerialNumber">
+        SELECT * FROM jc_integration_db.repo_base_serial_number as rbsn
+        WHERE rbsn.serial_number = #{serialNumber}
+        LIMIT 0,1
+    </select>
+
+    <!--根据物料和厂商全名查询原材料-->
+    <select id="byStandard" resultType="RepoBaseSerialNumber">
+        SELECT * FROM jc_integration_db.repo_base_serial_number as rbsn
+        WHERE rbsn.material_class = '1'
+        AND rbsn.material_name = #{rawName}
+        AND rbsn.manufacturer_name = #{manufacturerName}
+        LIMIT 0,1
+    </select>
+</mapper>

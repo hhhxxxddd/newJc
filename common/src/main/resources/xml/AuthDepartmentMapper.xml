@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinchi.common.mapper.AuthDepartmentMapper">
+    <select id="byId" parameterType="Integer" resultType="AuthDepartmentDTO">
+        SELECT * FROM jc_auth_db.auth_department
+        WHERE id = #{id}
+    </select>
+</mapper>

@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinchi.app.mapper.AuthUserMapper">
+    <select id="findAll" resultType="AuthUserDTO">
+       select au.id as id,
+       au.name,
+       au.department_id as departmentId,
+       ad.department_name as departmentName,
+       au.phone as phone
+       from jc_auth_db.auth_user as au join jc_auth_db.auth_department ad on au.department_id = ad.id
+    </select>
+
+    <select id="byId" parameterType="Integer" resultType="AuthUserDTO">
+       select au.id as id,
+       au.name,
+       au.department_id as departmentId,
+       ad.department_name as departmentName,
+       au.phone as phone
+       from jc_auth_db.auth_user as au join jc_auth_db.auth_department ad on au.department_id = ad.id
+       where au.id = #{id}
+    </select>
+
+    <select id="byNameLike" parameterType="String" resultType="AuthUserDTO">
+       select au.id as id,
+       au.name
+       from jc_auth_db.auth_user as au where au.name like '%${name}'
+    </select>
+
+    <select id="byIdCard" parameterType="String" resultType="Integer">
+      SELECT id
+      FROM jc_auth_db.auth_user WHERE id_card_number = #{idCard}
+      LIMIT 0,1
+    </select>
+
+</mapper>

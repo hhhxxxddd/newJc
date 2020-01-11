@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinchi.common.mapper.EquipmentInstructorRecordMapper">
+    <!--新增-->
+    <insert id="insert" parameterType="EquipmentInstructorRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO jc_integration_db.equipment_instructor_record(name, batch_number_id, effective_date, obsolete)
+        VALUE (#{name},#{batchNumberId},#{effectiveDate},#{obsolete})
+    </insert>
+
+    <!--更新-->
+    <update id="update" parameterType="EquipmentInstructorRecord">
+        UPDATE jc_integration_db.equipment_instructor_record
+        SET name = #{name},
+        effective_date = #{effectiveDate},
+        obsolete = #{obsolete}
+        WHERE id = #{id}
+    </update>
+
+    <!--根据id查询-->
+    <select id="byId" resultType="EquipmentInstructorRecord">
+        SELECT * FROM jc_integration_db.equipment_instructor_record as eir
+        WHERE eir.id = #{id} LIMIT 0,1
+    </select>
+
+    <!--根据批号id查询-->
+    <select id="byBatchNumberId" resultType="EquipmentInstructorRecord">
+        SELECT * FROM jc_integration_db.equipment_instructor_record as eir
+        WHERE eir.batch_number_id = #{batchNumberId} LIMIT 0,1
+    </select>
+
+    <delete id="delete" parameterType="Integer">
+        DELETE FROM jc_integration_db.equipment_instructor_record
+        WHERE id = #{id}
+    </delete>
+
+    <!--分页-->
+    <sql id="pagePart">
+        WHERE 1=1
+        <if test="instructorName!=null">
+            And name Like '${instructorName}%'
+        </if>
+    </sql>
+    <!--分页查询-->
+    <select id="byNameLikeByPage" resultType="EquipmentInstructorRecord">
+        SELECT * FROM jc_integration_db.equipment_instructor_record as eir
+        <include refid="pagePart"/>
+        <if test="pageBean!=null">
+            <if test="pageBean.sortField!=null and pageBean.sortType!=null">
+                order by ${pageBean.sortField} ${pageBean.sortType}
+            </if>
+            LIMIT #{pageBean.startIndex}, #{pageBean.pageSize}
+        </if>
+    </select>
+
+    <!--分页总数-->
+    <select id="countSum" resultType="Integer">
+        SELECT count(*) FROM jc_integration_db.equipment_instructor_record as eir
+        <include refid="pagePart"/>
+    </select>
+</mapper>

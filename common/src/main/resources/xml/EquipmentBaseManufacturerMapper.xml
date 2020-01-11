@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinchi.common.mapper.EquipmentBaseManufacturerMapper">
+    <!--新增-->
+    <insert id="add" parameterType="EquipmentBaseManufacturer" useGeneratedKeys="true" keyProperty="id">
+    INSERT INTO jc_integration_db.equipment_base_manufacturer(name, code, contact, type )
+    VALUE (#{name},#{code},#{contact},#{type})
+    </insert>
+
+    <!--根据id查询-->
+    <select id="byId" parameterType="Integer" resultType="EquipmentBaseManufacturer">
+        SELECT * FROM jc_integration_db.equipment_base_manufacturer as ebi
+        WHERE ebi.id = #{0}
+        LIMIT 0,1
+    </select>
+
+    <!--更新-->
+    <update id="update" parameterType="EquipmentBaseManufacturer">
+        UPDATE jc_integration_db.equipment_base_manufacturer
+        SET name =#{name}, contact=#{contact},type=#{type}
+        WHERE id = #{id}
+    </update>
+
+    <!--删除-->
+    <delete id="deleteById" parameterType="Integer">
+        DELETE FROM jc_integration_db.equipment_base_manufacturer
+        WHERE id = #{0}
+    </delete>
+
+    <!--批量删除-->
+    <delete id="batchDelete" parameterType="List">
+        DELETE FROM jc_integration_db.equipment_base_manufacturer
+        WHERE id IN
+        <foreach collection="list" item="item" index="index" separator="," open="(" close=")">
+            #{item}
+        </foreach>
+    </delete>
+
+    <!--查询所有-->
+    <select id="all" resultType="EquipmentBaseManufacturer">
+        SELECT * FROM jc_integration_db.equipment_base_manufacturer
+    </select>
+
+    <!--根据厂商类型查询所有-->
+    <select id="byType" parameterType="Integer" resultType="EquipmentBaseManufacturer">
+        SELECT * FROM jc_integration_db.equipment_base_manufacturer as ebi
+        WHERE ebi.type = #{0}
+    </select>
+</mapper>

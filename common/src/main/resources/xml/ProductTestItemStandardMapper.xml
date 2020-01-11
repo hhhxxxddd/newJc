@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 指定工作空间，要与接口名相同-->
+<mapper namespace="com.jinchi.common.mapper.ProductTestItemStandardMapper">
+
+    <!--新增产品检测项目标准-->
+    <insert id="insert" parameterType="ProductTestItemStandard" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO technique_product_test_item_standard (test_item_id, value, product_standard_id)
+        VALUES (#{testItemId},#{value},#{productStandardId});
+    </insert>
+
+    <!-- 更新产品检测项目标准 -->
+    <update id="update" parameterType="ProductTestItemStandard">
+        UPDATE technique_product_test_item_standard
+        SET test_item_id=#{testItemId},value=#{value},product_standard_id=#{productStandardId}
+        WHERE ID = #{id}
+    </update>
+
+    <!-- 根据id删除产品检测项目标准 -->
+    <select id="deleteById" parameterType="Integer">
+        DELETE
+        FROM technique_product_test_item_standard
+        WHERE ID = #{0}
+    </select>
+
+    <!-- 根据id查找产品检测项目标准 -->
+    <select id="getById" parameterType="Integer" resultType="ProductTestItemStandard">
+        SELECT *
+        FROM technique_product_test_item_standard
+        WHERE ID = #{0}
+    </select>
+
+    <!-- 根据id查找产品检测项目标准 -->
+    <select id="getByTestItemId" parameterType="Integer" resultType="ProductTestItemStandard">
+        SELECT *
+        FROM technique_product_test_item_standard
+        WHERE test_item_id = #{0}
+    </select>
+
+    <!--查询所有产品检测项目标准-->
+    <select id="getAll" resultType="ProductTestItemStandard">
+        SELECT *
+        FROM technique_product_test_item_standard
+        ORDER BY ID ASC;
+    </select>
+</mapper>

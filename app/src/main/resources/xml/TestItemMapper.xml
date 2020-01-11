@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 指定工作空间，要与接口名相同-->
+<mapper namespace="com.jinchi.app.mapper.TestItemMapper">
+
+    <!--新增-->
+    <insert id="insert" parameterType="com.jinchi.app.domain.TestItem">
+        INSERT INTO quality_base_test_item(name,unit)
+        VALUES (#{name},#{unit});
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="com.jinchi.app.domain.TestItem">
+        UPDATE quality_base_test_item
+        SET
+        name = #{name},
+        unit = #{unit}
+        WHERE ID = #{id}
+    </update>
+
+    <!-- 根据id删除 -->
+    <select id="delete" parameterType="Integer">
+        DELETE
+        FROM quality_base_test_item
+        WHERE ID = #{0}
+    </select>
+
+    <!-- 根据id查找 -->
+    <select id="find" parameterType="Integer" resultType="TestItem">
+        SELECT a.id AS id, a.name AS name,a.unit AS unit
+        FROM quality_base_test_item AS a
+        WHERE a.id = #{id}
+    </select>
+
+    <select id="byIds" parameterType="List" resultType="TestItem">
+        SELECT * FROM jc_integration_db.quality_base_test_item as qbti
+        WHERE qbti.id IN <foreach collection="list" separator="," index="index" item="item" open="(" close=")" >
+        #{item}
+    </foreach>
+    </select>
+
+    <!--查询所有-->
+    <select id="findAll" resultType="com.jinchi.app.domain.TestItem">
+        SELECT a.id AS id, a.name AS name,a.unit AS unit
+        FROM quality_base_test_item AS a
+        ORDER BY ID ASC;
+    </select>
+
+    <!--根据名称查询所有-->
+    <select id="findByName" resultType="com.jinchi.app.domain.TestItem">
+        SELECT a.id AS id, a.name AS name,a.unit AS unit
+        FROM quality_base_test_item AS a
+        WHERE name LIKE concat(concat('%', #{name}), '%')
+        ORDER BY ID ASC;
+    </select>
+
+    <select id="byName" resultType="TestItem">
+        SELECT *
+        FROM jc_integration_db.quality_base_test_item
+        WHERE name = #{name} LIMIT 0,1
+    </select>
+</mapper>

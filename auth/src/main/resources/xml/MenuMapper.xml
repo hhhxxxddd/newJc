@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 指定工作空间，要与接口名相同-->
+<mapper namespace="com.jinchi.auth.mapper.MenuMapper">
+
+    <!--<resultMap id="menuOperations" type="com.jinchi.auth.domain.Menu">-->
+    <!--<id property="id" column="id"/>-->
+    <!--<result property="menuName" column="menu_name"/>-->
+    <!--<result property="menuType" column="menu_type"/>-->
+    <!--<result property="parent" column="parent"/>-->
+    <!--<result property="prefix" column="prefix"/>-->
+    <!--<result property="path" column="path"/>-->
+
+    <!--<collection property="operations" ofType="Operation" javaType="ArrayList">-->
+    <!--<id property="id" column="operationId"/>-->
+    <!--<result property="operationName" column="operation_name"/>-->
+    <!--<result property="operationCode" column="operation_code"/>-->
+    <!--</collection>-->
+    <!--</resultMap>-->
+
+    <!--新增菜单-->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="com.jinchi.auth.domain.Menu">
+        insert into auth_menu (menu_name, menu_type, parent, prefix, path)
+        value (#{menuName}, #{menuType}, #{parent}, #{prefix}, #{path})
+    </insert>
+
+    <!-- 更新菜单 -->
+    <update id="update" parameterType="Menu">
+        update jc_auth_db.auth_menu
+        <set>
+            <if test="menuName!=null and menuName!=''">
+                menu_name =#{menuName},
+            </if>
+            <if test="parent!=null">
+                parent =#{parent},
+            </if>
+            <if test="path!=null">
+                path =#{path}
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!-- 根据id删除菜单 -->
+    <select id="deleteById" parameterType="Integer">
+        delete
+        from auth_menu
+        where id = #{0};
+    </select>
+
+    <!-- 根据id查找菜单 -->
+    <select id="byId" parameterType="Integer" resultType="Menu">
+        select a.id        as id,
+               a.menu_name as menuName,
+               a.menu_type as menuType,
+               a.parent,
+               a.prefix    as prefix,
+               a.path      as path
+
+        from auth_menu as a
+        where id = #{0};
+    </select>
+
+    <select id="hasChild" resultType="Integer">
+        select count(*)
+        from auth_menu as a
+        where a.parent = #{0};
+    </select>
+
+    <!--根据菜单类型查询所有菜单-->
+    <select id="byMenuType" resultType="Menu">
+        SELECT
+            a.id        as id,
+            a.menu_name as menuName,
+            a.menu_type as menuType,
+            a.parent    as parentId,
+            a.path      as path
+        FROM jc_auth_db.auth_menu as a
+        <if test="type!=-1">
+            WHERE a.menu_type = #{type}
+        </if>
+    </select>
+
+
+    <!--菜单分页=========================================================================-->
+    <sql id="part1">
+        <if test="pageBean!=null">
+            <if test="pageBean.sortField!=null and pageBean.sortType!=null">
+                order by ${pageBean.sortField} ${pageBean.sortType}
+            </if>
+            LIMIT #{pageBean.startIndex}, #{pageBean.pageSize}
+        </if>
+    </sql>
+
+    <!--名称模糊分页查询-->
+    <select id="byNameLikeByPage" resultType="Menu">
+        SELECT * FROM jc_auth_db.auth_menu
+        WHERE 1=1
+        <if test="menuName!=null">
+            AND menu_name LIKE '${menuName}%'
+        </if>
+        <include refid="part1"/>
+    </select>
+
+    <!--根据父菜单名称模糊查询-->
+    <select id="byFatherNameLikeByPage" resultType="Menu">
+        SELECT
+        DISTINCT m2.*
+        FROM jc_auth_db.auth_menu AS m
+        LEFT JOIN jc_auth_db.auth_menu AS m2
+        ON m.parent=m2.id
+        WHERE 1=1
+        <if test="menuName!=null and menuName!=''">
+            AND m2.menu_name LIKE '${menuName}%'
+        </if>
+        <include refid="part1"/>
+    </select>
+
+
+    <select id="countSum" resultType="Integer">
+        SELECT count(*) FROM jc_auth_db.auth_menu
+        WHERE 1=1
+        <if test="menuName!=null">
+            AND menu_name LIKE '${menuName}%'
+        </if>
+    </select>
+
+    <select id="countSumFather" resultType="Integer">
+        SELECT
+        count(DISTINCT m2.id)
+        FROM jc_auth_db.auth_menu AS m
+        LEFT JOIN jc_auth_db.auth_menu AS m2
+        ON m.parent=m2.id
+        WHERE 1=1
+        <if test="menuName!=null">
+            AND m2.menu_name LIKE '${menuName}%'
+        </if>
+    </select>
+
+
+    <!--菜单递归查找=======================================================================================-->
+    <!--菜单(带子菜单)-->
+    <resultMap id="menuMap" type="MenuDTO">
+        <id property="menuId" column="menuId"/>
+        <result property="menuName" column="menuName"/>
+        <result property="menuType" column="menuType"/>
+        <result property="parent" column="parent"/>
+        <result property="path" column="path"/>
+        <collection property="menuList" ofType="MenuDTO" column="menuId"
+                    select="findMenuByParentId"/>
+    </resultMap>
+
+    <!--菜单(带父菜单)-->
+    <resultMap id="menuMapReverse" type="MenuDTO">
+        <id property="menuId" column="menuId"/>
+        <result property="menuName" column="menuName"/>
+        <result property="menuType" column="menuType"/>
+        <result property="parent" column="parent"/>
+        <result property="path" column="path"/>
+        <collection property="menuList" ofType="MenuDTO" column="parent"
+                    select="recursiveQueryBySubMenuId"/>
+    </resultMap>
+
+    <sql id="menuContent">
+       SELECT  id menuid,
+               menu_name menuname,
+               parent,
+               menu_type menutype,
+               path
+       FROM jc_auth_db.auth_menu
+    </sql>
+
+    <!--找出所有父菜单-->
+    <select id="recursiveAll" resultMap="menuMap">
+        <include refid="menuContent"/>
+        WHERE parent = -1
+           OR parent IS NULL
+    </select>
+    <!--根据父菜单找子菜单-->
+    <select id="findMenuByParentId" parameterType="Integer" resultMap="menuMap">
+        <include refid="menuContent"/>
+        WHERE parent = #{value}
+    </select>
+    <!--查找一个子菜单-->
+    <select id="recursiveQueryBySubMenuId" parameterType="Integer" resultMap="menuMapReverse">
+        <include refid="menuContent"/>
+        WHERE id = #{id}
+    </select>
+
+
+
+</mapper>

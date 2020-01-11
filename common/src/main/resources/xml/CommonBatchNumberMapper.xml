@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinchi.common.mapper.CommonBatchNumberMapper">
+
+    <!--新增批号-->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="CommonBatchNumber">
+        INSERT INTO
+        quality_common_batch_number
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            batch_number,
+            <if test="description!=null and description!=''">
+                description,
+            </if>
+            <if test="memo!=null and memo!=''">
+                memo,
+            </if>
+            create_person_id,
+            create_time,
+            status,
+            data_type,
+            is_urgent,
+        </trim>
+        <trim prefix="VALUE (" suffix=")" suffixOverrides=",">
+            #{batchNumber},
+            <if test="description!=null and description!=''">
+                #{description},
+            </if>
+            <if test="memo!=null and memo!=''">
+                memo,
+            </if>
+            #{createPersonId},
+            #{createTime},
+            #{status},
+            #{dataType},
+            #{isUrgent},
+        </trim>
+    </insert>
+
+    <!--更新批号-->
+    <update id="update" parameterType="CommonBatchNumber">
+        UPDATE quality_common_batch_number
+        <set>
+            <if test="batchNumber!=null and batchNumber!=''">
+                batch_number = #{batchNumber},
+            </if>
+            <if test="createPersonId!=null">
+                create_person_id = #{createPersonId},
+            </if>
+            <if test="status!=null">
+                status = #{status},
+            </if>
+            <if test="dataType!=null">
+                data_type=#{dataType},
+            </if>
+            <if test="description!=null and description!=''">
+                description=#{description},
+            </if>
+            <if test="isUrgent!=null">
+                is_urgent=#{isUrgent},
+            </if>
+            <if test="memo!=null and memo!=''">
+                memo=#{memo},
+            </if>
+            <if test="isPublished!=null">
+                is_published=#{isPublished}
+            </if>
+            <if test="passTime!=null">
+                pass_time=#{passTime}
+            </if>
+        </set>
+        WHERE id = #{id}
+    </update>
+
+    <!--删除批号 根据id-->
+    <delete id="deleteById">
+        DELETE FROM quality_common_batch_number WHERE ID = #{id}
+    </delete>
+
+    <!--批量删除批号 根据ids-->
+    <delete id="deleteByIds">
+        DELETE FROM quality_common_batch_number WHERE
+        ID IN
+        <foreach collection="ids" item="id" index="index" open="(" close=")" separator=",">
+            #{id}
+        </foreach>
+    </delete>
+
+    <!--根据id查询-->
+    <select id="byId" parameterType="Integer" resultType="CommonBatchNumber">
+        SELECT * FROM quality_common_batch_number WHERE ID = #{id} limit 1
+    </select>
+
+    <!--根据批号查询-->
+    <select id="byBatchNumber" parameterType="String" resultType="CommonBatchNumber">
+        SELECT * FROM quality_common_batch_number WHERE batch_number = #{batchNumber}  LIMIT 0,1
+    </select>
+
+    <!--多条件查询-->
+    <select id="findByCommon" parameterType="CommonBatchNumber" resultType="CommonBatchNumber">
+        SELECT
+        cbn.*
+        FROM jc_integration_db.quality_common_batch_number AS cbn
+        WHERE 1=1
+        <if test="createPersonId!=null">
+            AND cbn.create_person_id = #{createPersonId}
+        </if>
+        <if test="status!=null">
+            AND cbn.status = #{status}
+        </if>
+        <if test="dataType!=null">
+            AND cbn.data_type= #{dataType}
+        </if>
+        <if test="isUrgent!=null">
+            AND cbn.is_urgent = #{isUrgent}
+        </if>
+        <if test="isPublished!=null">
+            AND cbn.is_published = #{isPublished}
+        </if>
+        <if test="memo!=null and memo!=''">
+            AND cbn.memo = #{memo}
+        </if>
+        <if test="description!=null and description!=''">
+            AND cbn.description like '%${description}%'
+        </if>
+    </select>
+
+
+    <!--创建DTO=====================================================================================-->
+    <resultMap id="CommonBatchNumberDTO" type="CommonBatchNumberDTO">
+        <result column="createPersonName" property="createPersonName" javaType="String"/>
+        <association property="commonBatchNumber" javaType="CommonBatchNumber" column="id" select="byId"/>
+    </resultMap>
+
+    <sql id="part1">
+        SELECT com.id as id,
+        au.name as createPersonName
+        FROM jc_integration_db.quality_common_batch_number AS com
+        LEFT JOIN jc_auth_db.auth_user AS au ON au.id = com.create_person_id
+        WHERE com.id=#{id}
+    </sql>
+
+    <sql id="part2">
+        <if test="dto!=null">
+            <if test="dto.commonBatchNumber!=null">
+                <if test="dto.commonBatchNumber.id!=null">
+                    AND com.id = #{dto.commonBatchNumber.id}
+                </if>
+                <if test="dto.commonBatchNumber.createPersonId!=null">
+                    AND com.create_person_id = #{dto.commonBatchNumber.createPersonId}
+                </if>
+                <if test="dto.commonBatchNumber.status!=null">
+                    AND com.status = #{dto.commonBatchNumber.status}
+                </if>
+                <if test="dto.commonBatchNumber.dataType!=null">
+                    AND com.data_type= #{dto.commonBatchNumber.dataType}
+                </if>
+                <if test="dto.commonBatchNumber.isUrgent!=null">
+                    AND com.is_urgent = #{dto.commonBatchNumber.isUrgent}
+                </if>
+                <if test="dto.commonBatchNumber.memo!=null and dto.commonBatchNumber.memo!=''">
+                    AND com.memo = #{dto.commonBatchNumber.memo}
+                </if>
+                <if test="dto.commonBatchNumber.isPublished!=null">
+                    AND com.is_published = #{dto.commonBatchNumber.isPublished}
+                </if>
+                <if test="dto.commonBatchNumber.description!=null and dto.commonBatchNumber.description!=''">
+                    AND com.description like '${dto.commonBatchNumber.description}%'
+                </if>
+            </if>
+        </if>
+        <if test="dto!=null and dto.createPersonName!=null and dto.createPersonName!=''">
+            AND au.name like '${dto.createPersonName}%'
+        </if>
+    </sql>
+
+    <select id="createDTOByIdAndDataType" resultMap="CommonBatchNumberDTO">
+        <include refid="part1"/>
+        <if test="dataType!=null">
+            AND com.data_type=#{dataType}
+        </if>
+    </select>
+
+    <select id="createDTOByIdAndCreateTime" resultMap="CommonBatchNumberDTO">
+        <include refid="part1"/>
+        <if test="date!=null and date!=''">
+            AND com.create_time &gt;= CONCAT('','${date}',' 00:00:00')
+            AND com.create_time &lt;= CONCAT('','${date}',' 23:59:59')
+        </if>
+    </select>
+
+    <select id="createDTOByIdsAndPersonName" parameterType="CommonBatchNumberDTO" resultMap="CommonBatchNumberDTO">
+        SELECT com.id as id
+            , au.name as createPersonName
+        FROM jc_integration_db.quality_common_batch_number AS com
+        LEFT JOIN jc_auth_db.auth_user AS au ON au.id = com.create_person_id
+        WHERE com.id IN <foreach collection="ids" separator="," index="index" item="id" close=")" open="(">
+        #{id}
+    </foreach>
+        <if test="personName!=null and personName!=''">
+            AND au.name Like '${personName}%'
+        </if>
+    </select>
+
+
+    <select id="createDTOsByCommonDTO" parameterType="CommonBatchNumberDTO" resultMap="CommonBatchNumberDTO">
+        SELECT com.id as id,au.name as createPersonName
+        FROM jc_integration_db.quality_common_batch_number AS com
+        LEFT JOIN jc_auth_db.auth_user AS au
+        ON au.id = com.create_person_id
+        WHERE 1=1
+        <include refid="part2"/>
+    </select>
+
+    <select id="createDTOsByCommonDTObyPage" resultMap="CommonBatchNumberDTO">
+        SELECT com.id as id
+        ,au.name as createPersonName
+        FROM jc_integration_db.quality_common_batch_number AS com
+        LEFT JOIN jc_auth_db.auth_user AS au ON au.id = com.create_person_id
+        WHERE 1=1
+        <include refid="part2"/>
+        <if test="pageBean!=null">
+            <if test="pageBean.sortField!=null and pageBean.sortType!=null">
+                order by com.${pageBean.sortField} ${pageBean.sortType}
+            </if>
+            LIMIT #{pageBean.startIndex}, #{pageBean.pageSize}
+        </if>
+    </select>
+
+    <select id="countSum" resultType="Integer">
+        SELECT count(*)
+        FROM jc_integration_db.quality_common_batch_number AS com
+        LEFT JOIN jc_auth_db.auth_user AS au ON au.id = com.create_person_id
+        WHERE 1=1
+        <include refid="part2"/>
+    </select>
+
+    <!--批号生成-->
+    <select id="lastBatchNumberByType" parameterType="Integer" resultType="CommonBatchNumber">
+        select * from jc_integration_db.quality_common_batch_number as qcbn2
+        where qcbn2.create_time =
+      (select MAX(qcbn.create_time) from jc_integration_db.quality_common_batch_number as qcbn where data_type = #{dataType})
+      LIMIT 0,1
+    </select>
+
+    <select id="delivererTask"  resultType="CommonBatchNumber">
+        SELECT * FROM jc_integration_db.quality_common_batch_number as qcbn
+        WHERE data_type = #{dataType}
+        AND create_person_id = #{createPersonId}
+        AND pass_time <![CDATA[>=]]> #{passTime}
+    </select>
+
+
+
+</mapper>

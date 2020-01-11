@@ -1,0 +1,92 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinchi.app.mapper.TaskHandlingRecordMapper">
+
+    <!--批量新增-->
+    <insert id="insertAll" parameterType="List">
+        INSERT INTO jc_integration_db.quality_task_handling_record
+        (handler,data_task_record_id,visible)
+        VALUES
+        <foreach collection="list" separator="," index="index" item="record">
+            (
+            #{record.handler},
+            #{record.dataTaskRecordId},
+            #{record.visible}
+            )
+        </foreach>
+    </insert>
+
+    <!--更新-->
+    <update id="update" parameterType="TaskHandlingRecord">
+        UPDATE jc_integration_db.quality_task_handling_record
+        SET handle_time=#{handleTime},
+        handle_reply=#{handleReply},
+        visible=#{visible}
+        WHERE id=#{id};
+    </update>
+
+    <!--根据用户id和是否可见查询-->
+    <select id="toDoList" resultType="TaskHandlingRecord">
+        SELECT * FROM jc_integration_db.quality_task_handling_record as qthr
+        WHERE
+        qthr.handler=#{userId}
+        <if test="visible!=null">
+            AND qthr.visible=#{visible}
+        </if>
+    </select>
+
+    <!--根据用户id和是否可见以及数据流程对应表id查询-->
+    <select id="toDoItem" resultType="TaskHandlingRecord">
+        SELECT * FROM jc_integration_db.quality_task_handling_record as qthr
+        WHERE
+        qthr.handler=#{userId}
+        <if test="keyId!=null">
+            AND qthr.data_task_record_id=#{keyId}
+        </if>
+        <if test="visible!=null">
+            AND qthr.visible=#{visible}
+        </if>
+        LIMIT 0,1
+    </select>
+
+    <!--查找下一条-->
+    <select id="next" resultType="TaskHandlingRecord">
+        SELECT * FROM jc_integration_db.quality_task_handling_record as qthr
+        WHERE
+        id > #{id}
+        AND data_task_record_id=#{dataTaskRecordId}
+        ORDER BY id
+        LIMIT 0,1
+    </select>
+
+    <!--查询当前流程已完成的审核记录-->
+    <select id="finTaskRecords" resultType="TaskHandlingRecord">
+        SELECT * FROM jc_integration_db.quality_task_handling_record as qthr
+        WHERE
+        qthr.handler=#{userId}
+        AND handle_time IS NOT NULL
+        ORDER BY id
+    </select>
+
+    <!--根据数据流程对应表查询-->
+    <select id="findByDataTaskId" parameterType="Integer" resultType="TaskHandlingRecord">
+        SELECT * FROM jc_integration_db.quality_task_handling_record as qthr
+        WHERE
+        qthr.data_task_record_id=#{dataTaskId}
+        AND handle_time IS NOT NULL
+        ORDER BY id
+    </select>
+
+    <select id="findAllByDataTaskId" parameterType="Integer" resultType="TaskHandlingRecord">
+        SELECT * FROM jc_integration_db.quality_task_handling_record as qthr
+        WHERE
+        qthr.data_task_record_id=#{dataTaskId}
+        ORDER BY id
+    </select>
+
+    <!--根据数据流程对应表id删除-->
+    <delete id="deleteByDataTaskId" parameterType="Integer">
+        DELETE FROM jc_integration_db.quality_task_handling_record
+        WHERE data_task_record_id = #{0}
+    </delete>
+</mapper>

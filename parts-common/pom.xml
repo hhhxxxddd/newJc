@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+    <!--项目名-->
+    <groupId>com.jinchi</groupId>
+    <artifactId>parts-common</artifactId>
+    <packaging>pom</packaging>
+    <version>1.0-SNAPSHOT</version>
+    <!--子项目-->
+    <modules>
+        <module>common-core</module>
+        <module>common-web</module>
+    </modules>
+    <!--依赖版本-->
+    <properties>
+            <spring.core.version>5.1.6.RELEASE</spring.core.version>
+            <common-lang>2.6</common-lang>
+            <lombok.version>1.18.10</lombok.version>
+            <junit.version>4.12</junit.version>
+    </properties>
+    <!--依赖-->
+    <dependencies>
+        <!--强化lang包-->
+        <dependency>
+            <groupId>commons-lang</groupId>
+            <artifactId>commons-lang</artifactId>
+            <version>${common-lang}</version>
+        </dependency>
+        <!--Spring核心-->
+        <dependency>
+            <groupId>org.springframework</groupId>
+            <artifactId>spring-core</artifactId>
+            <version>${spring.core.version}</version>
+        </dependency>
+        <!--使用 lombok 简化 Java 代码-->
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>${lombok.version}</version>
+<!--            <scope>provided</scope>-->
+        </dependency>
+        <!--测试-->
+        <dependency>
+            <groupId>junit</groupId>
+            <artifactId>junit</artifactId>
+            <version>${junit.version}</version>
+            <scope>test</scope>
+        </dependency>
+    </dependencies>
+</project>

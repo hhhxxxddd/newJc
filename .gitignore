@@ -1,0 +1,15 @@
+/.idea
+*.iml
+*/test/
+*/target/*
+/common/src/test/*
+/auth/src/test/*
+/repoapi/src/test/*
+/precursor/src/test/*
+/deviceSpotcheck/*
+/equipmentArchive/*
+/spotCheck/record/*
+/spotCheck/model/*
+/logs/*
+logs
+/excel/*

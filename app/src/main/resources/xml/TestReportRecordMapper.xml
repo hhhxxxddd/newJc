@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 指定工作空间，要与接口名相同-->
+<mapper namespace="com.jinchi.app.mapper.TestReportRecordMapper">
+
+    <!--新增-->
+    <insert id="saveOne" parameterType="TestReportRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO quality_test_report_record(sample_delivering_record_id, batch_number_id, purchase_report_record_id, judger, judge_date,
+                                               is_qualified, quality_level, decision)
+        VALUES (#{sampleDeliveringRecordId}, #{batchNumberId}, #{purchaseReportRecordId}, #{judger}, #{judgeDate}, #{isQualified},
+                #{qualityLevel}, #{decision});
+    </insert>
+
+    <!-- 更新 -->
+    <update id="update" parameterType="TestReportRecord">
+        UPDATE quality_test_report_record
+        SET sample_delivering_record_id = #{sampleDeliveringRecordId},
+            batch_number_id             = #{batchNumberId},
+            purchase_report_record_id   = #{purchaseReportRecordId},
+            judger                      = #{judger},
+            judge_date                  = #{judgeDate},
+            is_qualified                = #{isQualified},
+            quality_level               = #{qualityLevel},
+            decision                    = #{decision},
+            rate_person_id              = #{ratePersonId},
+            rate_date                   = #{rateDate}
+        WHERE ID = #{id}
+    </update>
+
+    <update id="updatePurchaseReportRecordId">
+        UPDATE quality_test_report_record
+        SET purchase_report_record_id = #{purchaseReportRecordId}
+        where ID in
+        <foreach collection="ids" item="ids" index="id" open="(" separator="," close=")">#{ids}</foreach>
+    </update>
+
+    <select id="getBySampleDeliveringRecordId" parameterType="Integer" resultType="TestReportRecord">
+        SELECT *
+        FROM quality_test_report_record
+        where sample_delivering_record_id = #{id} LIMIT 0,1
+    </select>
+
+    <select id="getById" parameterType="Integer" resultType="TestReportRecord">
+        SELECT *
+        FROM quality_test_report_record
+        where ID = #{0}
+    </select>
+
+    <!--根据进货单编号查询-杜敏-->
+    <select id="getByPurchaseReportRecordId" parameterType="Integer" resultType="TestReportRecord">
+        SELECT *
+        FROM quality_test_report_record a
+        where a.purchase_report_record_id = #{0}
+    </select>
+
+    <!--根据批号id查询-->
+    <select id="getByBatchNumberId" parameterType="Integer" resultType="TestReportRecord">
+        SELECT *
+        FROM jc_integration_db.quality_test_report_record as qtrr
+        WHERE qtrr.batch_number_id = #{batchNumberId}
+        LIMIT 0,1
+    </select>
+
+    <!--根据批号ids查询-->
+    <select id="byIsGenerate" resultType="TestReportRecord">
+        SELECT *
+        FROM jc_integration_db.quality_test_report_record as qtrr
+        JOIN jc_integration_db.quality_app.batch_number as qcbn
+        ON qtrr.batch_number_id = qcbn.id
+        AND qcbn.status = #{status}
+        <if test="isGenerate!=null and isGenerate==0">
+            AND qtrr.purchase_report_record_id IS NULL
+        </if>
+        <if test="pageBean!=null">
+            <if test="pageBean.sortField!=null and pageBean.sortType!=null">
+                order by qtrr.${pageBean.sortField} qtrr.${pageBean.sortType}
+            </if>
+            LIMIT #{pageBean.startIndex}, #{pageBean.pageSize}
+        </if>
+    </select>
+
+    <select id="countSum" resultType="Integer">
+        SELECT COUNT(*)
+        FROM jc_integration_db.quality_test_report_record as qtrr
+        JOIN jc_integration_db.quality_app.batch_number as qcbn
+        ON qtrr.batch_number_id = qcbn.id
+        AND qcbn.status = #{status}
+        <if test="isGenerate!=null and isGenerate==0">
+            AND qtrr.purchase_report_record_id IS NULL
+        </if>
+    </select>
+
+    <select id="selectByCondition" resultType="com.jinchi.app.domain.TestReportRecord">
+        ${sql}
+    </select>
+
+    <select id="countByCondition" resultType="java.lang.Long">
+        ${sql}
+    </select>
+</mapper>

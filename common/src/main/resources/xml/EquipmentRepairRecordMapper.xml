@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinchi.common.mapper.EquipmentRepairRecordMapper">
+    <insert id="insert" parameterType="EquipmentRepairRecord" keyProperty="id" useGeneratedKeys="true">
+        INSERT INTO jc_integration_db.equipment_repair_record(
+        status, instrument_id, department_id,
+        product_line_id, repair_applier_id,
+        repair_apply_time, failure_description, rate,finished_conclusion,order_time,rate_time,finished_time)
+        VALUE (#{status},#{instrumentId},#{departmentId},#{productLineId},
+        #{repairApplierId},#{repairApplyTime},#{failureDescription},
+        #{rate},#{finishedConclusion},#{orderTime})
+    </insert>
+
+    <update id="update" parameterType="EquipmentRepairRecord">
+        UPDATE jc_integration_db.equipment_repair_record
+        SET status = #{status},
+        instrument_id = #{instrumentId},
+        department_id = #{departmentId},
+        product_line_id = #{productLineId},
+        repair_applier_id = #{repairApplierId},
+        repair_apply_time = #{repairApplyTime},
+        failure_description = #{failureDescription},
+        rate = #{rate},
+        finished_conclusion = #{finishedConclusion},
+        order_time = #{orderTime},
+        rate_time = #{rateTime},
+        finished_time = #{finishedTime}
+        WHERE id = #{id}
+    </update>
+
+    <select id="byId" parameterType="Integer" resultType="EquipmentRepairRecord">
+        SELECT * FROM jc_integration_db.equipment_repair_record
+        WHERE id = #{id} LIMIT 0,1
+    </select>
+
+    <sql id="part1">
+        <if test="equipmentName!=null and equipmentName!=''">
+            JOIN jc_integration_db.equipment_base_instrument as ebi
+            ON err.instrument_id = ebi.id
+            WHERE ebi.name LIKE '${equipmentName}%'
+        </if>
+    </sql>
+
+    <select id="byNameLikeByPage" resultType="EquipmentRepairRecord">
+        SELECT * FROM jc_integration_db.equipment_repair_record as err
+        <include refid="part1"/>
+        <if test="pageBean!=null">
+            <if test="pageBean.sortField!=NULL and pageBean.sortType!=null">
+                ORDER BY ${pageBean.sortField} ${pageBean.sortType}
+            </if>
+            LIMIT #{pageBean.startIndex},#{pageBean.pageSize}
+        </if>
+    </select>
+
+    <select id="countSum" resultType="Integer">
+        SELECT count(*) FROM jc_integration_db.equipment_repair_record as err
+        <include refid="part1"/>
+    </select>
+</mapper>

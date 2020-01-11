@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinchi.common.mapper.RepoInRecordMapper">
+    <!--新增-->
+    <insert id="insert" parameterType="RepoInRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO
+            jc_integration_db.repo_in_record
+            (serial_number_id,  weight, create_person,in_time,create_time
+        )
+        VALUE
+        (
+        #{serialNumberId}
+        ,
+        #{weight}
+        ,
+        #{createPerson}
+        ,
+        #{inTime}
+        ,
+        #{createTime}
+        )
+    </insert>
+
+    <!--根据名称模糊,物料类型查询所有-->
+    <select id="byNameAndType" resultType="RepoInRecord">
+        SELECT rin.* FROM
+        jc_integration_db.repo_in_record as rin
+        JOIN jc_integration_db.repo_base_serial_number as rbs
+        ON rin.serial_number_id = rbs.id
+        WHERE 1=1
+        <if test="materialName!=null and materialName!=''">
+            AND rbs.material_name like '%${materialName}%'
+        </if>
+        <if test="materialType!=null">
+            AND rbs.material_class = #{materialType}
+        </if>
+    </select>
+
+    <select id="countSum" resultType="Integer">
+        SELECT count(*) FROM
+        jc_integration_db.repo_in_record as rin
+        JOIN jc_integration_db.repo_base_serial_number as rbs
+        ON rin.serial_number_id = rbs.id
+        WHERE 1=1
+        <if test="materialName!=null and materialName!=''">
+            AND rbs.material_name like '%${materialName}%'
+        </if>
+        <if test="materialType!=null">
+            AND rbs.material_class = #{materialType}
+        </if>
+    </select>
+
+    <!--根据SerialNumberId查询-->
+    <select id="bySerialNumberId" parameterType="Integer" resultType="RepoInRecord">
+        select *
+        from repo_in_record
+        where serial_number_id = #{serialNumberId} Limit 0,1
+    </select>
+</mapper>

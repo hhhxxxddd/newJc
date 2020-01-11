@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jinchi.common.mapper.EquipmentCheckPointRecordMapper">
+    <!--批量新增-->
+    <insert id="batchInsert" parameterType="List">
+        INSERT INTO jc_integration_db.equipment_check_point_record(
+        check_content,
+        check_standard,
+        check_frequency,
+        check_point_pic_name,
+        instructor_id)
+        VALUES <foreach collection="list" item="item" index="index" separator=",">
+        (#{item.checkContent},#{item.checkStandard},#{item.checkFrequency},#{item.checkPointPicName},#{item.instructorId})
+    </foreach>
+    </insert>
+
+    <!--根据外键查询-->
+    <select id="byInstructorId" parameterType="Integer" resultType="EquipmentCheckPointRecord">
+        SELECT * FROM jc_integration_db.equipment_check_point_record
+        WHERE instructor_id = #{instructorId}
+    </select>
+
+    <!--根据主键删除-->
+    <delete id="deleteByInstructorId" parameterType="Integer">
+        DELETE FROM jc_integration_db.equipment_check_point_record
+        WHERE instructor_id = #{instructorId}
+    </delete>
+</mapper>

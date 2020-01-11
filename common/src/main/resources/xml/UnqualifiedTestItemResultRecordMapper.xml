@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 指定工作空间，要与接口名相同-->
+<mapper namespace="com.jinchi.common.mapper.UnqualifiedTestItemResultRecordMapper">
+
+    <!--新增不合格检测项目结果纪录-->
+    <insert id="insert" parameterType="UnqualifiedTestItemResultRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO quality_unqualified_test_item_result_record(test_item_id, unqualified_test_report_record_id, test_result, is_valid)
+        VALUES (#{testItemId}, #{unqualifiedTestReportRecordId}, #{testResult}, #{isValid})
+    </insert>
+
+    <!--新增不合格检测项目结果纪录-->
+    <insert id="batchInsert" parameterType="List" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO quality_unqualified_test_item_result_record(test_item_id, unqualified_test_report_record_id,
+        test_result, is_valid)
+        VALUES
+        <foreach collection="list" separator="," index="index" item="item">
+            (#{item.testItemId}, #{item.unqualifiedTestReportRecordId}, #{item.testResult}, #{item.isValid})
+        </foreach>
+    </insert>
+
+    <!-- 更新不合格检测项目结果纪录 -->
+    <update id="update" parameterType="UnqualifiedTestItemResultRecord">
+        UPDATE quality_unqualified_test_item_result_record
+        SET test_item_id=#{testItemId},
+            unqualified_test_report_record_id=#{unqualifiedTestReportRecordId},
+            test_result=#{testResult},
+            is_valid=#{isValid}
+        WHERE ID = #{id}
+    </update>
+
+    <!-- 更新不合格检测项目结果纪录 -->
+    <update id="batchUpdate" parameterType="List">
+        UPDATE jc_integration_db.quality_unqualified_test_item_result_record
+        SET is_valid=
+        <foreach collection="list" item="item" index="index" separator=" " open="case id" close="end">
+            when #{item.id} then
+            #{item.isValid}
+        </foreach>
+        where id in
+        <foreach collection="list" item="item" separator="," close=")" open="(" index="index">
+            #{item.id}
+        </foreach>
+    </update>
+
+    <!-- 根据id删除不合格检测项目结果纪录 -->
+    <delete id="deleteById" parameterType="Integer">
+        DELETE
+        FROM quality_unqualified_test_item_result_record
+        WHERE ID = #{0}
+    </delete>
+    <!-- 根据id删除不合格检测项目结果纪录 -->
+    <delete id="deleteByIds" parameterType="Integer">
+        DELETE
+        FROM quality_unqualified_test_item_result_record
+        WHERE ID in
+        <foreach collection="List" item="ids" index="id" open="(" separator="," close=")">#{ids}</foreach>
+    </delete>
+
+
+    <!-- 根据id查找不合格检测项目结果纪录 -->
+    <select id="getById" parameterType="Integer" resultType="UnqualifiedTestItemResultRecord">
+        SELECT a.id                                as id,
+               a.test_item_id                      as testItemId,
+               a.unqualified_test_report_record_id as unqualifiedTestReportRecordId,
+               a.test_result                       as testResult,
+               a.is_valid                          as isValid
+        FROM quality_unqualified_test_item_result_record AS a
+        WHERE ID = #{0}
+    </select>
+
+    <!--查询所有不合格检测项目结果纪录-->
+    <select id="getAllByPage" resultType="UnqualifiedTestItemResultRecord">
+        SELECT a.id                                as id,
+               a.test_item_id                      as testItemId,
+               a.unqualified_test_report_record_id as unqualifiedTestReportRecordId,
+               a.test_result                       as testResult,
+               a.is_valid                          as isValid
+        FROM quality_unqualified_test_item_result_record AS a
+        ORDER BY ID ASC;
+    </select>
+
+    <!--根据不合格评审表id查-->
+    <select id="getByUnqualifiedRecordId" parameterType="Integer" resultType="UnqualifiedTestItemResultRecord">
+        SELECT * FROM jc_integration_db.quality_unqualified_test_item_result_record as qutirr
+        WHERE qutirr.unqualified_test_report_record_id = #{unqualifiedRecordId}
+    </select>
+</mapper>

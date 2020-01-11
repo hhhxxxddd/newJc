@@ -1,0 +1,29 @@
+spring:
+  application:
+    name: AUTH-SERVICE
+  datasource:
+    url: jdbc:mysql://115.157.192.47:3306/jc_auth_db?userUnicode=true&characterEncoding=UTF8&useSSL=false&serverTimezone=GMT&useAffectedRows=true
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+    type: com.alibaba.druid.pool.DruidDataSource
+    platform: mysql
+server:
+  port: 8081
+  servlet:
+    context-path:
+mybatis:
+  #映射类所在的包名
+  type-aliases-package: com.jinchi.auth.domain,com.jinchi.auth.dto,com.jinchi.auth.mapper
+  # xml文件所在的路径
+  mapper-locations: classpath:xml/*.xml
+  #驼峰命名
+  configuration:
+    map-underscore-to-camel-case: true
+#微服务注册
+eureka:
+  client:
+    fetch-registry: true
+    register-with-eureka: true
+    service-url:
+      defaultZone: http://localhost:8090/eureka

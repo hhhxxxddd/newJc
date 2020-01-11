@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 指定工作空间，要与接口名相同-->
+<mapper namespace="com.jinchi.common.mapper.UnqualifiedTracingRecordMapper">
+
+    <!--新增不合格跟踪-->
+    <insert id="insert" parameterType="UnqualifiedTracingRecord" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO jc_integration_db.quality_unqualified_tracing_record(batch_number_id, create_time, production_process_id, handler)
+        VALUE(#{batchNumberId},#{createTime},#{productionProcessId},#{handler})
+    </insert>
+
+    <!--根据批号id查询-->
+    <select id="findByBatchNumberId" parameterType="Integer" resultType="UnqualifiedTracingRecord">
+        SELECT * FROM jc_integration_db.quality_unqualified_tracing_record as qutr
+        WHERE batch_number_id = #{batchNumberId}
+        LIMIT 0,1
+    </select>
+
+    <!--更新-->
+    <update id="update" parameterType="UnqualifiedTracingRecord">
+        UPDATE jc_integration_db.quality_unqualified_tracing_record
+        SET
+        create_time =  #{createTime},
+        handler = #{handler},
+        production_process_id = #{productionProcessId}
+        WHERE id = #{id}
+    </update>
+</mapper>

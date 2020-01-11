@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 指定工作空间，要与接口名相同-->
+<mapper namespace="com.jinchi.auth.mapper.OperationMapper">
+
+	<!--新增操作-->
+    <insert id="insert" useGeneratedKeys="true" keyProperty="id" parameterType="Operation">
+        insert into auth_operation (operation_name, operation_code)
+        values
+        (#{operationName}, #{operationCode});
+    </insert>
+
+    <!--更新操作-->
+    <update id="update" parameterType="Operation">
+        update auth_operation
+        set operation_name = #{operationName},
+            operation_code = #{operationCode}
+        where id = #{id};
+    </update>
+
+    <!-- 根据id删除操作 -->
+    <select id="deleteById" parameterType="Integer" resultType="Operation">
+        delete
+        from auth_operation
+        where id = #{0};
+    </select>
+
+    <!--根据ids批量删除-->
+    <delete id="deleteByIds" parameterType="List">
+        delete from auth_operation
+        where id in <foreach collection="list" open="(" close=")" separator="," index="index" item="id">
+        #{id}
+    </foreach>
+    </delete>
+
+	<!-- 根据id查找操作 -->
+    <select id="findById" parameterType="Integer" resultType="Operation">
+        select *
+        from auth_operation
+        where id = #{0};
+    </select>
+
+    <!--查询所有操作-->
+    <select id="findAll" resultType="Operation">
+        select *
+        from auth_operation
+        order by id asc;
+    </select>
+	
+	<!--根据操作名称查询所有操作-->
+    <select id="findByNameLike" resultType="Operation">
+        select *
+        from auth_operation as o
+		where o.operation_name like '%${operationName}%'
+        order by id asc;
+    </select>
+
+</mapper>

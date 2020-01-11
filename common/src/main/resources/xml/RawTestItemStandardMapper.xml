@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- 指定工作空间，要与接口名相同-->
+<mapper namespace="com.jinchi.common.mapper.RawTestItemStandardMapper">
+
+    <!--新增检测标准-->
+    <insert id="insert" parameterType="RawTestItemStandard" useGeneratedKeys="true" keyProperty="id">
+        INSERT INTO technique_raw_test_item_standard (test_item_id,value,raw_standard_record_id)
+        VALUES (#{testItemId},#{value},#{rawStandardRecordId});
+    </insert>
+
+    <!-- 更新检测标准 -->
+    <update id="update" parameterType="RawTestItemStandard">
+        UPDATE technique_raw_test_item_standard
+        SET test_item_id = #{testItemId},value = #{value}, raw_standard_record_id = #{rawStandardRecordId}
+        WHERE ID = #{id}
+    </update>
+
+    <!-- 根据id删除检测标准 -->
+    <select id="deleteById" parameterType="Integer">
+        DELETE
+        FROM technique_raw_test_item_standard
+        WHERE ID = #{0}
+    </select>
+
+    <!-- 根据id查找检测标准 -->
+    <select id="getById" parameterType="Integer" resultType="RawTestItemStandard">
+        SELECT *
+        FROM technique_raw_test_item_standard
+        WHERE ID = #{0}
+    </select>
+
+    <!--查询所有检测标准-->
+    <select id="getAll" resultType="RawTestItemStandard">
+        SELECT *
+        FROM technique_raw_test_item_standard
+        ORDER BY ID ASC;
+    </select>
+
+    <!--根据检测标准名称查询所有检测标准-->
+    <select id="getByTestItemId" resultType="RawTestItemStandard">
+        SELECT *
+        FROM technique_raw_test_item_standard a
+        WHERE a.test_item_id = #{testItemId}
+        ORDER BY ID ASC;
+    </select>
+</mapper>
