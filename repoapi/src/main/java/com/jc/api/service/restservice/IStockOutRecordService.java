@@ -8,6 +8,7 @@ import com.jc.api.entity.vo.StockOutRecordVo;
 
 import java.util.List;
 
+@Deprecated
 public interface IStockOutRecordService {
 
     StockOutRecordVo getById(String id);

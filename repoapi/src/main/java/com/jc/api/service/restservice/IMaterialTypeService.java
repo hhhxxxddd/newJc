@@ -15,6 +15,7 @@ import java.util.Set;
  * @modifer
  * @since 2019/10/30日16:18
  */
+@Deprecated
 public interface IMaterialTypeService {
     /**
      * 查询父类型链

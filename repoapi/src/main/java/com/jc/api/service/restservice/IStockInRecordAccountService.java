@@ -14,6 +14,7 @@ import java.util.List;
  * @modifier
  * @since 19.12.8日0:01
  */
+@Deprecated
 public interface IStockInRecordAccountService {
     /**
      * 新增台账

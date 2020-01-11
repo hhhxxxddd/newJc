@@ -26,6 +26,7 @@ import java.util.Set;
  */
 @Service
 @Slf4j
+@Deprecated
 public class StockInRecordService implements IStockInRecordService {
     @Autowired
     private StockInRecordMapper stockInRecordMapper;

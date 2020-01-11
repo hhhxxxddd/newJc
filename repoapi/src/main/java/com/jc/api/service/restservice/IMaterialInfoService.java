@@ -15,6 +15,7 @@ import java.util.List;
  * @modifer
  * @since 2019/10/31日2:54
  */
+@Deprecated
 public interface IMaterialInfoService {
 
      MaterialInfoJointVo getById(String materialInfoId);

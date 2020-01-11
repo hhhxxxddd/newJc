@@ -15,6 +15,7 @@ import java.util.Set;
  * @modifer
  * @since 2019/10/31日4:01
  */
+@Deprecated
 public interface IStockInRecordService {
     /**
      * 新增入库记录

@@ -22,6 +22,7 @@ import javax.validation.Valid;
 @Api(tags = "(废弃)智能仓库-物料类型管理界面")
 @RequestMapping(value = "/type")
 @Slf4j
+@Deprecated
 public class MaterialTypeController {
     @Autowired
     private IMaterialTypeService iMaterialTypeService;

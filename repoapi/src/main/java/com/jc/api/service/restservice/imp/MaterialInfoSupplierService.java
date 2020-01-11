@@ -25,6 +25,7 @@ import java.util.List;
  * @modifier
  * @since 19.12.8日2:12
  */
+@Deprecated
 @Service
 @Slf4j
 public class MaterialInfoSupplierService implements IMaterialInfoSupplierService {

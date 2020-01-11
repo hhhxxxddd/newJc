@@ -16,6 +16,7 @@ import java.util.List;
  * @date:23:40 2019/3/30
  * @Modifer:
  */
+@Deprecated
 public interface IStockOutRecordHeadService {
 
     /**

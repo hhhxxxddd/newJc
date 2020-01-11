@@ -35,6 +35,7 @@ import java.util.Set;
  * @modifier
  * @since 2019/11/1日23:59
  */
+@Deprecated
 @Service
 @Slf4j
 public class MaterialInfoService implements IMaterialInfoService {

@@ -23,6 +23,7 @@ import javax.validation.Valid;
 @Api(tags = "(废弃)智能仓库-总库存管理界面")
 @RequestMapping(value = "/stock")
 @Slf4j
+@Deprecated
 public class MaterialStockController {
     @Autowired
     private IMaterialStockService iMaterialStockService;

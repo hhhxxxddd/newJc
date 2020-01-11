@@ -31,6 +31,7 @@ import java.util.List;
  */
 @Service
 @Slf4j
+@Deprecated
 public class StockInRecordAccountService implements IStockInRecordAccountService {
     //物料编码解码器
     private static DecoderV1 DECODER = new DecoderV1();

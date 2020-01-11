@@ -14,6 +14,7 @@ import java.util.List;
  * @modifier
  * @since 19.12.8日1:50
  */
+@Deprecated
 public interface IMaterialInfoSupplierService {
     /**
      * 新增

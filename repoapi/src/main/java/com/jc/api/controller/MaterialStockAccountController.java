@@ -22,6 +22,7 @@ import javax.validation.Valid;
 @Api(tags = "(废弃)智能仓库-库存台账管理界面")
 @RequestMapping(value = "/stockAccount")
 @Slf4j
+@Deprecated
 public class MaterialStockAccountController {
     @Autowired
     private IStockInRecordAccountService iStockInRecordAccountService;

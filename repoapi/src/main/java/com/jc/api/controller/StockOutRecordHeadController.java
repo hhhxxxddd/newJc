@@ -28,6 +28,7 @@ import java.util.List;
 @RequestMapping(value = "/outManage")
 @Api(tags = "(废弃)智能仓库-出库管理界面")
 @Slf4j
+@Deprecated
 public class StockOutRecordHeadController {
     @Autowired
     private IStockOutRecordHeadService iStockOutRecordHeadService;

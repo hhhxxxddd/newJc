@@ -25,6 +25,7 @@ import javax.validation.Valid;
 @Api(tags = "(废弃)智能仓库-物料信息管理界面")
 @RequestMapping(value = "/materialInfo")
 @Slf4j
+@Deprecated
 public class MaterialInfoController {
     @Autowired
     private IMaterialInfoService iMaterialInfoService;

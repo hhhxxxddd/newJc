@@ -30,6 +30,7 @@ import java.util.*;
  */
 @Service
 @Slf4j
+@Deprecated
 public class MaterialTypeService implements IMaterialTypeService {
     @Autowired
     private MaterialTypeMapper materialTypeMapper;

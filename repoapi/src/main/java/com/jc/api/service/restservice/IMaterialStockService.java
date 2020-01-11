@@ -15,6 +15,7 @@ import java.util.List;
  * @modifer
  * @since 2019/10/30日15:31
  */
+@Deprecated
 public interface IMaterialStockService{
 
     /**

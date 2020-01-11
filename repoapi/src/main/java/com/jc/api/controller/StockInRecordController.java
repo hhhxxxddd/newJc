@@ -23,6 +23,7 @@ import java.util.Set;
 @RequestMapping(value = "/inRecord")
 @Api(tags = "(废弃)智能仓库-入库记录界面")
 @Slf4j
+@Deprecated
 public class StockInRecordController {
     @Autowired
     private IStockInRecordService IStockInRecordService;

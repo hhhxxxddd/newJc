@@ -25,6 +25,7 @@ import javax.validation.constraints.NotBlank;
 @Api(tags = "(废弃)智能仓库-物料供货商管理界面")
 @RequestMapping(value = "/materialInfoSupplier")
 @Slf4j
+@Deprecated
 public class MaterialInfoSupplierController {
     @Autowired
     private IMaterialInfoSupplierService iMaterialInfoSupplierService;

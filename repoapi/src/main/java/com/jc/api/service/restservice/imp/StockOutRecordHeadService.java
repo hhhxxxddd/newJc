@@ -43,6 +43,7 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 @Service
 @Slf4j
+@Deprecated
 public class StockOutRecordHeadService implements IStockOutRecordHeadService {
     @Autowired
     private ICommonService iCommonService;

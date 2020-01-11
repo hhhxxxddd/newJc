@@ -22,6 +22,7 @@ import javax.validation.Valid;
 @RequestMapping(value = "/outRecord")
 @Api(tags = "(废弃)智能仓库-出库记录界面")
 @Slf4j
+@Deprecated
 public class StockOutRecordController {
     @Autowired
     private IStockOutRecordService iStockOutRecordService;

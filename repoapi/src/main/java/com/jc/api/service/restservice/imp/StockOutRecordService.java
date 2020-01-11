@@ -23,6 +23,7 @@ import java.util.List;
 
 @Service
 @Slf4j
+@Deprecated
 public class StockOutRecordService implements IStockOutRecordService {
     @Autowired
     private StockOutRecordMapper stockOutRecordMapper;
