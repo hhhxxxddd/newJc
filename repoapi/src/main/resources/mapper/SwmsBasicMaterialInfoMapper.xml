@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jc.api.mapper.SwmsBasicMaterialInfoMapper">
+    <select id="selectByNameLike" resultType="com.jc.api.entity.SwmsBasicMaterialInfo">
+        SELECT
+        material.id as "id",
+        material.material_name as "materialName",
+        material.material_name_code as "materialNameCode",
+        material.material_type_id as "materialTypeId",
+        material.sub_type_id as "subTypeId",
+        material.measure_unit as "measureUnit",
+        material.NI_flag as "niFlag",
+        material.CO_flag as "coFlag",
+        material.MN_flag as "mnFlag",
+        material.NH_flag as "nhFlag",
+        material.Alkali_flag as "alkaliFlag",
+        material.auto_flag as "autoFlag",
+        material.stream_flag as "streamFlag",
+        type.type_name as "typeName",
+        subType.sub_type_name as "subTypeName"
+        FROM jc_repo_db.SWMS_basic_material_info material
+        LEFT JOIN SWMS_basic_material_type type ON material_type_id = type.id
+        LEFT JOIN SWMS_basic_material_sub_type subType ON sub_type_id = subType.id
+        <where>
+            <if test="materialName!=null and materialName!=''">
+                material.material_name like #{materialName}"%"
+            </if>
+        </where>
+    </select>
+    <select id="selectPageVo" resultType="com.jc.api.entity.SwmsBasicMaterialInfo">
+        SELECT
+        material.id as "id",
+        material.material_name as "materialName",
+        material.material_name_code as "materialNameCode",
+        material.material_type_id as "materialTypeId",
+        material.sub_type_id as "subTypeId",
+        material.measure_unit as "measureUnit",
+        material.NI_flag as "niFlag",
+        material.CO_flag as "coFlag",
+        material.MN_flag as "mnFlag",
+        material.NH_flag as "nhFlag",
+        material.Alkali_flag as "alkaliFlag",
+        material.auto_flag as "autoFlag",
+        material.stream_flag as "streamFlag",
+        type.type_name as "typeName",
+        subType.sub_type_name as "subTypeName"
+        FROM jc_repo_db.SWMS_basic_material_info material
+        LEFT JOIN SWMS_basic_material_type type ON material_type_id = type.id
+        LEFT JOIN SWMS_basic_material_sub_type subType ON sub_type_id = subType.id
+        <where>
+            <if test="materialName!=null and materialName!=''">
+                material.material_name like #{materialName}"%"
+            </if>
+        </where>
+    </select>
+</mapper>

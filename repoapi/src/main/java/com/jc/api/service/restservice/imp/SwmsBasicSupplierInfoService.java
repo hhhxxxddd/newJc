@@ -123,9 +123,7 @@ public class SwmsBasicSupplierInfoService implements ISwmsBasicSupplierInfoServi
         if (supplierName != null) {
             queryWrapper.likeRight("material_supplier_name", supplierName);
         }
-        IPage iPage = swmsBasicSupplierInfoMapper.selectPage(page, queryWrapper);
-        System.out.println(iPage.getRecords());
-        return iPage;
+        return swmsBasicSupplierInfoMapper.selectPage(page, queryWrapper);
     }
 
     @Override

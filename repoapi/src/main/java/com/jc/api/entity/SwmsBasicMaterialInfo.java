@@ -1,8 +1,6 @@
 package com.jc.api.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.jinchi.common.web.entity.po.BasePo;
 import io.swagger.annotations.ApiModel;
@@ -28,10 +26,10 @@ import java.io.Serializable;
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
 @TableName("SWMS_basic_material_info")
-@ApiModel(value="SwmsBasicMaterialInfo对象", description="物料信息表")
+@ApiModel(value = "SwmsBasicMaterialInfo对象", description = "物料信息表")
 public class SwmsBasicMaterialInfo extends BasePo implements Serializable {
 
-    private static final long serialVersionUID=1L;
+    private static final long serialVersionUID = 1L;
 
     @ApiModelProperty(value = "物料名称")
     private String materialName;
@@ -73,6 +71,12 @@ public class SwmsBasicMaterialInfo extends BasePo implements Serializable {
 
     @ApiModelProperty(value = "流量统计标志位 0参加 1 不参加")
     private Boolean streamFlag;
+
+    //映射
+    @TableField(exist = false)
+    private String typeName;
+    @TableField(exist = false)
+    private String subTypeName;
 
 
 }

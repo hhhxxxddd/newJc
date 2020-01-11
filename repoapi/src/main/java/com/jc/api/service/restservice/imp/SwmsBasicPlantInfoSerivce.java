@@ -24,7 +24,7 @@ import java.util.List;
 @Service
 @Slf4j
 @SuppressWarnings("all")
-public class ISwmsBasicPlantInfoSerivce implements ISwmsBasicPlantInfoService {
+public class SwmsBasicPlantInfoSerivce implements ISwmsBasicPlantInfoService {
 
     @Autowired
     private SwmsBasicPlantInfoMapper swmsBasicPlantInfoMapper;

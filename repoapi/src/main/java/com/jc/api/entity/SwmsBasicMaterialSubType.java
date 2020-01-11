@@ -1,5 +1,6 @@
 package com.jc.api.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.jinchi.common.web.entity.po.BasePo;
 import io.swagger.annotations.ApiModel;
@@ -43,5 +44,6 @@ public class SwmsBasicMaterialSubType extends BasePo implements Serializable {
     private Boolean autoFlag;
 
     //映射
+    @TableField(exist = false)
     private String typeName;
 }
