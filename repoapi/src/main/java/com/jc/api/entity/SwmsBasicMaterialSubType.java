@@ -1,7 +1,5 @@
 package com.jc.api.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.jinchi.common.web.entity.po.BasePo;
 import io.swagger.annotations.ApiModel;
@@ -44,5 +42,5 @@ public class SwmsBasicMaterialSubType extends BasePo implements Serializable {
     @ApiModelProperty(value = "是否自动添加标志位 0自动 1手动")
     private Boolean autoFlag;
 
-
+    private String typeName;
 }

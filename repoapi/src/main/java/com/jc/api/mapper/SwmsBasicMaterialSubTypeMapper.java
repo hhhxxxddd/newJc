@@ -5,6 +5,8 @@ import com.jc.api.entity.SwmsBasicMaterialSubType;
 import org.apache.ibatis.annotations.Mapper;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * <p>
  * 物料子类型表 Mapper 接口
@@ -17,4 +19,12 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface SwmsBasicMaterialSubTypeMapper extends BaseMapper<SwmsBasicMaterialSubType> {
 
+    /**
+     * @Description:    物料子类型-条件查询-不分页
+     * @Author: River
+     * @Date: 2020/1/11 19:45
+     {@link List< SwmsBasicMaterialSubType>}
+     java.util.List<com.jc.api.entity.SwmsBasicMaterialSubType>
+     **/
+    List<SwmsBasicMaterialSubType> findList(SwmsBasicMaterialSubType subType);
 }

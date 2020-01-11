@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jc.api.mapper.SwmsBasicMaterialSubTypeMapper">
+
+    <select id="findList" parameterType="com.jc.api.entity.SwmsBasicMaterialSubType" resultType="com.jc.api.entity.SwmsBasicMaterialSubType">
+        SELECT
+            subType.id AS "id",
+            subType.sub_type_name AS "subTypeName",
+            subType.sub_type_code AS "subTypeCode",
+            subType.type_id AS "typeId",
+            subType.auto_flag AS "autoFlag",
+            type.type_name AS "typeName"
+        FROM SWMS_basic_material_sub_type subType
+        LEFT JOIN SWMS_basic_material_type type ON subType.type_id = type.id
+        <where>
+            <if test="subTypeCode != null and subTypeCode != ''">
+                subType.sub_type_code LIKE #{subTypeCode}"%"
+            </if>
+            <if test="subTypeName != null and subTypeName != ''">
+                subType.sub_type_name LIKE #{subTypeName}"%"
+            </if>
+            <if test="autoFlag != null">
+                subType.auto_flag = #{autoFlag}
+            </if>
+        </where>
+    </select>
+</mapper>
