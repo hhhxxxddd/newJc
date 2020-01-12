@@ -51,7 +51,7 @@ public class SwmsBasicMaterialInfoController {
         return Result.success(iSwmsBasicMaterialInfoService.getAllByPage(page,supplierName));
     }
 
-    @ApiOperation(value = "新增物料信息信息", notes = "新增")
+    @ApiOperation(value = "新增物料信息", notes = "新增")
     @ApiResponses(@ApiResponse(code = 200, message = "处理成功", response = Result.class))
     @PostMapping(value = "/add")
     public Result add(@RequestBody SwmsBasicMaterialInfo swmsBasicSupplierInfo) {
@@ -78,11 +78,10 @@ public class SwmsBasicMaterialInfoController {
     @ApiResponses(@ApiResponse(code = 200, message = "处理成功", response = Result.class))
     @DeleteMapping(value = "/{id}")
     public Result delete(@PathVariable String id) {
-        log.debug("根据id删除供应车间记录:{}", id);
         return Result.success(iSwmsBasicMaterialInfoService.delete(id));
     }
 
-    @ApiOperation(value = "批量删除物料信息信息",notes = "根据id集合删除")
+    @ApiOperation(value = "批量删除物料信息",notes = "根据id集合删除")
     @DeleteMapping(value = "/batchDelete")
     public Result batchDelete(@RequestParam Set<String> ids){
         return Result.success(iSwmsBasicMaterialInfoService.batchDelete(ids));

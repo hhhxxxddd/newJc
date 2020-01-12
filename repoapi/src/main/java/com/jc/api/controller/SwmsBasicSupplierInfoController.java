@@ -76,7 +76,6 @@ public class SwmsBasicSupplierInfoController {
     @ApiResponses(@ApiResponse(code = 200, message = "处理成功", response = Result.class))
     @DeleteMapping(value = "/{id}")
     public Result delete(@PathVariable Integer id) {
-        log.debug("根据id删除供应车间记录:{}", id);
         return Result.success(iSwmsBasicSupplierInfoService.delete(id));
     }
 
