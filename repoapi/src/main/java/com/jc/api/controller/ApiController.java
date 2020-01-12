@@ -3,6 +3,7 @@ package com.jc.api.controller;
 
 import com.jc.api.service.restservice.IStockInRecordService;
 import com.jc.api.service.restservice.IStockOutRecordHeadService;
+import com.jc.api.service.restservice.ISwmsStockInJournalAccountService;
 import com.jc.api.utils.XinSongHttpAnalyzeUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -30,6 +31,8 @@ public class ApiController {
     private IStockInRecordService IStockInRecordService;
     @Autowired
     private IStockOutRecordHeadService iStockOutRecordHeadService;
+    @Autowired
+    private ISwmsStockInJournalAccountService iSwmsStockInJournalAccountService;
 
 
     @PostMapping(value = "/outPost")
@@ -54,7 +57,7 @@ public class ApiController {
     @ApiOperation(value = "新松入库")
     public Boolean inApply(HttpServletRequest request) {
         XinSongHttpAnalyzeUtil.StockInReceiver stockInReceiver = XinSongHttpAnalyzeUtil.stockInContentLoading(request);
-        IStockInRecordService.insert(stockInReceiver.getMaterialCode(), stockInReceiver.getOperator());
+        iSwmsStockInJournalAccountService.insert(stockInReceiver.getMaterialCode(), stockInReceiver.getOperator());
         return true;
     }
 

@@ -52,11 +52,11 @@ public class SwmsStockInLedgers extends BasePo implements Serializable {
     @ApiModelProperty(value = "物料入库车间id")
     private Integer materialWorkshopId;
 
-    @ApiModelProperty(value = "物料名称代码")
-    private String materialNameCode;
+    @ApiModelProperty(value = "物料名称代码") //外键
+    private Integer materialNameCode;
 
-    @ApiModelProperty(value = "物料供应商代码")
-    private String materialSupplierCode;
+    @ApiModelProperty(value = "物料供应商代码") //外键
+    private Integer materialSupplierCode;
 
     @ApiModelProperty(value = "物料名称")
     private String materialName;

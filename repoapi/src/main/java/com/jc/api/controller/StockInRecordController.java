@@ -30,7 +30,7 @@ public class StockInRecordController {
 
     @ApiOperation(value = "仅供测试使用-入库(模仿新松入库)", notes = "前端不能入库,此接口做测试用")
     @ApiImplicitParams({
-            @ApiImplicitParam(name = "materialCode", value = "物料编码", example = "MC/BN180808-0-RAW(TS)-Fe-1-QDBX-60KG", required = true, dataType = "String"),
+            @ApiImplicitParam(name = "materialCode", value = "物料编码", example = "MC/BN180808-0-RAW-Fe-1-QDBX-60KG", required = true, dataType = "String"),
             @ApiImplicitParam(name = "createdPerson", value = "入库人", example = "胡旭东", required = true, dataType = "String")}
     )
     @ApiResponses(@ApiResponse(code = 200, message = "处理成功", response = Result.class))

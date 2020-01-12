@@ -34,6 +34,8 @@ public class SwmsStockInLedgersService implements ISwmsStockInLedgersService {
     @Autowired
     private SwmsStockInJournalAccountMapper swmsStockInJournalAccountMapper;
     @Autowired
+    private ISwmsStockInventoryReallyReportsService iSwmsStockInventoryReallyReportsService;
+    @Autowired
     private ISwmsBasicSupplierInfoService iSwmsBasicSupplierInfoService;
     @Autowired
     private ISwmsBasicMaterialTypeService iSwmsBasicMaterialTypeService;
@@ -64,26 +66,6 @@ public class SwmsStockInLedgersService implements ISwmsStockInLedgersService {
         String materialTypeStr = codeContent.getMaterialTypeStr();
         SwmsBasicMaterialType materialType = iSwmsBasicMaterialTypeService.autoAdd(new SwmsBasicMaterialType().setTypeCode(materialTypeStr));
         SwmsBasicMaterialSubType subType = iSwmsBasicMaterialSubTypeService.autoAdd(new SwmsBasicMaterialSubType().setSubTypeCode(codeContent.getMaterialNameCode()).setTypeId(Integer.valueOf(materialType.getId())));
-        //物料名称查询,自动新增
-        String materialNameCode = codeContent.getMaterialNameCode();
-        ;
-        SwmsBasicMaterialInfo materialInfo = new SwmsBasicMaterialInfo();
-        materialInfo
-                .setMaterialNameCode(materialNameCode)
-                .setMaterialTypeId(Integer.valueOf(materialType.getId()))
-                .setSubTypeId(Integer.valueOf(subType.getId()))
-                .setSupplierId(Integer.valueOf(supplierInfo.getId()))
-                .setStreamFlag(false)
-                .setAlkaliFlag(false)
-                .setNiFlag(false)
-                .setNhFlag(false)
-                .setMnFlag(false)
-                .setCoFlag(false)
-                .setAutoFlag(true);
-        SwmsBasicMaterialInfo newMaterialInfo = iSwmsBasicMaterialInfoService.autoAdd(materialInfo);
-        //物料车间代号 自动新增
-        String materialWorkShopCode = codeContent.getMaterialWorkShopCode();
-        SwmsBasicPlantInfo plantInfo = iSwmsBasicPlantInfoService.autoAdd(new SwmsBasicPlantInfo().setPlantCode(materialWorkShopCode));
         //物料计量单位 自动新增
         String weightWithUnit = codeContent.getWeight();
         String wordRegex = "[a-zA-z]+";
@@ -95,8 +77,30 @@ public class SwmsStockInLedgersService implements ISwmsStockInLedgersService {
         SwmsBasicMeasureUnit measureUnit = iSwmsBasicMeasureUnitService.autoAdd(new SwmsBasicMeasureUnit().setMeasureUnit(unit).setAutoFlag(true));
         //=======>重量
         String weightStr = weightWithUnit.replaceAll(wordRegex, "");
-        Float weightDouble = Float.valueOf(weightStr);
+        Float weightFloat = Float.valueOf(weightStr);
+        //物料名称查询,自动新增
+        String materialNameCode = codeContent.getMaterialNameCode();
+        SwmsBasicMaterialInfo materialInfo = new SwmsBasicMaterialInfo();
+        materialInfo
+                .setMaterialNameCode(materialNameCode)
+                .setMaterialTypeId(Integer.valueOf(materialType.getId()))
+                .setSubTypeId(Integer.valueOf(subType.getId()))
+                .setSupplierId(Integer.valueOf(supplierInfo.getId()))
+                .setMeasureUnit(unit)
+                .setStreamFlag(false)
+                .setAlkaliFlag(false)
+                .setNiFlag(false)
+                .setNhFlag(false)
+                .setMnFlag(false)
+                .setCoFlag(false)
+                .setAutoFlag(true);
+        SwmsBasicMaterialInfo newMaterialInfo = iSwmsBasicMaterialInfoService.autoAdd(materialInfo);
+        //物料车间代号 自动新增
+        String materialWorkShopCode = codeContent.getMaterialWorkShopCode();
+        SwmsBasicPlantInfo plantInfo = iSwmsBasicPlantInfoService.autoAdd(new SwmsBasicPlantInfo().setPlantCode(materialWorkShopCode));
 
+
+        //开始新增台账
         SwmsStockInLedgers stockInLedgers = new SwmsStockInLedgers();
         stockInLedgers
                 .setStockInRecordId(Long.valueOf(journalAccount.getId()))
@@ -105,11 +109,11 @@ public class SwmsStockInLedgersService implements ISwmsStockInLedgersService {
                 .setMaterialTypeId(Integer.valueOf(materialType.getId()))
                 .setMaterialSubTypeId(Integer.valueOf(subType.getId()))
                 .setMaterialWorkshopId(Integer.valueOf(plantInfo.getId()))
-                .setMaterialNameCode(materialInfo.getMaterialNameCode())
-                .setMaterialSupplierCode(supplierInfo.getMaterialSupplierCode())
+                .setMaterialNameCode(Integer.valueOf(materialInfo.getId()))
+                .setMaterialSupplierCode(Integer.valueOf(supplierInfo.getId()))
                 .setMaterialName(materialInfo.getMaterialName())
                 .setBagNum(Integer.valueOf(codeContent.getBagNo()))
-                .setWeight(weightDouble)
+                .setWeight(weightFloat)
                 .setMeasureUnit(measureUnit.getMeasureUnit())
                 .setCreatedTime(journalAccount.getCreatedTime())
                 .setCreatedPerson(journalAccount.getCreatedPerson())
@@ -123,14 +127,19 @@ public class SwmsStockInLedgersService implements ISwmsStockInLedgersService {
         }
         Boolean isInsert = swmsStockInLedgersMapper.insert(stockInLedgers) > 0;
         log.info("入库台账保存完成:{}", isInsert);
-//        //增加库存
-//        String materialInfoId = materialInfo.getId();
-//        QueryWrapper<MaterialStock> byInfoId = new QueryWrapper<>();
-//        byInfoId.eq("material_info_id", materialInfoId).last("limit 1");
-//        MaterialStock materialStock = materialStockMapper.selectOne(byInfoId);
-//        materialStock.setBagsSum(materialStock.getBagsSum() + 1);
-//        materialStock.setWeightSum(materialStock.getWeightSum() + weight);
-//        boolean updateStock = materialStockMapper.updateById(materialStock) > 0;
-//        log.info("库存更新:{}-{}", materialStock, updateStock);
+        //增加库存
+        SwmsStockInventoryReallyReports newValue = new SwmsStockInventoryReallyReports();
+        newValue.setMaterialTypeId(Integer.valueOf(materialType.getId()))
+                .setMaterialSubTypeId(Integer.valueOf(subType.getId()))
+                .setMaterialNameCode(Integer.valueOf(materialInfo.getId()))
+                .setMaterialSupplierCode(Integer.valueOf(supplierInfo.getId()))
+                .setMaterialName(materialInfo.getMaterialName())
+                .setMaterialBatch(stockInLedgers.getMaterialBatch())
+                .setMeasureUnit(stockInLedgers.getMeasureUnit())
+                .setCheckStatus(0)
+                .setRealWeight(weightFloat)
+                .setUsefulWeight(weightFloat)
+                .setStockDate(stockInLedgers.getCreatedTime());
+        iSwmsStockInventoryReallyReportsService.autoAdd(newValue);
     }
 }
