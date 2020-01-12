@@ -1,7 +1,6 @@
 package com.jc.api.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.jinchi.common.web.entity.po.BasePo;
@@ -83,5 +82,16 @@ public class SwmsStockOutLedgers extends BasePo implements Serializable {
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createdTime;
 
+    //映射
+    @TableField(exist = false)
+    private String materialTypeName;
+    @TableField(exist = false)
+    private String subTypeName;
+    @TableField(exist = false)
+    private String supplierName;
+    @TableField(exist = false)
+    private String realMaterialName;
+    @TableField(exist = false)
+    private String plantName;
 
 }

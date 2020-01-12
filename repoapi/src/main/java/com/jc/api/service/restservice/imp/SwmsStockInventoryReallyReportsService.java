@@ -21,6 +21,11 @@ public class SwmsStockInventoryReallyReportsService implements ISwmsStockInvento
     @Autowired
     private SwmsStockInventoryReallyReportsMapper swmsStockInventoryReallyReportsMapper;
 
+    /**
+     * 添加库存
+     * @param entity
+     * @return
+     */
     @Override
     public SwmsStockInventoryReallyReports autoAdd(SwmsStockInventoryReallyReports entity) {
         Integer materialInfoId = entity.getMaterialNameCode();

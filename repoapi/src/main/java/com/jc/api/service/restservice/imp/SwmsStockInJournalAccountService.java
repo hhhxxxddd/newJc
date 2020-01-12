@@ -7,6 +7,7 @@ import com.jc.api.entity.SwmsStockInJournalAccount;
 import com.jc.api.mapper.SwmsStockInJournalAccountMapper;
 import com.jc.api.service.restservice.ISwmsStockInJournalAccountService;
 import com.jc.api.service.restservice.ISwmsStockInLedgersService;
+import io.netty.util.internal.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -30,7 +31,6 @@ public class SwmsStockInJournalAccountService implements ISwmsStockInJournalAcco
     private ISwmsStockInLedgersService iSwmsStockInLedgersService;
 
     /**
-     *
      * @param materialCode 物料编码
      * @param createPerson 创建人
      * @return
@@ -59,18 +59,22 @@ public class SwmsStockInJournalAccountService implements ISwmsStockInJournalAcco
 
     /**
      * 查询所有 - 名称模糊
+     *
      * @param materialCode
      * @return
      */
     @Override
     public List<SwmsStockInJournalAccount> getAll(String materialCode) {
         QueryWrapper<SwmsStockInJournalAccount> byMaterialCode = new QueryWrapper<>();
-        byMaterialCode.likeRight("material_code",materialCode);
+        if (!StringUtil.isNullOrEmpty(materialCode)) {
+            byMaterialCode.likeRight("material_code", materialCode);
+        }
         return swmsStockInJournalAccountMapper.selectList(byMaterialCode);
     }
 
     /**
      * 查询所有 - 名称模糊/分页
+     *
      * @param page
      * @param materialCode
      * @return
@@ -78,7 +82,7 @@ public class SwmsStockInJournalAccountService implements ISwmsStockInJournalAcco
     @Override
     public IPage getAllByPage(Page page, String materialCode) {
         QueryWrapper<SwmsStockInJournalAccount> byMaterialCode = new QueryWrapper<>();
-        byMaterialCode.likeRight("material_code",materialCode);
-        return swmsStockInJournalAccountMapper.selectPage(page,byMaterialCode);
+        byMaterialCode.likeRight("material_code", materialCode);
+        return swmsStockInJournalAccountMapper.selectPage(page, byMaterialCode);
     }
 }
