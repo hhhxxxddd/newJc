@@ -1,5 +1,10 @@
 package com.jc.api.service.restservice;
 
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.jc.api.entity.SwmsStockInLedgers;
+
+import java.util.List;
+
 /**
  * @author XudongHu
  * @apiNote 入库台账接口
@@ -16,4 +21,17 @@ public interface ISwmsStockInLedgersService {
      */
     void parsingAndInsert(String SwmsStockInJournalAccountId);
 
+    /**
+     * 查询所有-名称模糊
+     * @param materialCode
+     * @return
+     */
+    List<SwmsStockInLedgers> getAll(String materialCode);
+
+    /**
+     * 查询所有-名称模糊/分页
+     * @param mateialCode
+     * @return
+     */
+    IPage<SwmsStockInLedgers> getAllByPage(String mateialCode);
 }

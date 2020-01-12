@@ -1,5 +1,6 @@
 package com.jc.api.service.restservice.imp;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jc.api.entity.SwmsStockInJournalAccount;
@@ -56,13 +57,28 @@ public class SwmsStockInJournalAccountService implements ISwmsStockInJournalAcco
         return success;
     }
 
+    /**
+     * 查询所有 - 名称模糊
+     * @param materialCode
+     * @return
+     */
     @Override
-    public List<SwmsStockInJournalAccount> getAll(SwmsStockInJournalAccount entity) {
-        return null;
+    public List<SwmsStockInJournalAccount> getAll(String materialCode) {
+        QueryWrapper<SwmsStockInJournalAccount> byMaterialCode = new QueryWrapper<>();
+        byMaterialCode.likeRight("material_code",materialCode);
+        return swmsStockInJournalAccountMapper.selectList(byMaterialCode);
     }
 
+    /**
+     * 查询所有 - 名称模糊/分页
+     * @param page
+     * @param materialCode
+     * @return
+     */
     @Override
-    public IPage getAllByPage(Page page, SwmsStockInJournalAccount entity) {
-        return null;
+    public IPage getAllByPage(Page page, String materialCode) {
+        QueryWrapper<SwmsStockInJournalAccount> byMaterialCode = new QueryWrapper<>();
+        byMaterialCode.likeRight("material_code",materialCode);
+        return swmsStockInJournalAccountMapper.selectPage(page,byMaterialCode);
     }
 }

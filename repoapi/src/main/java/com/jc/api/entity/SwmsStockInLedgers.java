@@ -1,5 +1,6 @@
 package com.jc.api.entity;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.jinchi.common.web.entity.po.BasePo;
@@ -80,6 +81,17 @@ public class SwmsStockInLedgers extends BasePo implements Serializable {
 
     @ApiModelProperty(value = "物料状态标志位material_status=0，表示在库中，为默认值；material_status=1，表示待出库；material_status=2，表示已出库")
     private Integer materialStatus;
+
+
+    //映射
+    @TableField(exist = false)
+    private String materialTypeName;
+    @TableField(exist = false)
+    private String subTypeName;
+    @TableField(exist = false)
+    private String supplierName;
+    @TableField(exist = false)
+    private String realMaterialName;
 
 
 }

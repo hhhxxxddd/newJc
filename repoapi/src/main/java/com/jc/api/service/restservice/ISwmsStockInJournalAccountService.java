@@ -23,19 +23,19 @@ public interface ISwmsStockInJournalAccountService {
     Boolean insert(String materialCode, String createPerson);
 
     /**
-     * 查询所有 - 条件
-     * @param entity
+     * 查询所有 - 物料编码模糊
+     * @param materialCode
      * @return
      */
-    List<SwmsStockInJournalAccount> getAll(SwmsStockInJournalAccount entity);
+    List<SwmsStockInJournalAccount> getAll(String materialCode);
 
     /**
-     * 查询所有 - 条件/分页
+     * 查询所有 - 物料编码模糊/分页
      * @param page
-     * @param entity
+     * @param materialCode
      * @return
      */
-    IPage getAllByPage(Page page, SwmsStockInJournalAccount entity);
+    IPage getAllByPage(Page page, String materialCode);
 
 
 }
