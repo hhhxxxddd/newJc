@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jc.api.entity.SwmsBasicPlantInfo;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Auther: River
@@ -14,25 +15,25 @@ import java.util.List;
 public interface ISwmsBasicPlantInfoService {
 
     /**
-     * @Description:    查询所有-不分页
+     * @Description:    车间-不分页
      * @Author: River
      * @Date: 2020/1/11 15:34
      {@link List< SwmsBasicPlantInfo>}
      java.util.List<com.jc.api.entity.SwmsBasicPlantInfo>
      **/
-    List<SwmsBasicPlantInfo> getAll(SwmsBasicPlantInfo swmsBasicPlantInfo);
+    List<SwmsBasicPlantInfo> getAll(String plantName);
 
     /**
-     * @Description:    查询所有-分页
+     * @Description:    车间-分页
      * @Author: River
-     * @Date: 2020/1/11 15:35
-     {@link List< SwmsBasicPlantInfo>}
-     java.util.List<com.jc.api.entity.SwmsBasicPlantInfo>
+     * @Date: 2020/1/12 14:47
+     {@link IPage< SwmsBasicPlantInfo>}
+     com.baomidou.mybatisplus.core.metadata.IPage<com.jc.api.entity.SwmsBasicPlantInfo>
      **/
-    IPage<SwmsBasicPlantInfo> getAllByPage(Page page,SwmsBasicPlantInfo swmsBasicPlantInfo);
+    IPage<SwmsBasicPlantInfo> getAllByPage(Page page, String plantName);
 
     /**
-     * @Description:    新增
+     * @Description:    车间-新增
      * @Author: River
      * @Date: 2020/1/11 15:37
      {@link Boolean}
@@ -41,7 +42,7 @@ public interface ISwmsBasicPlantInfoService {
     Boolean add(SwmsBasicPlantInfo swmsBasicPlantInfo);
 
     /**
-     * @Description:    自动新增
+     * @Description:    车间-自动新增
      * @Author: River
      * @Date: 2020/1/11 15:40
      {@link SwmsBasicPlantInfo}
@@ -50,7 +51,7 @@ public interface ISwmsBasicPlantInfoService {
     SwmsBasicPlantInfo autoAdd(SwmsBasicPlantInfo swmsBasicPlantInfo);
 
     /**
-     * @Description:    更新
+     * @Description:    车间-更新
      * @Author: River
      * @Date: 2020/1/11 15:37
      {@link Boolean}
@@ -59,12 +60,21 @@ public interface ISwmsBasicPlantInfoService {
     Boolean update(SwmsBasicPlantInfo swmsBasicPlantInfo);
 
     /**
-     * @Description:    删除
+     * @Description:    车间-删除
      * @Author: River
      * @Date: 2020/1/11 15:38
      {@link Boolean}
      java.lang.Boolean
      **/
     Boolean delete(Integer id);
+
+    /**
+     * @Description:    车间-删除
+     * @Author: River
+     * @Date: 2020/1/12 14:41
+    {@link Boolean}
+    java.lang.Boolean
+     **/
+    Boolean batchDelete(Set<String> ids);
 
 }

@@ -11,9 +11,11 @@ import com.jc.api.service.restservice.ISwmsBasicMaterialTypeService;
 import com.netflix.discovery.converters.Auto;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Auther: River
@@ -22,9 +24,10 @@ import java.util.List;
  */
 @Service
 @Slf4j
+@SuppressWarnings("all")
 public class SwmsBasicMaterialTypeService implements ISwmsBasicMaterialTypeService {
 
-    @Auto
+    @Autowired
     private SwmsBasicMaterialTypeMapper swmsBasicMaterialTypeMapper;
 
     /**
@@ -35,16 +38,10 @@ public class SwmsBasicMaterialTypeService implements ISwmsBasicMaterialTypeServi
      java.util.List<com.jc.api.entity.SwmsBasicMaterialType>
      **/
     @Override
-    public List<SwmsBasicMaterialType> getAll(SwmsBasicMaterialType swmsBasicMaterialType) {
+    public List<SwmsBasicMaterialType> getAll(String typeName) {
         QueryWrapper<SwmsBasicMaterialType> queryWrapper = new QueryWrapper<>();
-        if (StringUtils.isNotEmpty(swmsBasicMaterialType.getTypeCode())) {
-            queryWrapper.likeRight("type_code", swmsBasicMaterialType.getTypeCode());
-        }
-        if (StringUtils.isNotEmpty(swmsBasicMaterialType.getTypeName())) {
-            queryWrapper.likeRight("type_name", swmsBasicMaterialType.getTypeName());
-        }
-        if (swmsBasicMaterialType.getAutoFlag() != null) {
-            queryWrapper.eq("auto_flag", swmsBasicMaterialType.getAutoFlag());
+        if (StringUtils.isNotEmpty(typeName)) {
+            queryWrapper.likeRight("type_name", typeName);
         }
         return swmsBasicMaterialTypeMapper.selectList(queryWrapper);
     }
@@ -57,16 +54,10 @@ public class SwmsBasicMaterialTypeService implements ISwmsBasicMaterialTypeServi
      com.baomidou.mybatisplus.core.metadata.IPage<com.jc.api.entity.SwmsBasicMaterialType>
      **/
     @Override
-    public IPage<SwmsBasicMaterialType> getAllByPage(Page page, SwmsBasicMaterialType swmsBasicMaterialType) {
+    public IPage<SwmsBasicMaterialType> getAllByPage(Page page, String typeName) {
         QueryWrapper<SwmsBasicMaterialType> queryWrapper = new QueryWrapper<>();
-        if (StringUtils.isNotEmpty(swmsBasicMaterialType.getTypeCode())) {
-            queryWrapper.likeRight("type_code", swmsBasicMaterialType.getTypeCode());
-        }
-        if (StringUtils.isNotEmpty(swmsBasicMaterialType.getTypeName())) {
-            queryWrapper.likeRight("type_name", swmsBasicMaterialType.getTypeName());
-        }
-        if (swmsBasicMaterialType.getAutoFlag() != null) {
-            queryWrapper.eq("auto_flag", swmsBasicMaterialType.getAutoFlag());
+        if (StringUtils.isNotEmpty(typeName)) {
+            queryWrapper.likeRight("type_name", typeName);
         }
         return swmsBasicMaterialTypeMapper.selectPage(page, queryWrapper);
     }
@@ -152,6 +143,22 @@ public class SwmsBasicMaterialTypeService implements ISwmsBasicMaterialTypeServi
             return swmsBasicMaterialTypeMapper.deleteById(id) > 0;
         } catch (Exception e) {
             throw new DataAssociationException(String.format("删除失败,该数据正在被使用:%d,如要删除请选择强力删除,将删除包括关联的台账,出库信息", id));
+        }
+    }
+
+    /**
+     * @Description:    物料类型-批量删除
+     * @Author: River
+     * @Date: 2020/1/12 14:42
+     {@link Boolean}
+     java.lang.Boolean
+     **/
+    @Override
+    public Boolean batchDelete(Set<String> ids) {
+        try {
+            return swmsBasicMaterialTypeMapper.deleteBatchIds(ids) == ids.size();
+        } catch (Exception e) {
+            throw new DataAssociationException("删除失败,数据正在被使用");
         }
     }
 }

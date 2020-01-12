@@ -14,13 +14,13 @@
         LEFT JOIN SWMS_basic_material_type type ON subType.type_id = type.id
         <where>
             <if test="subTypeCode != null and subTypeCode != ''">
-                subType.sub_type_code LIKE #{subTypeCode}"%"
+                AND subType.sub_type_code LIKE #{subTypeCode}"%"
             </if>
             <if test="subTypeName != null and subTypeName != ''">
-                subType.sub_type_name LIKE #{subTypeName}"%"
+                AND subType.sub_type_name LIKE #{subTypeName}"%"
             </if>
             <if test="autoFlag != null">
-                subType.auto_flag = #{autoFlag}
+                AND subType.auto_flag = #{autoFlag}
             </if>
         </where>
     </select>

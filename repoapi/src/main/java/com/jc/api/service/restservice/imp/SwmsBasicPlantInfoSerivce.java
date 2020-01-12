@@ -15,6 +15,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Auther: River
@@ -37,16 +38,10 @@ public class SwmsBasicPlantInfoSerivce implements ISwmsBasicPlantInfoService {
      java.util.List<com.jc.api.entity.SwmsBasicPlantInfo>
      **/
     @Override
-    public List<SwmsBasicPlantInfo> getAll(SwmsBasicPlantInfo swmsBasicPlantInfo) {
+    public List<SwmsBasicPlantInfo> getAll(String plantName) {
         QueryWrapper<SwmsBasicPlantInfo> queryWrapper = new QueryWrapper<>();
-        if (!StringUtil.isNullOrEmpty(swmsBasicPlantInfo.getPlantCode())) {
-            queryWrapper.likeRight("plant_code", swmsBasicPlantInfo.getPlantCode());
-        }
-        if (!StringUtil.isNullOrEmpty(swmsBasicPlantInfo.getPlantName())) {
-            queryWrapper.likeRight("plant_name", swmsBasicPlantInfo.getPlantName());
-        }
-        if (swmsBasicPlantInfo.getAutoFlag() != null) {
-            queryWrapper.eq("auto_flag", swmsBasicPlantInfo.getAutoFlag());
+        if (!StringUtil.isNullOrEmpty(plantName)) {
+            queryWrapper.likeRight("plant_name", plantName);
         }
         return swmsBasicPlantInfoMapper.selectList(queryWrapper);
     }
@@ -59,16 +54,10 @@ public class SwmsBasicPlantInfoSerivce implements ISwmsBasicPlantInfoService {
      com.baomidou.mybatisplus.core.metadata.IPage<com.jc.api.entity.SwmsBasicPlantInfo>
      **/
     @Override
-    public IPage<SwmsBasicPlantInfo> getAllByPage(Page page, SwmsBasicPlantInfo swmsBasicPlantInfo) {
+    public IPage<SwmsBasicPlantInfo> getAllByPage(Page page, String plantName) {
         QueryWrapper<SwmsBasicPlantInfo> queryWrapper = new QueryWrapper<>();
-        if (!StringUtil.isNullOrEmpty(swmsBasicPlantInfo.getPlantCode())) {
-            queryWrapper.likeRight("plant_code", swmsBasicPlantInfo.getPlantCode());
-        }
-        if (StringUtil.isNullOrEmpty(swmsBasicPlantInfo.getPlantName())) {
-            queryWrapper.likeRight("plant_name", swmsBasicPlantInfo.getPlantName());
-        }
-        if (swmsBasicPlantInfo.getAutoFlag() != null) {
-            queryWrapper.eq("auto_flag", swmsBasicPlantInfo.getAutoFlag());
+        if (StringUtil.isNullOrEmpty(plantName)) {
+            queryWrapper.likeRight("plant_name", plantName);
         }
         return swmsBasicPlantInfoMapper.selectPage(page, queryWrapper);
     }
@@ -152,6 +141,22 @@ public class SwmsBasicPlantInfoSerivce implements ISwmsBasicPlantInfoService {
             return swmsBasicPlantInfoMapper.deleteById(id) > 0;
         } catch (Exception e) {
             throw new DataAssociationException(String.format("删除失败,该数据正在被使用:%d,如要删除请选择强力删除,将删除包括关联的台账,出库信息", id));
+        }
+    }
+
+    /**
+     * @Description:    物料车间-批量删除
+     * @Author: River
+     * @Date: 2020/1/12 14:44
+     {@link Boolean}
+     java.lang.Boolean
+     **/
+    @Override
+    public Boolean batchDelete(Set<String> ids) {
+        try {
+            return swmsBasicPlantInfoMapper.deleteBatchIds(ids) == ids.size();
+        } catch (Exception e) {
+            throw new DataAssociationException("删除失败,数据正在被使用");
         }
     }
 }

@@ -23,13 +23,20 @@ import java.util.List;
 public interface SwmsBasicMaterialSubTypeMapper extends BaseMapper<SwmsBasicMaterialSubType> {
 
     /**
-     * @Description:    物料子类型-条件查询-不分页
+     * @Description:    物料子类型-不分页
      * @Author: River
      * @Date: 2020/1/11 19:45
      {@link List< SwmsBasicMaterialSubType>}
      java.util.List<com.jc.api.entity.SwmsBasicMaterialSubType>
      **/
-    List<SwmsBasicMaterialSubType> findList(SwmsBasicMaterialSubType subType);
+    List<SwmsBasicMaterialSubType> findList(@Param(value = "subTypeName")String subTypeName);
 
+    /**
+     * @Description:    物料子类型-分页
+     * @Author: River
+     * @Date: 2020/1/12 14:54
+     {@link IPage< SwmsBasicMaterialSubType>}
+     com.baomidou.mybatisplus.core.metadata.IPage<com.jc.api.entity.SwmsBasicMaterialSubType>
+     **/
     IPage<SwmsBasicMaterialSubType> selectPageVo(Page<?> page, @Param(value = "subTypeName")String subTypeName);
 }

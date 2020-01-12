@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jc.api.entity.SwmsBasicMaterialSubType;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Auther: River
@@ -20,7 +21,7 @@ public interface ISwmsBasicMaterialSubTypeService {
      {@link List< SwmsBasicMaterialSubType>}
      java.util.List<com.jc.api.entity.SwmsBasicMaterialSubType>
      **/
-    List<SwmsBasicMaterialSubType> getAll(SwmsBasicMaterialSubType swmsBasicMaterialSubType);
+    List<SwmsBasicMaterialSubType> getAll(String subTypeName);
 
     /**
      * @Description:    物料子类型-分页
@@ -29,7 +30,7 @@ public interface ISwmsBasicMaterialSubTypeService {
      {@link IPage< SwmsBasicMaterialSubType>}
      com.baomidou.mybatisplus.core.metadata.IPage<com.jc.api.entity.SwmsBasicMaterialSubType>
      **/
-    IPage<SwmsBasicMaterialSubType> getAllByPage(Page<SwmsBasicMaterialSubType> page, SwmsBasicMaterialSubType swmsBasicMaterialSubType);
+    IPage<SwmsBasicMaterialSubType> getAllByPage(Page<SwmsBasicMaterialSubType> page, String subTypeName);
 
     /**
      * @Description:    物料子类型-新增
@@ -66,4 +67,11 @@ public interface ISwmsBasicMaterialSubTypeService {
      java.lang.Boolean
      **/
     Boolean delete(Integer id);
+
+    /**
+     * 批量删除
+     * @param ids 主键数组
+     * @return
+     */
+    Boolean batchDelete(Set<String> ids);
 }

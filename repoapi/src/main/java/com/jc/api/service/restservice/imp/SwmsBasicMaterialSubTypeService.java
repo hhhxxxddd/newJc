@@ -16,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
+import java.util.Set;
 
 /**
  * @Auther: River
@@ -41,18 +42,25 @@ public class SwmsBasicMaterialSubTypeService implements ISwmsBasicMaterialSubTyp
      java.util.List<com.jc.api.entity.SwmsBasicMaterialSubType>
      **/
     @Override
-    public List<SwmsBasicMaterialSubType> getAll(SwmsBasicMaterialSubType swmsBasicMaterialSubType) {
+    public List<SwmsBasicMaterialSubType> getAll(String subTypeName) {
         try {
-            return swmsBasicMaterialSubTypeMapper.findList(swmsBasicMaterialSubType);
+            return swmsBasicMaterialSubTypeMapper.findList(subTypeName);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return null;
     }
 
+    /**
+     * @Description:    物料子类型-分页
+     * @Author: River
+     * @Date: 2020/1/12 14:54
+     {@link IPage< SwmsBasicMaterialSubType>}
+     com.baomidou.mybatisplus.core.metadata.IPage<com.jc.api.entity.SwmsBasicMaterialSubType>
+     **/
     @Override
-    public IPage<SwmsBasicMaterialSubType> getAllByPage(Page<SwmsBasicMaterialSubType> page, SwmsBasicMaterialSubType swmsBasicMaterialSubType) {
-        return swmsBasicMaterialSubTypeMapper.selectPageVo(page,swmsBasicMaterialSubType.getSubTypeName());
+    public IPage<SwmsBasicMaterialSubType> getAllByPage(Page<SwmsBasicMaterialSubType> page, String subTypeName) {
+        return swmsBasicMaterialSubTypeMapper.selectPageVo(page, subTypeName);
     }
 
     /**
@@ -158,6 +166,22 @@ public class SwmsBasicMaterialSubTypeService implements ISwmsBasicMaterialSubTyp
             return swmsBasicMaterialSubTypeMapper.deleteById(id) > 0;
         } catch (Exception e) {
             throw new DataAssociationException(String.format("删除失败,该数据正在被使用:%d,如要删除请选择强力删除,将删除包括关联的台账,出库信息", id));
+        }
+    }
+
+    /**
+     * @Description:    物料子类型-批量删除
+     * @Author: River
+     * @Date: 2020/1/12 14:38
+     {@link Boolean}
+     java.lang.Boolean
+     **/
+    @Override
+    public Boolean batchDelete(Set<String> ids) {
+        try {
+            return swmsBasicMaterialSubTypeMapper.deleteBatchIds(ids) == ids.size();
+        } catch (Exception e) {
+            throw new DataAssociationException("删除失败,数据正在被使用");
         }
     }
 }
