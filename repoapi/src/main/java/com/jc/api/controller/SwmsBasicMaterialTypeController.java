@@ -36,14 +36,12 @@ public class SwmsBasicMaterialTypeController {
 
     @ApiOperation(value = "获取物料类型-条件", notes = "条件获取所有物料类型")
     @ApiResponses(@ApiResponse(code = 200, message = "处理成功", response = Result.class))
-    @ApiImplicitParam(name = "swmsBasicMaterialType", value = "查询条件", required = true, dataType = "SwmsBasicMaterialType")
     @PostMapping(value = "/conditions")
     public Result query(@RequestParam(required = false)String typeName){
         return Result.success(swmsBasicMaterialTypeService.getAll(typeName));
     }
 
     @ApiOperation(value = "获取物料类型-条件/分页", notes = "条件获取物料类型记录-分页")
-    @ApiImplicitParam(name = "swmsBasicMaterialType", value = "查询条件", required = true, dataType = "SwmsBasicMaterialType")
     @ApiResponses(@ApiResponse(code = 200, message = "处理成功", response = Result.class))
     @PostMapping(value = "/pages")
     public Result queryPages(@RequestBody Page page, @RequestParam(required = false) String typeName) {
@@ -52,7 +50,6 @@ public class SwmsBasicMaterialTypeController {
     }
 
     @ApiOperation(value = "新增物料类型信息", notes = "新增")
-    @ApiImplicitParam(name = "swmsBasicMaterialType", value = "新增参数", required = true, dataType = "SwmsBasicMaterialType")
     @ApiResponses(@ApiResponse(code = 200, message = "处理成功", response = Result.class))
     @PostMapping(value = "/add")
     public Result add(@Valid @RequestBody SwmsBasicMaterialType swmsBasicMaterialType) {

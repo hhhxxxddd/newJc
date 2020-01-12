@@ -1,6 +1,7 @@
 package com.jc.api.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.jinchi.common.web.entity.po.BasePo;
@@ -33,8 +34,8 @@ public class SwmsBasicSafetyStock extends BasePo implements Serializable {
     private static final long serialVersionUID=1L;
 
 
-    @ApiModelProperty(value = "物料名称")
-    private String materialName;
+    @ApiModelProperty(value = "物料id")
+    private Integer materialId;
 
     @ApiModelProperty(value = "物料类型id")
     private Integer materialTypeId;
@@ -45,5 +46,27 @@ public class SwmsBasicSafetyStock extends BasePo implements Serializable {
     @ApiModelProperty(value = "安全库存量")
     private Float safetyStockValue;
 
+    //映射 - 类型名称
+    @TableField(exist = false)
+    private String typeName;
 
+    //映射 - 子类型名称
+    @TableField(exist = false)
+    private String subTypeName;
+
+    //映射 - 供应商名称
+    @TableField(exist = false)
+    private String materialSupplierName;
+
+    //映射 - 物料名称
+    @TableField(exist = false)
+    private String materialName;
+
+    //映射 - 物料单位
+    @TableField(exist = false)
+    private String measureUnit;
+
+    //映射 - 物料代码
+    @TableField(exist = false)
+    private String materialNameCode;
 }

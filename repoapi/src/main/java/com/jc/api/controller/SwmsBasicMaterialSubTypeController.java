@@ -51,7 +51,6 @@ public class SwmsBasicMaterialSubTypeController {
     }
 
     @ApiOperation(value = "仅供测试使用-自动新增物料子类型信息", notes = "自动新增,存在则无动作,不存在则新增")
-    @ApiImplicitParam(name = "typeCode", value = "物料类型代号", required = true, dataType = "String")
     @ApiResponses(@ApiResponse(code = 200, message = "处理成功", response = Result.class))
     @PostMapping(value = "/autoAdd")
     public Result autoAdd(@RequestParam @NotBlank(message = "物料类型代号不能为空白") String subTypeCode, @RequestParam @NotBlank(message = "父类型ID不能为空白")Integer typeId) {
