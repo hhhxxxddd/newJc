@@ -62,7 +62,7 @@ public class SwmsBasicDeliveryAddressInfoController {
     @ApiResponses(@ApiResponse(code = 200, message = "处理成功", response = Result.class))
     @DeleteMapping(value = "/{id}")
     public Result delete(@PathVariable Integer id) {
-        log.debug("根据id删除物料子类型记录:{}", id);
+        log.debug("根据id删除出库点记录:{}", id);
         return Result.success(swmsBasicDeliveryAddressInfoService.delete(id));
     }
 

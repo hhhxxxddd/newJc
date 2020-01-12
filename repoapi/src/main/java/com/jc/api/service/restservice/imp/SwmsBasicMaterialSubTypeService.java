@@ -43,12 +43,7 @@ public class SwmsBasicMaterialSubTypeService implements ISwmsBasicMaterialSubTyp
      **/
     @Override
     public List<SwmsBasicMaterialSubType> getAll(String subTypeName) {
-        try {
-            return swmsBasicMaterialSubTypeMapper.findList(subTypeName);
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return null;
+        return swmsBasicMaterialSubTypeMapper.findList(subTypeName);
     }
 
     /**
