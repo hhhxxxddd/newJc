@@ -1488,11 +1488,11 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
             List<ProductionInstrumentAddress> addresses = instrumentAddressMapper.selectByExample(example);
             for (int i = 0; i < addresses.size(); i++) {
                 Map<String, Object> map = new HashMap<>();
-                Float data = RealTimeUtil.timelyHttpMethod("http://192.168.190.173:10086/api/Snapshot?tagName", addresses.get(i).getAddress());
+                Float data = RealTimeUtil.timelyHttpMethod("http://192.168.190.162:10086/api/Snapshot?tagName", addresses.get(i).getAddress());
                 map.put("name", addresses.get(i).getName());
                 map.put("address", addresses.get(i).getAddress());
                 if (null == data) {
-                    map.put("value", -1);//有地址，没有返回值
+                    map.put("value", -1);//有地址，没有返回值ano'de
                 } else {
                     map.put("value", data);
                 }
@@ -1518,7 +1518,7 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
             } else {
                 Integer plcId = plcMaps.get(0).getPlcCode();
                 BasicInfoPrecursorPlcAddress address = addressMapper.selectByPrimaryKey(plcId);
-                Float data = RealTimeUtil.timelyHttpMethod("http://192.168.190.173:10086/api/Snapshot?tagName", address.getAddress());
+                Float data = RealTimeUtil.timelyHttpMethod("http://192.168.190.162:10086/api/Snapshot?tagName", address.getAddress());
                 map.put("address", address.getAddress());
                 if (null == data) {
                     map.put("value", -1);//有地址，没有返回值

@@ -81,4 +81,4 @@ spring:
 enable:
   timeService: true
 realTime:
-  url: http://192.168.190.173:10086/api/Snapshot
+  url: http://192.168.190.162:10086/api/Snapshot

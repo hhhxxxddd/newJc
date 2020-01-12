@@ -331,11 +331,11 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                     if (info.getDateType() == new Integer(0).byteValue()) {//dcs数据,犁刀混全是dcs数据
                         Float temp1 = getDcsValue(info.getCode(), head.getLineCode(), "已混量", head.getEndTime());
                         Float temp2 = getDcsValue(info.getCode(), head.getLineCode(), "结存量", head.getEndTime());
-                        Float temp3 = getDcsValue(info.getCode(),head.getLineCode(),"次数",head.getEndTime());
+                        Integer temp3 = getDcsCount(info.getCode(),head.getLineCode(),head.getPeriodCode(),head.getEndTime());
                         //fixme 物料有两个plc地址，无法对应出来
                         info.setMix(temp1);
                         info.setBalance(temp2);
-                        info.setValue(temp3);
+                        info.setValue(temp3.floatValue());
                     }
                     infos.add(info);
                 }
@@ -380,13 +380,13 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                     if (info.getDateType() == new Integer(0).byteValue()) {//dcs数据,粉碎全是是dcs数据
                         Float temp1 = getDcsValue(info.getCode(), head.getLineCode(), "进料量", head.getEndTime());
                         Float temp2 = getDcsValue(info.getCode(), head.getLineCode(), "结存量", head.getEndTime());
-                        Float temp3 = getDcsValue(info.getCode(), head.getLineCode(), "次数", head.getEndTime());
+                        Integer temp3 = getDcsCount(info.getCode(), head.getLineCode(), head.getPeriodCode(),head.getEndTime());
                         //fixme
                         if (info.getFlag()) {
                             info.setReceive(temp1);
                             info.setBalance(temp2);
                         } else {
-                            info.setValue(temp3);
+                            info.setValue(temp3.floatValue());
                         }
                     }
                     infos.add(info);
@@ -399,13 +399,13 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                     if (info.getDateType() == new Integer(0).byteValue()) {//dcs数据,二混全是dcs数据
                         Float temp1 = getDcsValue(info.getCode(), head.getLineCode(), "进料量", head.getEndTime());
                         Float temp2 = getDcsValue(info.getCode(), head.getLineCode(), "结存量", head.getEndTime());
-                        Float temp3 = getDcsValue(info.getCode(), head.getLineCode(), "次数", head.getEndTime());
+                        Integer temp3 = getDcsCount(info.getCode(), head.getLineCode(), head.getPeriodCode(), head.getEndTime());
                         //fixme
                         if (info.getFlag()) {
                             info.setReceive(temp1);
                             info.setBalance(temp2);
                         } else {
-                            info.setValue(temp3);
+                            info.setValue(temp3.floatValue());
                         }
                     }
                     infos.add(info);
@@ -418,13 +418,13 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                     if (info.getDateType() == new Integer(0).byteValue()) {//dcs数据,二烧部分是dcs数据
                         Float temp1 = getDcsValue(info.getCode(), head.getLineCode(), "入炉排数", head.getEndTime());
                         Float temp2 = getDcsValue(info.getCode(), head.getLineCode(), "出炉排数", head.getEndTime());
-                        Float temp3 = getDcsValue(info.getCode(), head.getLineCode(), "次数", head.getEndTime());
+                        Integer temp3 = getDcsCount(info.getCode(), head.getLineCode(), head.getPeriodCode(), head.getEndTime());
                         //fixme
                         if (info.getFlag()) {
                             info.setIntoFurnace(temp1.intValue());
                             info.setOutFurnace(temp2.intValue());
                         } else {
-                            info.setValue(temp3);
+                            info.setValue(temp3.floatValue());
                         }
                     }
                     infos.add(info);
@@ -437,7 +437,7 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                     if (info.getDateType() == new Integer(0).byteValue()) {//dcs数据,包装部分是dcs数据
                         Float temp1 = getDcsValue(info.getCode(), head.getLineCode(), "进料量", head.getEndTime());
                         Float temp2 = getDcsValue(info.getCode(), head.getLineCode(), "结存量", head.getEndTime());
-                        Float temp3 = getDcsValue(info.getCode(), head.getLineCode(), "次数", head.getEndTime());
+                        Integer temp3 = getDcsCount(info.getCode(), head.getLineCode(), head.getPeriodCode(), head.getEndTime());
                         //fixme
                         if(info.getCode() == 39){
                             info.setReceive(temp1);
@@ -445,7 +445,7 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                         if (info.getFlag()) {
                             info.setBalance(temp2);
                         } else {
-                            info.setValue(temp3);
+                            info.setValue(temp3.floatValue());
                         }
                     }
                     if(info.getDateType() == new Integer(2).byteValue()){//智能仓库数据，专为产成品
@@ -482,26 +482,6 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
         }
         ans.setProcesses(anodeProcesses);
         return ans;
-    }
-
-    private Float getValueByNameByTime(String matName, Date start, Date end) {
-        Double ans = Math.random() * 100 + 1;
-        return ans.floatValue();
-    }
-
-    private Float getDcsValue(Integer matId, Integer lineCode, String attName, Date date) {
-        Double t = Math.random() * 100 + 1;
-
-        /*BasicInfoAnodeMaterialPlcMapExample example = new BasicInfoAnodeMaterialPlcMapExample();
-        example.createCriteria().andMaterialCodeEqualTo(matId).andLineCodeEqualTo(lineCode).andMaterialAttEqualTo(attName);
-        List<BasicInfoAnodeMaterialPlcMap> maps = plcMapMapper.selectByExample(example);
-        if(maps.size() == 0)
-            return -2f;
-        String address = plcAddressMapper.selectByPrimaryKey(maps.get(0).getPlcCode()).getPlcAddress();
-        Float ans = RealTimeUtil.dcsForAnode("192.168.190.173/Snapshot",address,date);
-        return ans;*/
-
-        return t.floatValue();
     }
 
     @Override
@@ -2431,4 +2411,20 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
         }
         return new ArrayList();
     }
+
+
+    private Float getValueByNameByTime(String matName, Date start, Date end) {
+        Double ans = Math.random() * 100 + 1;
+        return ans.floatValue();
+    }
+
+    private Float getDcsValue(Integer matId, Integer lineCode, String attName, Date date) {
+        Double t = Math.random() * 100 + 1;
+        return t.floatValue();
+    }
+
+    private Integer getDcsCount(Integer matId,Integer lineCode,Integer preiodCode,Date date){
+        return 1;
+    }
 }
+
