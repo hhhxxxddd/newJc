@@ -1,7 +1,5 @@
 package com.jc.api.entity;
 
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.jinchi.common.web.entity.po.BasePo;
@@ -55,10 +53,10 @@ public class SwmsStockInLedgers extends BasePo implements Serializable {
     private Integer materialWorkshopId;
 
     @ApiModelProperty(value = "物料名称代码")
-    private Integer materialNameCode;
+    private String materialNameCode;
 
     @ApiModelProperty(value = "物料供应商代码")
-    private Integer materialSupplierCode;
+    private String materialSupplierCode;
 
     @ApiModelProperty(value = "物料名称")
     private String materialName;

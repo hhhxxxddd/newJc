@@ -75,9 +75,11 @@ public class SwmsBasicMeasureUnitService implements ISwmsBasicMeasureUnitService
         byUnit.eq("measure_unit", entity.getMeasureUnit()).last("limit 1");
         SwmsBasicMeasureUnit oldValue = swmsBasicMeasureUnitMapper.selectOne(byUnit);
         if (oldValue != null) return oldValue;
+        log.info("发现新计量单位,开始新增=========>");
         entity.setAutoFlag(true);
         entity.setMeasureUnitDesc("未知计量单位");
         swmsBasicMeasureUnitMapper.insert(entity);
+        log.info("新计量单位新增结束=========>{}", entity.toString());
         return entity;
     }
 

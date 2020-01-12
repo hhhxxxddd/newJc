@@ -10,7 +10,7 @@ package com.jc.api.utils.materialcode;
  */
 public class DecoderV1 extends AbstractMaterialDecoder {
     // "正确格式为:MC/批次号+车间号+类型+名称+袋号+厂商代号+重量" +
-    // "如:MC/BN180808-WS001-RAW-Fe-0001-QDBX-60KG");
+    // "如:MC/BN180808-WS001-RAW-Fe-01-QDBX-60KG");
     @Override
     public MaterialCode.DecodedMaterialCode decode(String code) {
         MaterialCode.DecodedMaterialCode decodedMaterialCode = MaterialCode.DecodedMaterialCode.newDecodeMaterialCode();
