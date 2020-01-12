@@ -18,6 +18,7 @@ spring:
     password: Znjs_2019
   application:
     name: REPOAPI-SERVICE
+
 feign:
   hystrix:
     enabled: true
