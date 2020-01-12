@@ -1,6 +1,7 @@
 package com.jc.api.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.jinchi.common.web.entity.po.BasePo;
@@ -41,5 +42,12 @@ public class SwmsBasicInactionStockDeadline extends BasePo implements Serializab
     @ApiModelProperty(value = "呆滞期限(天)")
     private Integer deadline;
 
+    //映射 - 物料类型名称
+    @TableField(exist = false)
+    private String typeName;
+
+    //映射 - 物料子类型名称
+    @TableField(exist = false)
+    private String subTypeName;
 
 }
