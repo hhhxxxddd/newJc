@@ -42,11 +42,14 @@
         material.Alkali_flag as "alkaliFlag",
         material.auto_flag as "autoFlag",
         material.stream_flag as "streamFlag",
+        material.supplier_id as "supplierId",
         type.type_name as "typeName",
-        subType.sub_type_name as "subTypeName"
+        subType.sub_type_name as "subTypeName",
+        supplier.material_supplier_name as "supplierName"
         FROM jc_repo_db.SWMS_basic_material_info material
-        LEFT JOIN SWMS_basic_material_type type ON material_type_id = type.id
-        LEFT JOIN SWMS_basic_material_sub_type subType ON sub_type_id = subType.id
+        LEFT JOIN jc_repo_db.SWMS_basic_material_type type ON material_type_id = type.id
+        LEFT JOIN jc_repo_db.SWMS_basic_material_sub_type subType ON sub_type_id = subType.id
+        LEFT JOIN jc_repo_db.SWMS_basic_supplier_info supplier ON supplier_id = supplier.id
         <where>
             <if test="materialName!=null and materialName!=''">
                 material.material_name like #{materialName}"%"
