@@ -37,5 +37,5 @@ public class TestController {
        return iSwmsStockInJournalAccountService.insert(materialCode, createdPerson);
     }
 
-    //出库模拟
+    //出库模拟-仅发送数据
 }

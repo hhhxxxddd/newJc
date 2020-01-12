@@ -1,6 +1,8 @@
 package com.jc.api.service.restservice.imp;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jc.api.entity.*;
 import com.jc.api.exception.custom.DataNotFindException;
 import com.jc.api.mapper.SwmsStockInJournalAccountMapper;
@@ -14,6 +16,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -48,6 +51,10 @@ public class SwmsStockInLedgersService implements ISwmsStockInLedgersService {
     @Autowired
     private ISwmsBasicMeasureUnitService iSwmsBasicMeasureUnitService;
 
+    /**
+     * 解析编码并存入台账
+     * @param SwmsStockInJournalAccountId 入库台账id
+     */
     @Override
     @Async("PoolTaskExecutor")
     @Transactional
@@ -141,5 +148,25 @@ public class SwmsStockInLedgersService implements ISwmsStockInLedgersService {
                 .setUsefulWeight(weightFloat)
                 .setStockDate(stockInLedgers.getCreatedTime());
         iSwmsStockInventoryReallyReportsService.autoAdd(newValue);
+    }
+
+    /**
+     * 查询所有
+     * @param materialCode
+     * @return
+     */
+    @Override
+    public List<SwmsStockInLedgers> getAll(String materialCode) {
+        return swmsStockInLedgersMapper.selectEntity(materialCode);
+    }
+
+    /**
+     * 查询所有-分页
+     * @param materialCode
+     * @return
+     */
+    @Override
+    public IPage<SwmsStockInLedgers> getAllByPage(Page page, String materialCode) {
+        return swmsStockInLedgersMapper.selectEntityByPage(page,materialCode);
     }
 }

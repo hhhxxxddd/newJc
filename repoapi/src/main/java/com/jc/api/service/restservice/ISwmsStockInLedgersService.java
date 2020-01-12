@@ -1,6 +1,7 @@
 package com.jc.api.service.restservice;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jc.api.entity.SwmsStockInLedgers;
 
 import java.util.List;
@@ -30,8 +31,8 @@ public interface ISwmsStockInLedgersService {
 
     /**
      * 查询所有-名称模糊/分页
-     * @param mateialCode
+     * @param materialCode
      * @return
      */
-    IPage<SwmsStockInLedgers> getAllByPage(String mateialCode);
+    IPage<SwmsStockInLedgers> getAllByPage(Page page, String materialCode);
 }

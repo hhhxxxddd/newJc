@@ -92,6 +92,8 @@ public class SwmsStockInLedgers extends BasePo implements Serializable {
     private String supplierName;
     @TableField(exist = false)
     private String realMaterialName;
+    @TableField(exist = false)
+    private String plantName;
 
 
 }

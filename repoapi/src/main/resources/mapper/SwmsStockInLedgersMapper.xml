@@ -1,0 +1,84 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jc.api.mapper.SwmsStockInLedgersMapper">
+    <select id="selectEntity" resultType="com.jc.api.entity.SwmsStockInLedgers">
+        SELECT
+        stock.id as "id",
+        stock.material_code as "materialCode",
+        stock.material_type_id as "materialTypeId",
+        stock.material_sub_type_id as "materialSubTypeId",
+        stock.material_workshop_id as "materialWorkShopId",
+        stock.material_name as "materialName",
+        stock.material_name_code as "materialNameCode",
+        stock.material_supplier_code as "materialSupplierCode",
+        stock.bag_num as "bagNum",
+        stock.created_person as "createdPerson",
+        stock.created_time as "createdTime",
+        stock.material_batch as "materialBatch",
+        stock.material_status as "materialStatus",
+        stock.measure_unit as "measureUnit",
+        stock.weight as "weight",
+        stock.stock_in_record_id as "stockInRecordId",
+        materialInfo.material_name as "realMaterialName",
+        supplier.material_supplier_name as "supplierName",
+        plant.plant_name as "plantName",
+        materialType.type_name as "materialTypeName",
+        subType.sub_type_name as "subTypeName"
+        FROM jc_repo_db.SWMS_stock_in_ledgers stock
+        LEFT JOIN jc_repo_db.SWMS_basic_material_info materialInfo
+        ON stock.material_name_code = materialInfo.id
+        LEFT JOIN jc_repo_db.SWMS_basic_supplier_info supplier
+        ON stock.material_supplier_code = supplier.id
+        LEFT JOIN jc_repo_db.SWMS_basic_plant_info plant
+        ON stock.material_workshop_id = plant.id
+        LEFT JOIN jc_repo_db.SWMS_basic_material_type materialType
+        ON stock.material_type_id = materialType.id
+        LEFT JOIN jc_repo_db.SWMS_basic_material_sub_type subType
+        ON stock.material_sub_type_id = subType.id
+        <where>
+            <if test="materialCode!=null and materialCode !='' ">
+                stock.material_code LIKE #{materialCode}"%"
+            </if>
+        </where>
+    </select>
+    <select id="selectEntityByPage" resultType="com.jc.api.entity.SwmsStockInLedgers">
+        SELECT
+        stock.id as "id",
+        stock.material_code as "materialCode",
+        stock.material_type_id as "materialTypeId",
+        stock.material_sub_type_id as "materialSubTypeId",
+        stock.material_workshop_id as "materialWorkShopId",
+        stock.material_name as "materialName",
+        stock.material_name_code as "materialNameCode",
+        stock.material_supplier_code as "materialSupplierCode",
+        stock.bag_num as "bagNum",
+        stock.created_person as "createdPerson",
+        stock.created_time as "createdTime",
+        stock.material_batch as "materialBatch",
+        stock.material_status as "materialStatus",
+        stock.measure_unit as "measureUnit",
+        stock.weight as "weight",
+        stock.stock_in_record_id as "stockInRecordId",
+        materialInfo.material_name as "realMaterialName",
+        supplier.material_supplier_name as "supplierName",
+        plant.plant_name as "plantName",
+        materialType.type_name as "materialTypeName",
+        subType.sub_type_name as "subTypeName"
+        FROM jc_repo_db.SWMS_stock_in_ledgers stock
+        LEFT JOIN jc_repo_db.SWMS_basic_material_info materialInfo
+        ON stock.material_name_code = materialInfo.id
+        LEFT JOIN jc_repo_db.SWMS_basic_supplier_info supplier
+        ON stock.material_supplier_code = supplier.id
+        LEFT JOIN jc_repo_db.SWMS_basic_plant_info plant
+        ON stock.material_workshop_id = plant.id
+        LEFT JOIN jc_repo_db.SWMS_basic_material_type materialType
+        ON stock.material_type_id = materialType.id
+        LEFT JOIN jc_repo_db.SWMS_basic_material_sub_type subType
+        ON stock.material_sub_type_id = subType.id
+        <where>
+        <if test="materialCode!=null and materialCode !='' ">
+            stock.material_code LIKE #{materialCode}"%"
+        </if>
+        </where>
+    </select>
+</mapper>
