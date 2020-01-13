@@ -1,13 +1,20 @@
 package com.jinchi.common.service;
 
+import com.fasterxml.jackson.core.type.TypeReference;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.jinchi.common.domain.*;
+import com.jinchi.common.dto.HistoryDataDto;
 import com.jinchi.common.dto.Page;
 import com.jinchi.common.dto.anode.*;
 import com.jinchi.common.mapper.*;
 import com.jinchi.common.utils.ComUtil;
+import com.jinchi.common.utils.GzipUtil;
+import com.jinchi.common.utils.RealTimeUtil;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.client.RestTemplate;
 
 import java.util.*;
 
@@ -69,6 +76,12 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
     AnodeProductionLineService anodeProductionLineService;
     @Autowired
     AnodeProcessNameService anodeProcessNameService;
+    @Autowired
+    BasicInfoAnodePlcAddressMapper addressMapper;
+    @Autowired
+    BasicInfoAnodeMaterialPlcMapMapper mapMapper;
+    @Autowired
+    private RestTemplate restTemplate;
 
     @Override
     public Map<String, Object> addComfirm(AnodeGoodsInProcessStatisticHead head) {
@@ -329,11 +342,11 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                 for (int l = 0; l < materials.size(); l++) {
                     AnodeMaterial info = new AnodeMaterial(materials.get(l));
                     if (info.getDateType() == new Integer(0).byteValue()) {//dcs数据,犁刀混全是dcs数据
-                        Float temp1 = getDcsValue(info.getCode(), head.getLineCode(), "已混量", head.getEndTime());
+                        //Float temp1 = getDcsValue(info.getCode(), head.getLineCode(), "已混量", head.getEndTime());
                         Float temp2 = getDcsValue(info.getCode(), head.getLineCode(), "结存量", head.getEndTime());
                         Integer temp3 = getDcsCount(info.getCode(),head.getLineCode(),head.getPeriodCode(),head.getEndTime());
                         //fixme 物料有两个plc地址，无法对应出来
-                        info.setMix(temp1);
+                        info.setMix(0f);
                         info.setBalance(temp2);
                         info.setValue(temp3.floatValue());
                     }
@@ -2419,12 +2432,27 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
     }
 
     private Float getDcsValue(Integer matId, Integer lineCode, String attName, Date date) {
-        Double t = Math.random() * 100 + 1;
-        return t.floatValue();
+        BasicInfoAnodeMaterialPlcMapExample example = new BasicInfoAnodeMaterialPlcMapExample();
+        example.createCriteria().andMaterialCodeEqualTo(matId).andLineCodeEqualTo(lineCode).andMaterialAttEqualTo(attName);
+        Integer plc = mapMapper.selectByExample(example).get(0).getPlcCode();
+        BasicInfoAnodePlcAddress address = addressMapper.selectByPrimaryKey(plc);
+        return RealTimeUtil.dcsForAnode("http://192.168.190.162:10086/api/History",address.getPlcAddress(),date);
     }
 
-    private Integer getDcsCount(Integer matId,Integer lineCode,Integer preiodCode,Date date){
-        return 1;
+    private Integer getDcsCount(Integer matId,Integer lineCode,Integer periodCode,Date date){
+        String attName = "";
+        if(periodCode == 1){
+            attName = "白班次数";
+        }else if(periodCode == 2){
+            attName = "晚班次数";
+        }else{
+            return 0;
+        }
+        BasicInfoAnodeMaterialPlcMapExample example = new BasicInfoAnodeMaterialPlcMapExample();
+        example.createCriteria().andMaterialCodeEqualTo(matId).andLineCodeEqualTo(lineCode).andMaterialAttEqualTo(attName);
+        Integer plc = mapMapper.selectByExample(example).get(0).getPlcCode();
+        BasicInfoAnodePlcAddress address = addressMapper.selectByPrimaryKey(plc);
+        return RealTimeUtil.dcsForAnode("http://192.168.190.162:10086/api/History",address.getPlcAddress(),date).intValue();
     }
 }
 

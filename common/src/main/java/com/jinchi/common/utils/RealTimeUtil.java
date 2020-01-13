@@ -70,21 +70,21 @@ public class RealTimeUtil {
 
     public static Float dcsForAnode(String url, String point, Date date){
         //传参url示例 192.168.1.1/snapshot xx.xxx 2019-10-10
-        url += "tagName=";
+        url += "?tagName=";
         url += point;
-        url += "?";
-        url += "beginTime=";
-        url += ComUtil.dateToString(date,"yyyy/MM/dd");
-        System.out.println(url);
+        url += "&";
+        url += "Time=";
+        //url += ComUtil.dateToString(date,"yyyy-MM-dd HH:mm:ss");
+        url += "2020-01-12 11:12:13";
         String response = restTemplate.getForObject(url, String.class);
-        if("[]".equals(response)){
+        if("{}".equals(response)){
             return null;
         }
-        response = response.replaceAll("\\[","");
-        response = response.replaceAll("]","");
-        response = response.replaceAll("\\{","");
-        response = response.replaceAll("}","");
-        String[] strs = response.split(",");
+        Integer start = response.lastIndexOf("{");
+        Integer end = response.indexOf("}");
+        String res = response.substring(start+1,end);
+        res = res.replaceAll(" ","");
+        String[] strs = res.split(",");
         String value = null;
         for(int i=0;i<strs.length;i++){
             if(strs[i].contains("Value")){
