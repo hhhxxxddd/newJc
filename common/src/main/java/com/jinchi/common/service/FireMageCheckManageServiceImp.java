@@ -93,7 +93,9 @@ public class FireMageCheckManageServiceImp implements FireMageCheckManageService
         for (int i = 0; i < infos.size(); i++) {
             FireMageDetectInfoDTO info = new FireMageDetectInfoDTO();
             info.setHead(infos.get(i));
-            info.setDeptName(deptMapper.selectByPrimaryKey(infos.get(i).getDeptCode()).getDeptName());
+            FireMageDept dept = deptMapper.selectByPrimaryKey(infos.get(i).getDeptCode());
+            String deptName = dept==null?"":dept.getDeptName();
+            info.setDeptName(deptName);
             FireMageBatchItemsValuesExample example1 = new FireMageBatchItemsValuesExample();
             example1.createCriteria().andBatchCodeEqualTo(infos.get(i).getCode());
             List<FireMageBatchItemsValues> values = itemsValuesMapper.selectByExample(example1);
@@ -119,7 +121,9 @@ public class FireMageCheckManageServiceImp implements FireMageCheckManageService
         FireMageBatchItemsValues itemsValues = itemsValuesMapper.selectByExample(example).get(0);
         List<String> containItems = Arrays.asList(itemsValues.getItemNames().split(","));
         List<String> containCodes = Arrays.asList(itemsValues.getItemCodes().split(","));
-        ans.setDeptName(deptMapper.selectByPrimaryKey(info.getDeptCode()).getDeptName());
+        FireMageDept dept = deptMapper.selectByPrimaryKey(info.getDeptCode());
+        String deptName = dept==null?"":dept.getDeptName();
+        ans.setDeptName(deptName);
         ans.setBatch(info.getBatch());
         ans.setCheckPeople(info.getDelieryPeople());
 
