@@ -1,6 +1,7 @@
 package com.jc.api.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -73,5 +74,15 @@ public class SwmsStockOutLedgersDayReports extends BasePo implements Serializabl
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date createdDay;
 
+    @TableField(exist = false)
+    private String supplierName;
 
+    @TableField(exist = false)
+    private String typeName;
+
+    @TableField(exist = false)
+    private String subTypeName;
+
+    @TableField(exist = false)
+    private String deptName;
 }

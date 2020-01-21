@@ -1,8 +1,11 @@
 package com.jc.api.mapper;
 
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jc.api.entity.SwmsStockInLedgersDayReports;
 import org.apache.ibatis.annotations.Mapper;
+import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
 /**
@@ -17,4 +20,10 @@ import org.springframework.stereotype.Repository;
 @Mapper
 public interface SwmsStockInLedgersDayReportsMapper extends BaseMapper<SwmsStockInLedgersDayReports> {
 
+    IPage<SwmsStockInLedgersDayReports> selectPageVo(Page page,
+                                                     @Param(value = "typeId") Integer typeId,
+                                                     @Param(value = "subTypeId") Integer subTypeId,
+                                                     @Param(value = "supplierId") Integer supplierId,
+                                                     @Param(value = "startTime") String startTime,
+                                                     @Param(value = "endTime") String endTime);
 }
