@@ -1,18 +1,18 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
-<mapper namespace="com.jc.api.mapper.SwmsStockInventoryDailyReportsMapper">
-    <select id="selectPageVo" resultType="com.jc.api.entity.SwmsStockInventoryDailyReports">
+<mapper namespace="com.jc.api.mapper.SwmsStockInventoryReallyReportsMapper">
+    <select id="selectPageVo" resultType="com.jc.api.entity.SwmsStockInventoryReallyReports">
         SELECT
         a.*,
         b.type_name AS "typeName",
         c.sub_type_name AS "subTypeName",
         d.material_supplier_name AS "supplierName"
-
         FROM
-        `SWMS_stock_inventory_daily_reports` a
+        `SWMS_stock_inventory_really_reports` a
         LEFT JOIN SWMS_basic_material_type b ON a.material_type_id = b.id
         LEFT JOIN SWMS_basic_material_sub_type c ON a.material_sub_type_id = c.id
         LEFT JOIN SWMS_basic_supplier_info d ON a.material_supplier_code = d.id
+        LEFT JOIN SWMS_basic_material_info e ON a.material_name_code = e.id
 
         <where>
             <if test="typeId != null">
@@ -21,21 +21,12 @@
             <if test="subTypeId != null">
                 and a.material_sub_type_id = #{subTypeId}
             </if>
-
-            <if test="startTime != null and startTime != ''">
-                and a.created_day &gt; #{startTime}
+            <if test="supplierId != null">
+                and a.material_supplier_code = #{supplierId}
             </if>
-
-            <if test="endTime != null and endTime != ''">
-                and a.created_day &lt; #{endTime}
+            <if test="materialNameCode != null">
+                and a.material_name_code = #{materialNameCode}
             </if>
         </where>
     </select>
-
-    <update id="updateComments">
-        UPDATE SWMS_stock_inventory_daily_reports
-        SET comments = #{comments}
-        WHERE
-        id = #{id}
-    </update>
 </mapper>
