@@ -86,4 +86,10 @@ public class SwmsBasicMaterialInfoController {
     public Result batchDelete(@RequestParam Set<String> ids){
         return Result.success(iSwmsBasicMaterialInfoService.batchDelete(ids));
     }
+
+    @ApiOperation(value = "根据物料大类搜索",notes = "根据物料大类搜索")
+    @GetMapping(value = "/getByType")
+    public Result getByType(@RequestParam Integer type){
+        return Result.success(iSwmsBasicMaterialInfoService.getByType(type));
+    }
 }

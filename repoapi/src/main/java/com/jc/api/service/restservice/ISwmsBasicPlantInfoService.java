@@ -77,4 +77,11 @@ public interface ISwmsBasicPlantInfoService {
      **/
     Boolean batchDelete(Set<String> ids);
 
+    /**
+     * 批量删除
+     * @param ids
+     * @return
+     */
+    void deleteByIds(Integer[] ids);
+
 }

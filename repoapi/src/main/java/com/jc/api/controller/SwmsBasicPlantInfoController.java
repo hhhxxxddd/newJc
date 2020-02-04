@@ -82,4 +82,13 @@ public class SwmsBasicPlantInfoController {
         log.debug("根据id删除供应车间记录:{}", id);
         return Result.success(iSwmsBasicPlantInfoService.delete(id));
     }
+
+    @ApiOperation(value = "删除供应车间信息", notes = "根据id删除供应车间信息")
+    @ApiResponses(@ApiResponse(code = 200, message = "处理成功", response = Result.class))
+    @DeleteMapping(value = "ids")
+    public Result deleteByIds(@RequestBody Integer[] ids) {
+        log.debug("根据id删除供应车间记录:{}", ids);
+        iSwmsBasicPlantInfoService.deleteByIds(ids);
+        return Result.success();
+    }
 }

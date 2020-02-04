@@ -200,4 +200,11 @@ public class SwmsBasicMaterialInfoService implements ISwmsBasicMaterialInfoServi
             throw new DataAssociationException("删除失败,数据使用中");
         }
     }
+
+    @Override
+    public List getByType(Integer type) {
+        QueryWrapper<SwmsBasicMaterialInfo> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("material_type_id",type);
+        return swmsBasicMaterialInfoMapper.selectList(queryWrapper);
+    }
 }

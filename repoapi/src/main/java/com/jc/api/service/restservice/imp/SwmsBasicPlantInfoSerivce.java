@@ -56,7 +56,7 @@ public class SwmsBasicPlantInfoSerivce implements ISwmsBasicPlantInfoService {
     @Override
     public IPage<SwmsBasicPlantInfo> getAllByPage(Page page, String plantName) {
         QueryWrapper<SwmsBasicPlantInfo> queryWrapper = new QueryWrapper<>();
-        if (StringUtil.isNullOrEmpty(plantName)) {
+        if (!StringUtil.isNullOrEmpty(plantName)) {
             queryWrapper.likeRight("plant_name", plantName);
         }
         return swmsBasicPlantInfoMapper.selectPage(page, queryWrapper);
@@ -158,5 +158,11 @@ public class SwmsBasicPlantInfoSerivce implements ISwmsBasicPlantInfoService {
         } catch (Exception e) {
             throw new DataAssociationException("删除失败,数据正在被使用");
         }
+    }
+
+    @Override
+    public void deleteByIds(Integer[] ids) {
+        for(Integer id:ids)
+            delete(id);
     }
 }
