@@ -91,14 +91,18 @@ public class SwmsBasicMeasureUnitService implements ISwmsBasicMeasureUnitService
     @Override
     public List<SwmsBasicMeasureUnit> getAll(String measureUnitDesc) {
         QueryWrapper<SwmsBasicMeasureUnit> byDesc = new QueryWrapper<>();
-        byDesc.likeRight("measure_unit_desc", measureUnitDesc);
+        if (!StringUtil.isNullOrEmpty(measureUnitDesc)) {
+            byDesc.likeRight("measure_unit_desc", measureUnitDesc);
+        }
         return swmsBasicMeasureUnitMapper.selectList(byDesc);
     }
 
     @Override
     public IPage<SwmsBasicMeasureUnit> getAllByPage(Page page, String measureUnitDesc) {
         QueryWrapper<SwmsBasicMeasureUnit> byDesc = new QueryWrapper<>();
-        byDesc.likeRight("measure_unit_desc", measureUnitDesc);
+        if (!StringUtil.isNullOrEmpty(measureUnitDesc)) {
+            byDesc.likeRight("measure_unit_desc", measureUnitDesc);
+        }
         return swmsBasicMeasureUnitMapper.selectPage(page, byDesc);
     }
 
@@ -109,6 +113,6 @@ public class SwmsBasicMeasureUnitService implements ISwmsBasicMeasureUnitService
 
     @Override
     public Boolean batchDelete(Set<String> ids) {
-        return swmsBasicMeasureUnitMapper.deleteBatchIds(ids)==ids.size();
+        return swmsBasicMeasureUnitMapper.deleteBatchIds(ids) == ids.size();
     }
 }
