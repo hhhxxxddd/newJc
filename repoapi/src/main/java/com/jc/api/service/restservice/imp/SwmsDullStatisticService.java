@@ -2,11 +2,9 @@ package com.jc.api.service.restservice.imp;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.jc.api.entity.SwmsBasicInactionStockDeadline;
-import com.jc.api.entity.SwmsStockInLedgers;
 import com.jc.api.entity.SwmsStockInLedgersDayReports;
 import com.jc.api.mapper.SwmsBasicInactionStockDeadlineMapper;
 import com.jc.api.mapper.SwmsStockInLedgersDayReportsMapper;
-import com.jc.api.mapper.SwmsStockInLedgersMapper;
 import com.jc.api.service.restservice.ISwmsDullStatisticService;
 import com.jc.api.utils.ComUtil;
 import org.springframework.beans.factory.annotation.Autowired;
