@@ -1,6 +1,7 @@
 package com.jc.api.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -88,5 +89,12 @@ public class SwmsStockInLedgersDayReports extends BasePo implements Serializable
     @ApiModelProperty(value = "是否出完库标记位flag=0，表示未出完库，为默认值；flag=1，表示已出完库")
     private Boolean flag;
 
+    @TableField(exist = false)
+    private String supplierName;
 
+    @TableField(exist = false)
+    private String typeName;
+
+    @TableField(exist = false)
+    private String subTypeName;
 }

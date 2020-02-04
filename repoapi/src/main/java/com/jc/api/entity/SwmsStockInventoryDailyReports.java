@@ -1,6 +1,7 @@
 package com.jc.api.entity;
 
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import com.baomidou.mybatisplus.annotation.TableName;
 import com.fasterxml.jackson.annotation.JsonFormat;
@@ -77,5 +78,12 @@ public class SwmsStockInventoryDailyReports extends BasePo implements Serializab
     @ApiModelProperty(value = "备注")
     private String comments;
 
+    @TableField(exist = false)
+    private String supplierName;
 
+    @TableField(exist = false)
+    private String typeName;
+
+    @TableField(exist = false)
+    private String subTypeName;
 }

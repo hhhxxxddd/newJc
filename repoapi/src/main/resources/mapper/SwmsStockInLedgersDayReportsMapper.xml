@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jc.api.mapper.SwmsStockInLedgersDayReportsMapper">
+
+    <select id="selectPageVo" resultType="com.jc.api.entity.SwmsStockInLedgersDayReports">
+        SELECT
+        a.*,
+        b.type_name as "typeName",
+        c.sub_type_name as "subTypeName",
+        d.material_supplier_name as "supplierName"
+        FROM
+        `SWMS_stock_in_ledgers_day_reports` a
+        LEFT JOIN SWMS_basic_material_type b ON a.material_type_id = b.id
+        LEFT JOIN SWMS_basic_material_sub_type c ON a.material_sub_type_id = c.id
+        LEFT JOIN SWMS_basic_supplier_info d ON a.material_supplier_code = d.id
+
+        <where>
+            <if test="typeId != null">
+                and a.material_type_id = #{typeId}
+            </if>
+            <if test="subTypeId != null">
+                and a.material_sub_type_id = #{subTypeId}
+            </if>
+
+            <if test="supplierId != null">
+                and a.material_supplier_code = #{supplierId}
+            </if>
+
+            <if test="startTime != null and startTime != ''">
+                and a.created_day &gt; #{startTime}
+            </if>
+
+            <if test="endTime != null and endTime != ''">
+                and a.created_day &lt; #{endTime}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateById">
+		UPDATE SWMS_stock_in_ledgers_day_reports
+			SET check_status = #{status}
+		WHERE id = #{id}
+	</update>
+</mapper>

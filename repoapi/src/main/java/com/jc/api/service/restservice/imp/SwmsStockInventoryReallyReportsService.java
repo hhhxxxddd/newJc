@@ -1,12 +1,18 @@
 package com.jc.api.service.restservice.imp;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jc.api.entity.SwmsStockInLedgers;
 import com.jc.api.entity.SwmsStockInventoryReallyReports;
+import com.jc.api.mapper.SwmsStockInLedgersMapper;
 import com.jc.api.mapper.SwmsStockInventoryReallyReportsMapper;
 import com.jc.api.service.restservice.ISwmsStockInventoryReallyReportsService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
+import java.util.List;
 
 /**
  * @author XudongHu
@@ -21,8 +27,12 @@ public class SwmsStockInventoryReallyReportsService implements ISwmsStockInvento
     @Autowired
     private SwmsStockInventoryReallyReportsMapper swmsStockInventoryReallyReportsMapper;
 
+    @Autowired
+    private SwmsStockInLedgersMapper swmsStockInLedgersMapper;
+
     /**
      * 添加库存
+     *
      * @param entity
      * @return
      */
@@ -40,14 +50,26 @@ public class SwmsStockInventoryReallyReportsService implements ISwmsStockInvento
             oldValue.setUsefulWeight(usefulWeight+entity.getUsefulWeight());
             swmsStockInventoryReallyReportsMapper.updateById(oldValue);
             log.info("增加库存结束:");
-            log.info("实际库存:{}->{}",realWeight,oldValue.getRealWeight());
-            log.info("可用库存:{}-{}",usefulWeight,oldValue.getUsefulWeight());
-        }else {
-            log.info("发现新库存-开始初始化新增:{}",entity);
+            log.info("实际库存:{}->{}", realWeight, oldValue.getRealWeight());
+            log.info("可用库存:{}-{}", usefulWeight, oldValue.getUsefulWeight());
+        } else {
+            log.info("发现新库存-开始初始化新增:{}", entity);
             swmsStockInventoryReallyReportsMapper.insert(entity);
             log.info("库存初始化新增结束");
             log.info(entity.toString());
         }
         return entity;
+    }
+
+    @Override
+    public IPage<SwmsStockInventoryReallyReports> selectByPage(Page page, Integer typeId, Integer subTypeId, Integer materialNameCode, Integer supplierId) {
+        return swmsStockInventoryReallyReportsMapper.selectPageVo(page, typeId, subTypeId, supplierId, materialNameCode);
+    }
+
+    @Override
+    public List<SwmsStockInLedgers> getByBatch(String materialBatch) {
+        QueryWrapper<SwmsStockInLedgers> byBatch = new QueryWrapper<>();
+        byBatch.eq("material_batch", materialBatch).ne("material_status", 2);
+        return swmsStockInLedgersMapper.selectList(byBatch);
     }
 }
