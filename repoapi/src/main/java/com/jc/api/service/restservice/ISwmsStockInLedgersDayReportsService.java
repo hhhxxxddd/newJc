@@ -15,5 +15,9 @@ import com.jc.api.entity.SwmsStockInLedgersDayReports;
  */
 public interface ISwmsStockInLedgersDayReportsService extends IService<SwmsStockInLedgersDayReports> {
 
-    IPage<SwmsStockInLedgersDayReports> selectByPage(Page page,Integer typeId,Integer subTypeId,Integer supplierId,String startTime,String endTime);
+    IPage<SwmsStockInLedgersDayReports> selectByPage(Page page, Integer typeId, Integer subTypeId, Integer supplierId, String startTime, String endTime);
+
+    void updateByIds(Long[] ids, Integer status);
+
+    void updateById(Long id, Integer status);
 }

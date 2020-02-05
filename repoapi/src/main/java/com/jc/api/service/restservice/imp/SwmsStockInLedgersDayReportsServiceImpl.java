@@ -27,6 +27,18 @@ public class SwmsStockInLedgersDayReportsServiceImpl extends ServiceImpl<SwmsSto
 
     @Override
     public IPage<SwmsStockInLedgersDayReports> selectByPage(Page page, Integer typeId, Integer subTypeId, Integer supplierId, String startTime, String endTime) {
-        return reportsMapper.selectPageVo(page,typeId,subTypeId,supplierId,startTime,endTime);
+        return reportsMapper.selectPageVo(page, typeId, subTypeId, supplierId, startTime, endTime);
+    }
+
+    @Override
+    public void updateByIds(Long[] ids, Integer status) {
+        for (Long id : ids) {
+            updateById(id, status);
+        }
+    }
+
+    @Override
+    public void updateById(Long id, Integer status) {
+        reportsMapper.updateById(id, status);
     }
 }

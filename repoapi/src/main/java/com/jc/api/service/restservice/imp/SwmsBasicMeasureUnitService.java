@@ -38,6 +38,11 @@ public class SwmsBasicMeasureUnitService implements ISwmsBasicMeasureUnitService
         if (StringUtil.isNullOrEmpty(entity.getMeasureUnitDesc())) {
             throw new ParamVerifyException("新增失败,计量单位描述不存在");
         }
+        QueryWrapper<SwmsBasicMeasureUnit> byUnit = new QueryWrapper<>();
+        byUnit.eq("measure_unit", entity.getMeasureUnit()).last("limit 1");
+        if (swmsBasicMeasureUnitMapper.selectOne(byUnit) != null) {
+            throw new DataDuplicateException("新增失败,计量单位重复:" + entity.getMeasureUnit());
+        }
         entity.setAutoFlag(false);
         return entity;
     }
@@ -91,14 +96,18 @@ public class SwmsBasicMeasureUnitService implements ISwmsBasicMeasureUnitService
     @Override
     public List<SwmsBasicMeasureUnit> getAll(String measureUnitDesc) {
         QueryWrapper<SwmsBasicMeasureUnit> byDesc = new QueryWrapper<>();
-        byDesc.likeRight("measure_unit_desc", measureUnitDesc);
+        if (!StringUtil.isNullOrEmpty(measureUnitDesc)) {
+            byDesc.likeRight("measure_unit_desc", measureUnitDesc);
+        }
         return swmsBasicMeasureUnitMapper.selectList(byDesc);
     }
 
     @Override
     public IPage<SwmsBasicMeasureUnit> getAllByPage(Page page, String measureUnitDesc) {
         QueryWrapper<SwmsBasicMeasureUnit> byDesc = new QueryWrapper<>();
-        byDesc.likeRight("measure_unit_desc", measureUnitDesc);
+        if (!StringUtil.isNullOrEmpty(measureUnitDesc)) {
+            byDesc.likeRight("measure_unit_desc", measureUnitDesc);
+        }
         return swmsBasicMeasureUnitMapper.selectPage(page, byDesc);
     }
 
@@ -109,6 +118,6 @@ public class SwmsBasicMeasureUnitService implements ISwmsBasicMeasureUnitService
 
     @Override
     public Boolean batchDelete(Set<String> ids) {
-        return swmsBasicMeasureUnitMapper.deleteBatchIds(ids)==ids.size();
+        return swmsBasicMeasureUnitMapper.deleteBatchIds(ids) == ids.size();
     }
 }

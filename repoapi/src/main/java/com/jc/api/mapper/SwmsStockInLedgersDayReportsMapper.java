@@ -26,4 +26,6 @@ public interface SwmsStockInLedgersDayReportsMapper extends BaseMapper<SwmsStock
                                                      @Param(value = "supplierId") Integer supplierId,
                                                      @Param(value = "startTime") String startTime,
                                                      @Param(value = "endTime") String endTime);
+
+    void updateById(@Param(value = "id") Long id, @Param(value = "status") Integer status);
 }
