@@ -24,3 +24,5 @@ feign:
     enabled: true
 mybatis-plus:
   mapper-locations: mapper/*.xml
+schedule:
+  enable: true
