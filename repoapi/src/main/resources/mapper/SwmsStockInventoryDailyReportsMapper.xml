@@ -23,11 +23,11 @@
             </if>
 
             <if test="startTime != null and startTime != ''">
-                and a.created_day &gt; #{startTime}
+                and a.stock_date &gt; #{startTime}
             </if>
 
             <if test="endTime != null and endTime != ''">
-                and a.created_day &lt; #{endTime}
+                and a.stock_date &lt; #{endTime}
             </if>
         </where>
     </select>
