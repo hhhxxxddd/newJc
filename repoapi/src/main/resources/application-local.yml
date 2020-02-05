@@ -23,3 +23,5 @@ spring:
 feign:
   hystrix:
     enabled: true
+schedule:
+  enable: true
