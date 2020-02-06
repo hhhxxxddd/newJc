@@ -29,6 +29,7 @@ public class SwmsStockAgeStatisticService implements ISwmsStockAgeStatisticServi
     @Override
     public Map turnoverRate(Integer type, Integer subType,String time) {
         Map<String,Object> ans = new HashMap<>();
+        time += "-01 00:00:00";
         LocalDateTime localDateTime = ComUtil.stringToLocalDateTime(time,"yyyy-MM-dd HH:mm:ss");
         if(subType != null) {
             QueryWrapper<SwmsStockInventoryTurnoverRateMonthReportsDetails> queryWrapper = new QueryWrapper<>();
