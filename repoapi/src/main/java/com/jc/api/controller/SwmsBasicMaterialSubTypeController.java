@@ -81,4 +81,11 @@ public class SwmsBasicMaterialSubTypeController {
         return Result.success(swmsBasicMaterialSubTypeService.batchDelete(ids));
     }
 
+    @ApiOperation(value = "根据大类获取物料子类型", notes = "根据大类获取物料子类型")
+    @ApiResponses(@ApiResponse(code = 200, message = "处理成功", response = Result.class))
+    @GetMapping(value = "/getByType")
+    public Result getByType(@RequestParam Integer type){
+        return Result.success(swmsBasicMaterialSubTypeService.getByType(type));
+    }
+
 }

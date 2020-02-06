@@ -179,4 +179,16 @@ public class SwmsBasicMaterialSubTypeService implements ISwmsBasicMaterialSubTyp
             throw new DataAssociationException("删除失败,数据正在被使用");
         }
     }
+
+    /**
+     * 根据大类查找小类
+     * @param type
+     * @return
+     */
+    @Override
+    public List getByType(Integer type) {
+        QueryWrapper<SwmsBasicMaterialSubType> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("type_id",type);
+        return swmsBasicMaterialSubTypeMapper.selectList(queryWrapper);
+    }
 }

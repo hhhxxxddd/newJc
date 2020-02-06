@@ -74,4 +74,11 @@ public interface ISwmsBasicMaterialSubTypeService {
      * @return
      */
     Boolean batchDelete(Set<String> ids);
+
+    /**
+     * 根据主类查子类
+     * @param type
+     * @return
+     */
+    List getByType(Integer type);
 }
