@@ -30,7 +30,7 @@ public class SwmsInOutAcountController {
 
     @PostMapping(value = "page")
     @ApiResponses(@ApiResponse(code = 200, message = "处理成功", response = Result.class))
-    @ApiOperation(value = "新增统计")
+    @ApiOperation(value = "分页")
     public Result page(@RequestParam(required = false,defaultValue = "") Integer type,
                        @RequestParam(required = false,defaultValue = "") Integer subType,
                        @RequestParam(required = false,defaultValue = "") Integer matId,

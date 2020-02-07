@@ -76,4 +76,5 @@ public interface ISwmsBasicMaterialTypeService {
      java.lang.Boolean
      **/
     Boolean batchDelete(Set<String> ids);
+
 }
