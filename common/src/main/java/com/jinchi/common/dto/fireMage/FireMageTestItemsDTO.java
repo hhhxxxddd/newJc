@@ -6,9 +6,9 @@ public class FireMageTestItemsDTO extends FireMageTestItems {
 
     private boolean flag;
 
-    private Float values = null;
+    private Object values = null;
 
-    public FireMageTestItemsDTO(Long code, String name, String unit, boolean flag,Float values) {
+    public FireMageTestItemsDTO(Long code, String name, String unit, boolean flag,Object values) {
         super(code, name, unit);
         this.flag = flag;
         this.values = values;
@@ -29,11 +29,11 @@ public class FireMageTestItemsDTO extends FireMageTestItems {
         this.flag = flag;
     }
 
-    public Float getValues() {
+    public Object getValues() {
         return values;
     }
 
-    public void setValues(Float values) {
+    public void setValues(Object values) {
         this.values = values;
     }
 }

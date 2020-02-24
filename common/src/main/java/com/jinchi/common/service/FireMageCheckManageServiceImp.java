@@ -505,7 +505,7 @@ public class FireMageCheckManageServiceImp implements FireMageCheckManageService
             if (values[i].equals("-1")) {
                 itemsDTO.setValues(null);
             } else {
-                itemsDTO.setValues(Float.parseFloat(values[i]));
+                itemsDTO.setValues(values[i]);
             }
             itemsDTOS.add(itemsDTO);
         }
