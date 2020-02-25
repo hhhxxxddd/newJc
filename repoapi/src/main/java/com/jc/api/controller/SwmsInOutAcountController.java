@@ -34,9 +34,9 @@ public class SwmsInOutAcountController {
     public Result page(@RequestParam(required = false,defaultValue = "") Integer type,
                        @RequestParam(required = false,defaultValue = "") Integer subType,
                        @RequestParam(required = false,defaultValue = "") Integer matId,
-                       @RequestParam(required = false,defaultValue = "") Integer month,
+                       @RequestParam(required = false,defaultValue = "") String date,
                        @RequestBody Page page
                        ){
-        return Result.success(service.pages(type,subType,matId,month,page));
+        return Result.success(service.pages(type,subType,matId,date,page));
     }
 }

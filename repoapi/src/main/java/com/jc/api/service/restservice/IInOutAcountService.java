@@ -7,5 +7,5 @@ public interface IInOutAcountService {
 
     Boolean addStatistic(Integer year,Integer month,String startTime,String endTime);
 
-    IPage pages(Integer type, Integer subType, Integer matId, Integer month, Page page);
+    IPage pages(Integer type, Integer subType, Integer matId, String date, Page page);
 }

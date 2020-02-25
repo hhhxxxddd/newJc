@@ -10,10 +10,12 @@ import com.jc.api.service.restservice.IInOutAcountService;
 import com.jc.api.utils.ComUtil;
 import com.jc.api.utils.WeightUnitConvertUtil;
 import com.netflix.discovery.converters.Auto;
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.time.LocalDateTime;
 import java.util.*;
 
 @Service
@@ -250,12 +252,23 @@ public class InOutAcountService implements IInOutAcountService {
     }
 
     @Override
-    public IPage pages(Integer type, Integer subType, Integer matId, Integer month, Page page) {
+    public IPage pages(Integer type, Integer subType, Integer matId, String date, Page page) {
+        Integer year = null,month = null;
+        LocalDateTime time = null;
+        if(StringUtils.isNotEmpty(date)){
+            date += "-01 00:00:00";
+            time = ComUtil.stringToLocalDateTime(date,"yyyy-MM-dd HH:mm:ss");
+            year = time.getYear();
+            month = time.getMonthValue();
+
+        }
+
         QueryWrapper<SwmsStockInOutMonthReports> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq(type!=null,"material_type_id",type)
                 .eq(subType!=null,"material_sub_type_id",subType)
                 .eq(matId!=null,"material_name_code",matId)
-                .eq(month!=null,"months",month);
+                .eq(month!=null,"months",month)
+                .eq(year!=null,"years",year);
         IPage ans = inOutMonthReportsMapper.selectPage(page,queryWrapper);
         List<SwmsStockInOutMonthReports> re = ans.getRecords();
         List<Map> res = new ArrayList<>();
