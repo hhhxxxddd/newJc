@@ -9,7 +9,6 @@ import com.jc.api.mapper.*;
 import com.jc.api.service.restservice.IInOutAcountService;
 import com.jc.api.utils.ComUtil;
 import com.jc.api.utils.WeightUnitConvertUtil;
-import com.netflix.discovery.converters.Auto;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -57,6 +56,13 @@ public class InOutAcountService implements IInOutAcountService {
         } else {
             lastMonth = month - 1;
         }
+        QueryWrapper<SwmsStockInOutMonthReports> reportsQueryWrapper = new QueryWrapper<>();
+        reportsQueryWrapper
+                .eq("months",month)
+                .eq("years",year);
+        Integer cnt = inOutMonthReportsMapper.selectCount(reportsQueryWrapper);
+        if(cnt > 0)
+            return true;//如果已经统计过，则不用再重新统计了
 
         QueryWrapper<SwmsStockInventoryDailyReports> queryWrapper = new QueryWrapper<>();
         queryWrapper.ge("stock_date", start)
