@@ -8,7 +8,7 @@ import com.jc.api.entity.dto.AuditDTO;
 import com.jc.api.entity.vo.OutQueryVo;
 import com.jc.api.mapper.*;
 import com.jc.api.service.feignservice.ICommonService;
-import com.jc.api.service.restservice.IFireMageOutService;
+import com.jc.api.service.restservice.IWetMageOutService;
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -18,7 +18,7 @@ import java.util.*;
 
 @Service
 @Transactional
-public class FireMageOutService implements IFireMageOutService {
+public class WetMageOutService implements IWetMageOutService {
     @Autowired
     SwmsStockInventoryReallyReportsMapper reallyReportsMapper;
     @Autowired
@@ -45,8 +45,11 @@ public class FireMageOutService implements IFireMageOutService {
     @Override
     public Boolean sendAudit(List<AuditDTO> mats, Integer deptCode, Integer lineCode,
                              Integer outPoint, Integer outType, Integer isUrgent,
-                             Integer auditId,Integer userId) {
-        String common = iCommonService.send2audit(userId,isUrgent,auditId,1);
+                             Integer auditId,Integer userId,String batch) {
+        if(!iCommonService.validateBatch(batch)){
+            return false;
+        }
+        String common = iCommonService.send2audit(userId,isUrgent,auditId,2);
         if(common == null)
             return false;
         String[] s = common.split("@");
@@ -57,7 +60,8 @@ public class FireMageOutService implements IFireMageOutService {
                 .setApplicationFormId(Long.parseLong(s[1]))
                 .setStockOutRecordHeadCode(s[0])
                 .setDeptCode(deptCode)
-                .setHfLineCode(lineCode)
+                .setSfLineCode(lineCode)
+                .setBatchCode(batch)//尚未做到逗号分隔
                 .setDeliveryTypeCode(outType)
                 .setDeliveryAddressCode(outPoint)
                 //.setMaterialTypeId(materialInfo.getMaterialTypeId())
@@ -67,7 +71,7 @@ public class FireMageOutService implements IFireMageOutService {
                 .setCreatedPerson(iCommonService.personName(userId))
                 .setCompletionTime(new Date())
                 .setMaterialStatus(0)
-                .setSysFlag(false);//火法出库
+                .setSysFlag(true);//湿法出库
         outRecordHeadMapper.insert(head);
 
         for(int i=0;i<mats.size();i++){
@@ -107,10 +111,10 @@ public class FireMageOutService implements IFireMageOutService {
                     .setMaterialNameCode(mat.getMatId())
                     .setMaterialSupplierCode(material.getSupplierId())
                     .setMaterialName(material.getMaterialName())
+                    .setWeight(mat.getWeight())
                     .setMaterialCode(ledgers.getMaterialCode())
                     .setMaterialBatch(ledgers.getMaterialBatch())
                     .setBagNum(ledgers.getBagNum())
-                    .setWeight(mat.getWeight())
                     .setMeasureUnit(material.getMeasureUnit())
                     .setCreatedTime(new Date())
                     .setCompletionFlag(false);
@@ -125,7 +129,7 @@ public class FireMageOutService implements IFireMageOutService {
         queryWrapper.eq(deptCode != null,"dept_code",deptCode)
                 .gt(StringUtils.isNotBlank(date),"completion_time",date+" 00:00:00")
                 .lt(StringUtils.isNotBlank(date),"completion_time",date+" 23:59:59")
-                .eq("sys_flag",0);
+                .eq("sys_flag",1);
         IPage ans = outRecordHeadMapper.selectPage(page,queryWrapper);
         List<SwmsStockOutRecordHead> heads = ans.getRecords();
         List<Map> list = new ArrayList<>();

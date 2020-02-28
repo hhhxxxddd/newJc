@@ -3,6 +3,7 @@ package com.jc.api.service.feignservice;
 import com.alibaba.fastjson.JSONObject;
 import com.jc.api.config.FallBack;
 import com.jc.api.config.FeignConfig;
+import io.swagger.models.auth.In;
 import org.springframework.cloud.openfeign.FeignClient;
 import org.springframework.web.bind.annotation.*;
 
@@ -51,5 +52,10 @@ public interface ICommonService {
     @RequestMapping(value = "/jc/send2audit",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
     String send2audit(@RequestParam Integer personId,
                       @RequestParam Integer isUrgent,
-                      @RequestParam Integer auditId);
+                      @RequestParam Integer auditId,
+                      @RequestParam Integer flag);
+
+    //校验批号
+    @RequestMapping(value = "/jc/validateBatch",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
+    Boolean validateBatch(@RequestParam String batch);
 }

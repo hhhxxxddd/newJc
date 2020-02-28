@@ -3,6 +3,7 @@ package com.jc.api.controller;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jc.api.entity.dto.AuditDTO;
 import com.jc.api.service.restservice.imp.FireMageOutService;
+import com.jc.api.service.restservice.imp.WetMageOutService;
 import com.jinchi.common.core.vo.Result;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -14,12 +15,12 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping(value = "/fire")
-@Api(tags = "出库管理-火法出库")
-public class FireMageOutController {
+@RequestMapping(value = "/wet")
+@Api(tags = "出库管理-湿法出库")
+public class WetMageOutController {
 
     @Autowired
-    FireMageOutService service;
+    WetMageOutService service;
 
     @GetMapping(value = "/query")
     @ApiOperation(value = "查询按钮")
@@ -39,7 +40,7 @@ public class FireMageOutController {
     }
 
     @PostMapping(value = "page")
-    @ApiOperation(value= "火法出库单查询")
+    @ApiOperation(value= "湿法出库单查询")
     @ApiResponses(@ApiResponse(code = 200, message = "处理成功", response = Result.class))
     public Result page(@RequestParam(required = false)Integer deptCode,@RequestParam(required = false)String date,
                        @RequestBody Page page){
@@ -56,8 +57,10 @@ public class FireMageOutController {
                         @RequestParam Integer outType,
                         @RequestParam Integer isUrgent,
                         @RequestParam Integer auditId,
-                        @RequestParam Integer userId){
-        return Result.success(service.sendAudit(mats, deptCode, lineCode, outPoint, outType, isUrgent, auditId, userId));
+                        @RequestParam Integer userId,
+                        @RequestParam String batch){
+        System.out.println(mats);
+        return Result.success(service.sendAudit(mats, deptCode, lineCode, outPoint, outType, isUrgent, auditId, userId,batch));
     }
 
     @GetMapping(value = "detail")

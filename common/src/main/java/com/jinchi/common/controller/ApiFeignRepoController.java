@@ -21,6 +21,7 @@ import org.springframework.web.bind.annotation.RestController;
 import java.util.Date;
 
 import static com.jinchi.common.constant.BatchTypeEnum.FIRE_MAGE_OUT;
+import static com.jinchi.common.constant.BatchTypeEnum.WET_OUT;
 
 /**
  * @author XudongHu
@@ -49,6 +50,8 @@ public class ApiFeignRepoController {
     CommonBatchNumberMapper commonBatchNumberMapper;
     @Autowired
     DataTaskRecordService dataTaskRecordService;
+    @Autowired
+    ProductionBatchInfoService batchInfoService;
     private Logger logger = LoggerFactory.getLogger(ApiFeignRepoController.class);
 
     /**
@@ -128,18 +131,45 @@ public class ApiFeignRepoController {
     @PostMapping(value = "/jc/send2audit")
     public String send2audit(@RequestParam Integer personId,
                              @RequestParam Integer isUrgent,
-                             @RequestParam Integer auditId){
-        String batch = NumberGenerator.batchNumberGenerator(FIRE_MAGE_OUT.typeCode());
-        CommonBatchNumber commonBatchNumber =
-                CommonBatchFactory.initialize()
-                        .setCreatePersonId(personId)
-                        .setBatchNumber(batch)
-                        .setIsUrgent(isUrgent)
-                        .setDescription(FIRE_MAGE_OUT.description())
-                        .setDataType(FIRE_MAGE_OUT.typeCode());
-        commonBatchNumberMapper.insert(commonBatchNumber);
-        //流程
-        dataTaskRecordService.send2audit(commonBatchNumber.getId(),auditId,isUrgent);
-        return commonBatchNumber.getBatchNumber() + "-" + commonBatchNumber.getId();
+                             @RequestParam Integer auditId,
+                             @RequestParam Integer flag){
+        if(flag == 1) {
+            logger.info("Feign-common：火法出库调用审核流程");
+            String batch = NumberGenerator.batchNumberGenerator(FIRE_MAGE_OUT.typeCode());
+            CommonBatchNumber commonBatchNumber =
+                    CommonBatchFactory.initialize()
+                            .setCreatePersonId(personId)
+                            .setBatchNumber(batch)
+                            .setIsUrgent(isUrgent)
+                            .setDescription(FIRE_MAGE_OUT.description())
+                            .setDataType(FIRE_MAGE_OUT.typeCode());
+            commonBatchNumberMapper.insert(commonBatchNumber);
+            //流程
+            dataTaskRecordService.send2audit(commonBatchNumber.getId(), auditId, isUrgent);
+            return commonBatchNumber.getBatchNumber() + "@" + commonBatchNumber.getId();
+        }
+        if(flag == 2){
+            logger.info("Feign-common：湿法出库调用审核流程");
+            String batch = NumberGenerator.batchNumberGenerator(WET_OUT.typeCode());
+            CommonBatchNumber commonBatchNumber =
+                    CommonBatchFactory.initialize()
+                            .setCreatePersonId(personId)
+                            .setBatchNumber(batch)
+                            .setIsUrgent(isUrgent)
+                            .setDescription(WET_OUT.description())
+                            .setDataType(WET_OUT.typeCode());
+            commonBatchNumberMapper.insert(commonBatchNumber);
+            //流程
+            dataTaskRecordService.send2audit(commonBatchNumber.getId(), auditId, isUrgent);
+            return commonBatchNumber.getBatchNumber() + "@" + commonBatchNumber.getId();
+        }
+        return null;
+    }
+
+    @PostMapping(value = "/jc/validateBatch")
+    public Boolean validateBatch(@RequestParam String batch){
+        logger.info("Feign-common：调用批次信息服务，查询批号是否存在");
+        ProductionBatchInfo info = batchInfoService.getInfo(batch);
+        return info==null?false:true;
     }
 }

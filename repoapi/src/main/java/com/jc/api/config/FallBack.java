@@ -60,7 +60,12 @@ public class FallBack implements ICommonService {
     }
 
     @Override
-    public String send2audit(Integer personId, Integer isUrgent, Integer auditId) {
+    public String send2audit(Integer personId, Integer isUrgent, Integer auditId, Integer flag) {
+        return null;
+    }
+
+    @Override
+    public Boolean validateBatch(String batch) {
         return null;
     }
 }

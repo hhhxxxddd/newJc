@@ -728,6 +728,8 @@ public class ProductionBatchInfoServiceImp implements ProductionBatchInfoService
     public ProductionBatchInfo getInfo(String batch) {
         ProductionBatchInfoExample example = new ProductionBatchInfoExample();
         example.createCriteria().andBatchEqualTo(batch);
+        if(productionBatchInfoMapper.selectByExample(example).size() == 0)
+            return null;
         return productionBatchInfoMapper.selectByExample(example).get(0);
     }
 
