@@ -43,6 +43,26 @@ public class FallBack implements ICommonService {
         log.error("调用创建人查询接口失败,连接中断");
         return "加载失败";
     }
+
+    @Override
+    public String deptName(Integer id) {
+        return null;
+    }
+
+    @Override
+    public String fireLine(Integer id) {
+        return null;
+    }
+
+    @Override
+    public String line(Integer id) {
+        return null;
+    }
+
+    @Override
+    public String send2audit(Integer personId, Integer isUrgent, Integer auditId) {
+        return null;
+    }
 }
 
 

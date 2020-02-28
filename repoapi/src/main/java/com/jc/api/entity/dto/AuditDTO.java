@@ -8,9 +8,11 @@ import lombok.Data;
 @Data
 public class AuditDTO {
 
-    private Long matId;
+    private Integer matId;
     private String matName;
     private String metBatch;
-    private Long stockId;
+    private Long ledgersId;
+    private Float weight;
+    private String group;
 
 }

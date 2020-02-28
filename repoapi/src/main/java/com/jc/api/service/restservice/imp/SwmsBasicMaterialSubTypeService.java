@@ -69,10 +69,10 @@ public class SwmsBasicMaterialSubTypeService implements ISwmsBasicMaterialSubTyp
     public Boolean add(SwmsBasicMaterialSubType swmsBasicMaterialSubType) {
         QueryWrapper<SwmsBasicMaterialSubType> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("sub_type_code", swmsBasicMaterialSubType.getSubTypeCode());
-        List<SwmsBasicMaterialSubType> queryByCode = swmsBasicMaterialSubTypeMapper.selectList(queryWrapper);
+        /*List<SwmsBasicMaterialSubType> queryByCode = swmsBasicMaterialSubTypeMapper.selectList(queryWrapper);
         if (queryByCode.size() > 0) {
             throw new DataDuplicateException("新增失败,类型代号同名:" + swmsBasicMaterialSubType.getSubTypeCode());
-        }
+        }*/
 
         if (swmsBasicMaterialSubType.getTypeId() == null) {
             throw new DataDuplicateException("物料类型未选择");

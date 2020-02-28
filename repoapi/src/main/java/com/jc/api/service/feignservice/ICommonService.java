@@ -35,4 +35,21 @@ public interface ICommonService {
 
     /*@RequestMapping(value = "/redis/feign",method = RequestMethod.GET)
     String feign(@RequestParam String msg);*/
+    //查询部门名称
+    @RequestMapping(value = "/jc/deptName",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
+    String deptName(@RequestParam Integer id);
+
+    //查询火法产线
+    @RequestMapping(value = "/jc/fireLine",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
+    String fireLine(@RequestParam Integer id);
+
+    //查询湿法产线
+    @RequestMapping(value = "/jc/line",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
+    String line(@RequestParam Integer id);
+
+    //出库送审
+    @RequestMapping(value = "/jc/send2audit",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
+    String send2audit(@RequestParam Integer personId,
+                      @RequestParam Integer isUrgent,
+                      @RequestParam Integer auditId);
 }

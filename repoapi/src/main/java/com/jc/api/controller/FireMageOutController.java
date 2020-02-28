@@ -34,4 +34,12 @@ public class FireMageOutController {
     public Result queryDown(@RequestParam Integer matId, @RequestBody Page page){
         return Result.success(service.getDataByMatid(matId, page));
     }
+
+    @PostMapping(value = "page")
+    @ApiOperation(value= "火法出库单查询")
+    @ApiResponses(@ApiResponse(code = 200, message = "处理成功", response = Result.class))
+    public Result page(@RequestParam(required = false)Integer deptCode,@RequestParam(required = false)String date,
+                       @RequestBody Page page){
+        return Result.success(service.getByPage(deptCode,date,page));
+    }
 }

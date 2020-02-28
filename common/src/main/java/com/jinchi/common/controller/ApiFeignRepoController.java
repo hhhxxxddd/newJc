@@ -1,14 +1,15 @@
 package com.jinchi.common.controller;
 
 import com.alibaba.fastjson.JSONObject;
-import com.jinchi.common.domain.ProductLine;
-import com.jinchi.common.domain.RepoBaseEndPosition;
+import com.jinchi.common.domain.*;
 import com.jinchi.common.dto.AuthUserDTO;
 import com.jinchi.common.dto.repository.RepoOutHeadDTO;
-import com.jinchi.common.service.AuthUserService;
-import com.jinchi.common.service.ProductLineService;
-import com.jinchi.common.service.RepoBaseEndPositionService;
-import com.jinchi.common.service.RepoOutApplyService;
+import com.jinchi.common.mapper.BasicInfoAnodeProductionLineMapper;
+import com.jinchi.common.mapper.BasicInfoPrecursorProductionLineMapper;
+import com.jinchi.common.mapper.CommonBatchNumberMapper;
+import com.jinchi.common.model.factorypattern.CommonBatchFactory;
+import com.jinchi.common.service.*;
+import com.jinchi.common.utils.NumberGenerator;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -18,6 +19,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
+
+import static com.jinchi.common.constant.BatchTypeEnum.FIRE_MAGE_OUT;
 
 /**
  * @author XudongHu
@@ -36,6 +39,16 @@ public class ApiFeignRepoController {
     private ProductLineService productLineService;
     @Autowired
     private RepoBaseEndPositionService repoBaseEndPositionService;
+    @Autowired
+    DeptManageService deptManageService;
+    @Autowired
+    BasicInfoAnodeProductionLineMapper lineMapper;
+    @Autowired
+    BasicInfoPrecursorProductionLineMapper sLineMapper;
+    @Autowired
+    CommonBatchNumberMapper commonBatchNumberMapper;
+    @Autowired
+    DataTaskRecordService dataTaskRecordService;
     private Logger logger = LoggerFactory.getLogger(ApiFeignRepoController.class);
 
     /**
@@ -91,4 +104,42 @@ public class ApiFeignRepoController {
         return byId==null?"未知名称":byId.getEndPosition();
     }
 
+    @PostMapping(value = "/jc/deptName")
+    public String deptName(@RequestParam Integer id){
+        logger.info("Feign-common:查询部门名称");
+        BasicInfoDept dept =  deptManageService.getDeptById(id);
+        return dept==null?"未知部门":dept.getName();
+    }
+
+    @PostMapping(value = "/jc/fireLine")
+    public String fireLine(@RequestParam Integer id){
+        logger.info("Feign-common:查询火法产线");
+        BasicInfoAnodeProductionLine line = lineMapper.selectByPrimaryKey(id);
+        return line==null?"未知产线":line.getName();
+    }
+
+    @PostMapping(value = "/jc/line")
+    public String line(@RequestParam Integer id){
+        logger.info("Feign-common:查询湿法产线");
+        BasicInfoPrecursorProductionLine line = sLineMapper.selectByPrimaryKey(id);
+        return line==null?"未知产线":line.getName();
+    }
+
+    @PostMapping(value = "/jc/send2audit")
+    public String send2audit(@RequestParam Integer personId,
+                             @RequestParam Integer isUrgent,
+                             @RequestParam Integer auditId){
+        String batch = NumberGenerator.batchNumberGenerator(FIRE_MAGE_OUT.typeCode());
+        CommonBatchNumber commonBatchNumber =
+                CommonBatchFactory.initialize()
+                        .setCreatePersonId(personId)
+                        .setBatchNumber(batch)
+                        .setIsUrgent(isUrgent)
+                        .setDescription(FIRE_MAGE_OUT.description())
+                        .setDataType(FIRE_MAGE_OUT.typeCode());
+        commonBatchNumberMapper.insert(commonBatchNumber);
+        //流程
+        dataTaskRecordService.send2audit(commonBatchNumber.getId(),auditId,isUrgent);
+        return commonBatchNumber.getBatchNumber() + "-" + commonBatchNumber.getId();
+    }
 }

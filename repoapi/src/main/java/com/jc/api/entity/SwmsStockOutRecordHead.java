@@ -40,7 +40,7 @@ public class SwmsStockOutRecordHead extends BasePo implements Serializable {
     private Long applicationFormId;
 
     @ApiModelProperty(value = "出库单号 对应commonBatchNumber中的批号")
-    private Long stockOutRecordHeadCode;
+    private String stockOutRecordHeadCode;
 
     @ApiModelProperty(value = "领用单位id")
     private Integer deptCode;
@@ -60,11 +60,14 @@ public class SwmsStockOutRecordHead extends BasePo implements Serializable {
     @ApiModelProperty(value = "出库点")
     private Integer deliveryAddressCode;
 
+    @ApiModelProperty(value = "物料类型id")
+    private Integer materialTypeId;
+
     @ApiModelProperty(value = "物料子类型id")
     private Integer materialSubTypeId;
 
-    @ApiModelProperty(value = "物料入库车间id")
-    private Integer materialWorkshopId;
+    /*@ApiModelProperty(value = "物料入库车间id")
+    private Integer materialWorkshopId;*/
 
     @ApiModelProperty(value = "申请时间")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")

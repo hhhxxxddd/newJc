@@ -43,7 +43,7 @@ public class SwmsStockOutRecordDetail extends BasePo implements Serializable {
     private Long stockOutRecordHeadId;
 
     @ApiModelProperty(value = "出库单号")
-    private Long stockOutRecordHeadCode;
+    private String stockOutRecordHeadCode;
 
     @ApiModelProperty(value = "分组名")
     private String groupName;

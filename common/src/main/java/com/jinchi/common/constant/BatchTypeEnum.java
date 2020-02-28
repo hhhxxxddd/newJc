@@ -28,7 +28,9 @@ public enum BatchTypeEnum {
     TECH_PRODUCT_STANDARD("成品标准数据",14,"CPBZ",1),
     EQUIPMENT_INSTRUCTOR("设备指导数据",15,"SBZD",1),
     GHOST_RECORD("幽灵数据",66,"NMSL",1),
-    PROCESS_PARAMETER("工艺参数数据",16,"GYCS",1);
+    PROCESS_PARAMETER("工艺参数数据",16,"GYCS",1),
+    FIRE_MAGE_OUT("火法出库",17,"HFCK",1),
+    WET_OUT("湿法出库",18,"SFCK",1);
 
     private String description; //描述
     private Integer typeCode;   //类型值
