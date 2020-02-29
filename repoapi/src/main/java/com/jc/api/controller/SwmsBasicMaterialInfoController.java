@@ -69,9 +69,9 @@ public class SwmsBasicMaterialInfoController {
     @ApiOperation(value = "更新物料信息", notes = "更新")
     @ApiResponses(@ApiResponse(code = 200, message = "处理成功", response = Result.class))
     @PutMapping(value = "/{id}")
-    public Result update(@PathVariable String id,@RequestBody SwmsBasicMaterialInfo swmsBasicSupplierInfo,@RequestParam String[] supIds) {
+    public Result update(@PathVariable String id,@RequestBody SwmsBasicMaterialInfo swmsBasicSupplierInfo) {
         swmsBasicSupplierInfo.setId(id);
-        return Result.success(iSwmsBasicMaterialInfoService.update(swmsBasicSupplierInfo,supIds));
+        return Result.success(iSwmsBasicMaterialInfoService.update(swmsBasicSupplierInfo,swmsBasicSupplierInfo.getSupplierIds()));
     }
 
     @ApiOperation(value = "删除物料信息", notes = "根据id删除供应车间信息")
