@@ -190,19 +190,18 @@ public class SwmsBasicMaterialInfoService implements ISwmsBasicMaterialInfoServi
             QueryWrapper<SwmsBasicMatSup> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("mat_id", record.get(i).getId());
             List<SwmsBasicMatSup> ms = matSupMapper.selectList(queryWrapper);
-            String supNames = "";
+            List ss = new ArrayList();
             if (ms.size() != 0) {
                 SwmsBasicSupplierInfo sInfo = supplierInfoMapper.selectById(ms.get(0).getSupId());
-                supNames += (sInfo == null ? "未知供应商" : sInfo.getMaterialSupplierName());
+                ss.add(sInfo);
             }
             for (int l = 1; l < ms.size(); l++) {
                 SwmsBasicSupplierInfo sInfo = supplierInfoMapper.selectById(ms.get(l).getSupId());
-                supNames += ",";
-                supNames += (sInfo == null ? "未知供应商" : sInfo.getMaterialSupplierName());
+                ss.add(sInfo);
             }
             Map<String, Object> map = new HashMap<>();
             map.put("head", record.get(i));
-            map.put("sup", supNames);
+            map.put("sup", ss);
             rec.add(map);
         }
         ans.setRecords(rec);

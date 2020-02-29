@@ -54,9 +54,9 @@ public class SwmsBasicMaterialInfoController {
     @ApiOperation(value = "新增物料信息", notes = "新增")
     @ApiResponses(@ApiResponse(code = 200, message = "处理成功", response = Result.class))
     @PostMapping(value = "/add")
-    public Result add(@RequestBody SwmsBasicMaterialInfo swmsBasicSupplierInfo,@RequestParam String[] supIds) {
+    public Result add(@RequestBody SwmsBasicMaterialInfo swmsBasicSupplierInfo) {
         swmsBasicSupplierInfo.setAutoFlag(false);
-        return Result.success(iSwmsBasicMaterialInfoService.add(swmsBasicSupplierInfo,supIds));
+        return Result.success(iSwmsBasicMaterialInfoService.add(swmsBasicSupplierInfo,swmsBasicSupplierInfo.getSupplierIds()));
     }
 
     @ApiOperation(value = "仅供测试使用-自动新增物料信息", notes = "自动新增,存在则无动作,不存在则新增")

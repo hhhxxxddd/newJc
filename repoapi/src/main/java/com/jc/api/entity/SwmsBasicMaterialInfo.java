@@ -72,12 +72,11 @@ public class SwmsBasicMaterialInfo extends BasePo implements Serializable {
     @ApiModelProperty(value = "流量统计标志位 0参加 1 不参加")
     private Boolean streamFlag;
 
-/*
+
     @ApiModelProperty(value = "物料供应商id")
     @TableField(exist = false)
-    private Integer supplierId;
+    private String[] supplierIds;
 
-*/
 
     @TableField(exist = false)
     private String supplierName;
