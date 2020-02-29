@@ -109,7 +109,7 @@ public class WetMageOutService implements IWetMageOutService {
                     .setMaterialSubTypeId(material.getSubTypeId())
                     .setMaterialWorkshopId(ledgers.getMaterialWorkshopId())
                     .setMaterialNameCode(mat.getMatId())
-                    .setMaterialSupplierCode(material.getSupplierId())
+                    .setMaterialSupplierCode(ledgers.getMaterialSupplierCode())
                     .setMaterialName(material.getMaterialName())
                     .setWeight(mat.getWeight())
                     .setMaterialCode(ledgers.getMaterialCode())

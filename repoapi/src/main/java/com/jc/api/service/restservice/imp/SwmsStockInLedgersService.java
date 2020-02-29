@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jc.api.entity.*;
 import com.jc.api.exception.custom.DataNotFindException;
+import com.jc.api.mapper.SwmsMatSupMapper;
 import com.jc.api.mapper.SwmsStockInJournalAccountMapper;
 import com.jc.api.mapper.SwmsStockInLedgersMapper;
 import com.jc.api.service.restservice.*;
@@ -50,6 +51,8 @@ public class SwmsStockInLedgersService implements ISwmsStockInLedgersService {
     private ISwmsBasicPlantInfoService iSwmsBasicPlantInfoService;
     @Autowired
     private ISwmsBasicMeasureUnitService iSwmsBasicMeasureUnitService;
+    @Autowired
+    private SwmsMatSupMapper matSupMapper;
 
     /**
      * 解析编码并存入台账
@@ -92,7 +95,7 @@ public class SwmsStockInLedgersService implements ISwmsStockInLedgersService {
                 .setMaterialNameCode(materialNameCode)
                 .setMaterialTypeId(Integer.valueOf(materialType.getId()))
                 .setSubTypeId(Integer.valueOf(subType.getId()))
-                .setSupplierId(Integer.valueOf(supplierInfo.getId()))
+                //.setSupplierId(Integer.valueOf(supplierInfo.getId()))
                 .setMeasureUnit(unit)
                 .setStreamFlag(false)
                 .setAlkaliFlag(false)
@@ -102,6 +105,11 @@ public class SwmsStockInLedgersService implements ISwmsStockInLedgersService {
                 .setCoFlag(false)
                 .setAutoFlag(true);
         SwmsBasicMaterialInfo newMaterialInfo = iSwmsBasicMaterialInfoService.autoAdd(materialInfo);
+        //建立物料供应商映射
+        SwmsBasicMatSup matSup = new SwmsBasicMatSup();
+        matSup.setMatId(Integer.valueOf(newMaterialInfo.getId()));
+        matSup.setSupId(Integer.valueOf(supplierInfo.getId()));
+
         //物料车间代号 自动新增
         String materialWorkShopCode = codeContent.getMaterialWorkShopCode();
         SwmsBasicPlantInfo plantInfo = iSwmsBasicPlantInfoService.autoAdd(new SwmsBasicPlantInfo().setPlantCode(materialWorkShopCode));

@@ -2,17 +2,11 @@ package com.jc.api.service.restservice.imp;
 
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.jc.api.entity.SwmsBasicMaterialInfo;
-import com.jc.api.entity.SwmsBasicMaterialSubType;
-import com.jc.api.entity.SwmsBasicMaterialType;
-import com.jc.api.entity.SwmsBasicSafetyStock;
+import com.jc.api.entity.*;
 import com.jc.api.exception.custom.DataAssociationException;
 import com.jc.api.exception.custom.DataDuplicateException;
 import com.jc.api.exception.custom.ParamVerifyException;
-import com.jc.api.mapper.SwmsBasicMaterialInfoMapper;
-import com.jc.api.mapper.SwmsBasicMaterialSubTypeMapper;
-import com.jc.api.mapper.SwmsBasicMaterialTypeMapper;
-import com.jc.api.mapper.SwmsBasicSafetyStockMapper;
+import com.jc.api.mapper.*;
 import com.jc.api.service.restservice.ISwmsBasicSafetyStockService;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.lang.StringUtils;
@@ -43,6 +37,9 @@ public class SwmsBasicSafetyStockService implements ISwmsBasicSafetyStockService
 
     @Autowired
     private SwmsBasicMaterialSubTypeMapper swmsBasicMaterialSubTypeMapper;
+
+    @Autowired
+    private SwmsBasicSupplierInfoMapper supplierInfoMapper;
 
     /**
      * @Description:    安全库存-不分页
@@ -101,6 +98,12 @@ public class SwmsBasicSafetyStockService implements ISwmsBasicSafetyStockService
             if (materialSubType == null) {
                 throw new DataDuplicateException("新增失败：子类型信息不存在：" + swmsBasicSafetyStock.getSubTypeId());
         }
+        }
+        if (swmsBasicSafetyStock.getSupId() != null) {
+            SwmsBasicSupplierInfo supplierInfo = supplierInfoMapper.selectById(swmsBasicSafetyStock.getSupId());
+            if (supplierInfo == null) {
+                throw new DataDuplicateException("新增失败：供应商不存在：" + swmsBasicSafetyStock.getSupId());
+            }
         }
         return swmsBasicSafetyStockMapper.insert(swmsBasicSafetyStock) > 0;
     }

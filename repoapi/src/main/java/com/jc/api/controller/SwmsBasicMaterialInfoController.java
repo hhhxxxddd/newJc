@@ -54,9 +54,9 @@ public class SwmsBasicMaterialInfoController {
     @ApiOperation(value = "新增物料信息", notes = "新增")
     @ApiResponses(@ApiResponse(code = 200, message = "处理成功", response = Result.class))
     @PostMapping(value = "/add")
-    public Result add(@RequestBody SwmsBasicMaterialInfo swmsBasicSupplierInfo) {
+    public Result add(@RequestBody SwmsBasicMaterialInfo swmsBasicSupplierInfo,@RequestParam String[] supIds) {
         swmsBasicSupplierInfo.setAutoFlag(false);
-        return Result.success(iSwmsBasicMaterialInfoService.add(swmsBasicSupplierInfo));
+        return Result.success(iSwmsBasicMaterialInfoService.add(swmsBasicSupplierInfo,supIds));
     }
 
     @ApiOperation(value = "仅供测试使用-自动新增物料信息", notes = "自动新增,存在则无动作,不存在则新增")
@@ -69,9 +69,9 @@ public class SwmsBasicMaterialInfoController {
     @ApiOperation(value = "更新物料信息", notes = "更新")
     @ApiResponses(@ApiResponse(code = 200, message = "处理成功", response = Result.class))
     @PutMapping(value = "/{id}")
-    public Result update(@PathVariable String id,@RequestBody SwmsBasicMaterialInfo swmsBasicSupplierInfo) {
+    public Result update(@PathVariable String id,@RequestBody SwmsBasicMaterialInfo swmsBasicSupplierInfo,@RequestParam String[] supIds) {
         swmsBasicSupplierInfo.setId(id);
-        return Result.success(iSwmsBasicMaterialInfoService.update(swmsBasicSupplierInfo));
+        return Result.success(iSwmsBasicMaterialInfoService.update(swmsBasicSupplierInfo,supIds));
     }
 
     @ApiOperation(value = "删除物料信息", notes = "根据id删除供应车间信息")

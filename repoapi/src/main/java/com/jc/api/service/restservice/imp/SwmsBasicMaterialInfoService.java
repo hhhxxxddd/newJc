@@ -3,21 +3,21 @@ package com.jc.api.service.restservice.imp;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.jc.api.entity.SwmsBasicMatSup;
 import com.jc.api.entity.SwmsBasicMaterialInfo;
+import com.jc.api.entity.SwmsBasicSupplierInfo;
 import com.jc.api.exception.custom.DataAssociationException;
 import com.jc.api.exception.custom.DataDuplicateException;
 import com.jc.api.exception.custom.ParamVerifyException;
-import com.jc.api.mapper.SwmsBasicMaterialInfoMapper;
-import com.jc.api.mapper.SwmsBasicMaterialSubTypeMapper;
-import com.jc.api.mapper.SwmsBasicMaterialTypeMapper;
+import com.jc.api.mapper.*;
 import com.jc.api.service.restservice.ISwmsBasicMaterialInfoService;
 import io.netty.util.internal.StringUtil;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author XudongHu
@@ -26,6 +26,7 @@ import java.util.Set;
  * @modifier
  * @since 20.1.12日3:01
  */
+@Transactional
 @Service
 @Slf4j
 public class SwmsBasicMaterialInfoService implements ISwmsBasicMaterialInfoService {
@@ -35,6 +36,10 @@ public class SwmsBasicMaterialInfoService implements ISwmsBasicMaterialInfoServi
     private SwmsBasicMaterialTypeMapper swmsBasicMaterialTypeMapper;
     @Autowired
     private SwmsBasicMaterialSubTypeMapper swmsBasicMaterialSubTypeMapper;
+    @Autowired
+    private SwmsMatSupMapper matSupMapper;
+    @Autowired
+    private SwmsBasicSupplierInfoMapper supplierInfoMapper;
 
     //新增校验
     private SwmsBasicMaterialInfo addVerify(SwmsBasicMaterialInfo entity) {
@@ -98,9 +103,17 @@ public class SwmsBasicMaterialInfoService implements ISwmsBasicMaterialInfoServi
      * @return
      */
     @Override
-    public Boolean add(SwmsBasicMaterialInfo entity) {
+    public Boolean add(SwmsBasicMaterialInfo entity, String[] supIds) {
         entity.setAutoFlag(false);
-        return swmsBasicMaterialInfoMapper.insert(addVerify(entity)) > 0;
+        SwmsBasicMaterialInfo mat = addVerify(entity);
+        swmsBasicMaterialInfoMapper.insert(mat);
+        for (int i = 0; i < supIds.length; i++) {
+            SwmsBasicMatSup ms = new SwmsBasicMatSup();
+            ms.setSupId(Integer.valueOf(supIds[i]));
+            ms.setMatId(Integer.valueOf(mat.getId()));
+            matSupMapper.insert(ms);
+        }
+        return true;
     }
 
     /**
@@ -143,8 +156,11 @@ public class SwmsBasicMaterialInfoService implements ISwmsBasicMaterialInfoServi
      * @return
      */
     @Override
-    public Boolean update(SwmsBasicMaterialInfo entity) {
-        return swmsBasicMaterialInfoMapper.updateById(updateVerify(entity)) > 0;
+    public Boolean update(SwmsBasicMaterialInfo entity, String[] supIds) {
+        SwmsBasicMaterialInfo mat = updateVerify(entity);
+        swmsBasicMaterialInfoMapper.updateById(mat);
+        updateSup(mat.getId(), supIds);
+        return true;
     }
 
     /**
@@ -167,7 +183,30 @@ public class SwmsBasicMaterialInfoService implements ISwmsBasicMaterialInfoServi
      */
     @Override
     public IPage<SwmsBasicMaterialInfo> getAllByPage(Page page, String materialName) {
-        return swmsBasicMaterialInfoMapper.selectPageVo(page, materialName);
+        IPage ans = swmsBasicMaterialInfoMapper.selectPageVo(page, materialName);
+        List<Map<String, Object>> rec = new ArrayList<>();
+        List<SwmsBasicMaterialInfo> record = ans.getRecords();
+        for (int i = 0; i < record.size(); i++) {
+            QueryWrapper<SwmsBasicMatSup> queryWrapper = new QueryWrapper<>();
+            queryWrapper.eq("mat_id", record.get(i).getId());
+            List<SwmsBasicMatSup> ms = matSupMapper.selectList(queryWrapper);
+            String supNames = "";
+            if (ms.size() != 0) {
+                SwmsBasicSupplierInfo sInfo = supplierInfoMapper.selectById(ms.get(0).getSupId());
+                supNames += (sInfo == null ? "未知供应商" : sInfo.getMaterialSupplierName());
+            }
+            for (int l = 1; l < ms.size(); l++) {
+                SwmsBasicSupplierInfo sInfo = supplierInfoMapper.selectById(ms.get(l).getSupId());
+                supNames += ",";
+                supNames += (sInfo == null ? "未知供应商" : sInfo.getMaterialSupplierName());
+            }
+            Map<String, Object> map = new HashMap<>();
+            map.put("head", record.get(i));
+            map.put("sup", supNames);
+            rec.add(map);
+        }
+        ans.setRecords(rec);
+        return ans;
     }
 
     /**
@@ -179,9 +218,12 @@ public class SwmsBasicMaterialInfoService implements ISwmsBasicMaterialInfoServi
     @Override
     public Boolean delete(String id) {
         try {
+            Map<String, Object> map = new HashMap<>();
+            map.put("mat_id", id);
+            matSupMapper.deleteByMap(map);
             return swmsBasicMaterialInfoMapper.deleteById(id) > 0;
-        }catch (Exception e){
-            throw new DataAssociationException("删除失败,数据使用中:"+id);
+        } catch (Exception e) {
+            throw new DataAssociationException("删除失败,数据使用中:" + id);
         }
 
     }
@@ -195,8 +237,13 @@ public class SwmsBasicMaterialInfoService implements ISwmsBasicMaterialInfoServi
     @Override
     public Boolean batchDelete(Set<String> ids) {
         try {
+            Map<String, Object> map = new HashMap<>();
+            ids.forEach(e -> {
+                map.put("mat_id", e);
+                matSupMapper.deleteByMap(map);
+            });
             return swmsBasicMaterialInfoMapper.deleteBatchIds(ids) > 0;
-        }catch (Exception e){
+        } catch (Exception e) {
             throw new DataAssociationException("删除失败,数据使用中");
         }
     }
@@ -204,7 +251,21 @@ public class SwmsBasicMaterialInfoService implements ISwmsBasicMaterialInfoServi
     @Override
     public List getByType(Integer type) {
         QueryWrapper<SwmsBasicMaterialInfo> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("material_type_id",type);
+        queryWrapper.eq("material_type_id", type);
         return swmsBasicMaterialInfoMapper.selectList(queryWrapper);
+    }
+
+    private void updateSup(String matId, String[] ids) {
+        Map<String, Object> map = new HashMap<>();
+        map.put("mat_id", matId);
+        matSupMapper.deleteByMap(map);
+
+        for (int i = 0; i < ids.length; i++) {
+            SwmsBasicMatSup ms = new SwmsBasicMatSup();
+            ms.setMatId(Integer.valueOf(matId));
+            ms.setSupId(Integer.valueOf(ids[i]));
+            matSupMapper.insert(ms);
+        }
+
     }
 }

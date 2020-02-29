@@ -105,7 +105,7 @@ public class FireMageOutService implements IFireMageOutService {
                     .setMaterialSubTypeId(material.getSubTypeId())
                     .setMaterialWorkshopId(ledgers.getMaterialWorkshopId())
                     .setMaterialNameCode(mat.getMatId())
-                    .setMaterialSupplierCode(material.getSupplierId())
+                    .setMaterialSupplierCode(ledgers.getMaterialSupplierCode())
                     .setMaterialName(material.getMaterialName())
                     .setMaterialCode(ledgers.getMaterialCode())
                     .setMaterialBatch(ledgers.getMaterialBatch())

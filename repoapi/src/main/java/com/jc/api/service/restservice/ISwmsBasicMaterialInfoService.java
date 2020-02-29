@@ -20,7 +20,7 @@ public interface ISwmsBasicMaterialInfoService {
      * @param entity
      * @return
      */
-    Boolean add(SwmsBasicMaterialInfo entity);
+    Boolean add(SwmsBasicMaterialInfo entity,String[] supIds);
 
     /**
      * 自动新增
@@ -34,7 +34,7 @@ public interface ISwmsBasicMaterialInfoService {
      * @param entity
      * @return
      */
-    Boolean update(SwmsBasicMaterialInfo entity);
+    Boolean update(SwmsBasicMaterialInfo entity,String[] supIds);
 
     /**
      * 查询所有-名称模糊

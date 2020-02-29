@@ -46,6 +46,9 @@ public class SwmsBasicSafetyStock extends BasePo implements Serializable {
     @ApiModelProperty(value = "安全库存量")
     private Float safetyStockValue;
 
+    @ApiModelProperty(value = "供应商id")
+    private Integer supId;
+
     //映射 - 类型名称
     @TableField(exist = false)
     private String typeName;
