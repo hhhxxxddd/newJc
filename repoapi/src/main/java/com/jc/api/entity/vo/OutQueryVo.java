@@ -17,6 +17,6 @@ public class OutQueryVo {
 
     List<SwmsStockInventoryReallyReports> ups;
 
-    IPage details;
+    List details;
 
 }

@@ -15,7 +15,7 @@ public interface IFireMageOutService {
 
     IPage getByPage(Integer deptCode, String date, Page page);
 
-    OutQueryVo getDataByMatid(Integer matId,Page page);
+    OutQueryVo getDataByMatid(Integer matId);
 
     List detail(Long headId);
 }

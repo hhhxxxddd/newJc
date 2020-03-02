@@ -211,23 +211,23 @@ public class WetMageOutService implements IWetMageOutService {
         map.forEach((k,v)->reports.add(v));
         ans.setUps(reports);
 
-        IPage<SwmsStockInLedgers> page = new Page<SwmsStockInLedgers>();
+        List list = new ArrayList();
         if(reports.size() != 0){
             Integer mat = reports.get(0).getMaterialNameCode();
             QueryWrapper<SwmsStockInLedgers> queryWrapper = new QueryWrapper<>();
             queryWrapper.eq("material_name_code",mat).eq("material_status",0);
-            page = ledgersMapper.selectPage(new Page<SwmsStockInLedgers>(),queryWrapper);
+            list = ledgersMapper.selectList(queryWrapper);
         }
-        ans.setDetails(page);
+        ans.setDetails(list);
         return ans;
     }
 
     @Override
-    public OutQueryVo getDataByMatid(Integer matId, Page page) {
+    public OutQueryVo getDataByMatid(Integer matId) {
         OutQueryVo ans = new OutQueryVo();
         QueryWrapper<SwmsStockInLedgers> queryWrapper = new QueryWrapper<>();
         queryWrapper.eq("material_name_code",matId).eq("material_status",0);
-        ans.setDetails(ledgersMapper.selectPage(page,queryWrapper));
+        ans.setDetails(ledgersMapper.selectList(queryWrapper));
         return ans;
     }
 
