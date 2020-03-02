@@ -74,8 +74,21 @@ public class SwmsStockInLedgersService implements ISwmsStockInLedgersService {
         SwmsBasicSupplierInfo supplierInfo = iSwmsBasicSupplierInfoService.autoAdd(new SwmsBasicSupplierInfo().setMaterialSupplierCode(materialSupplierNameCode));
         //物料类型查询,自动新增
         String materialTypeStr = codeContent.getMaterialTypeStr();
+        String materialSubTypeStr = codeContent.getMaterialNameCode();
+        //
+        if (materialTypeStr.contains("(")&&materialTypeStr.contains(")")) {
+            Pattern pattern = Pattern.compile("(?<=\\()[^\\)]+");
+            Matcher matcher = pattern.matcher(materialTypeStr);
+            StringBuilder subTypeBuilder = new StringBuilder();
+            while (matcher.find()) {
+                subTypeBuilder.append(matcher.group());
+            }
+            materialTypeStr = materialTypeStr.replaceAll("("+"\\("+subTypeBuilder.toString()+"\\)"+")","");
+            materialSubTypeStr = subTypeBuilder.toString();
+        }
+
         SwmsBasicMaterialType materialType = iSwmsBasicMaterialTypeService.autoAdd(new SwmsBasicMaterialType().setTypeCode(materialTypeStr));
-        SwmsBasicMaterialSubType subType = iSwmsBasicMaterialSubTypeService.autoAdd(new SwmsBasicMaterialSubType().setSubTypeCode(codeContent.getMaterialNameCode()).setTypeId(Integer.valueOf(materialType.getId())));
+        SwmsBasicMaterialSubType subType = iSwmsBasicMaterialSubTypeService.autoAdd(new SwmsBasicMaterialSubType().setSubTypeCode(materialSubTypeStr).setTypeId(Integer.valueOf(materialType.getId())));
         //物料计量单位 自动新增
         String weightWithUnit = codeContent.getWeight();
         String wordRegex = "[a-zA-z]+";
@@ -124,9 +137,9 @@ public class SwmsStockInLedgersService implements ISwmsStockInLedgersService {
                 .setMaterialTypeId(Integer.valueOf(materialType.getId()))
                 .setMaterialSubTypeId(Integer.valueOf(subType.getId()))
                 .setMaterialWorkshopId(Integer.valueOf(plantInfo.getId()))
-                .setMaterialNameCode(Integer.valueOf(materialInfo.getId()))
+                .setMaterialNameCode(Integer.valueOf(newMaterialInfo.getId()))
                 .setMaterialSupplierCode(Integer.valueOf(supplierInfo.getId()))
-                .setMaterialName(materialInfo.getMaterialName())
+                .setMaterialName(newMaterialInfo.getMaterialName())
                 .setBagNum(Integer.valueOf(codeContent.getBagNo()))
                 .setWeight(weightFloat)
                 .setMeasureUnit(measureUnit.getMeasureUnit())
@@ -146,9 +159,9 @@ public class SwmsStockInLedgersService implements ISwmsStockInLedgersService {
         SwmsStockInventoryReallyReports newValue = new SwmsStockInventoryReallyReports();
         newValue.setMaterialTypeId(Integer.valueOf(materialType.getId()))
                 .setMaterialSubTypeId(Integer.valueOf(subType.getId()))
-                .setMaterialNameCode(Integer.valueOf(materialInfo.getId()))
+                .setMaterialNameCode(Integer.valueOf(newMaterialInfo.getId()))
                 .setMaterialSupplierCode(Integer.valueOf(supplierInfo.getId()))
-                .setMaterialName(materialInfo.getMaterialName())
+                .setMaterialName(newMaterialInfo.getMaterialName())
                 .setMaterialBatch(stockInLedgers.getMaterialBatch())
                 .setMeasureUnit(stockInLedgers.getMeasureUnit())
                 .setCheckStatus(0)
