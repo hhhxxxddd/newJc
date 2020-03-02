@@ -71,6 +71,8 @@ public class DataTaskRecordServiceImp implements DataTaskRecordService {
     RedisTemplate redisTemplate;
     @Autowired
     ProcessParametersListHeadMapper processParametersListHeadMapper;
+    @Autowired
+    IRepoOutService repoOutService;
 
     /**
      * 送审
@@ -313,6 +315,12 @@ public class DataTaskRecordServiceImp implements DataTaskRecordService {
                 head.setStatusFlag(new Integer(2).byteValue());
                 processParametersListHeadMapper.updateByPrimaryKeySelective(head);
             }
+
+            //出库申请改为审核中
+            if(dataType.equals(BatchTypeEnum.FIRE_MAGE_OUT.typeCode()) || dataType.equals(BatchTypeEnum.WET_OUT.typeCode())){
+                //无操作
+            }
+
             return String.format("%s数据审核通过,继续审核", commonBatchNumber.getBatchNumber());
         }
 
@@ -442,6 +450,19 @@ public class DataTaskRecordServiceImp implements DataTaskRecordService {
                 head.setStatusFlag(new Integer(4).byteValue());
             }
             processParametersListHeadMapper.updateByPrimaryKeySelective(head);
+        }
+
+        //出库申请审核后
+        if(dataType.equals(BatchTypeEnum.FIRE_MAGE_OUT.typeCode()) || dataType.equals(BatchTypeEnum.WET_OUT.typeCode())){
+            /*ProcessParametersListHeadExample example = new ProcessParametersListHeadExample();
+            example.createCriteria().andApprovalProcessCodeEqualTo(batchNumberId);
+            List<ProcessParametersListHead> heads = processParametersListHeadMapper.selectByExample(example);
+            ProcessParametersListHead head = heads.get(0);*/
+            if(pass){
+                repoOutService.passAudit(batchNumberId.longValue());
+            }else{
+                repoOutService.notPass(batchNumberId.longValue());
+            }
         }
 
         String message;

@@ -2,19 +2,20 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.jc.api.mapper.SwmsBasicSafetyStockMapper">
 
-    <select id="findList"  resultType="com.jc.api.entity.SwmsBasicSafetyStock">
+    <select id="findList" resultType="com.jc.api.entity.SwmsBasicSafetyStock">
         SELECT
-            a.id AS "id",
-            a.material_id AS "materialId",
-            a.material_type_id AS "materialTypeId",
-            a.material_type_id AS "subTypeId",
-            a.safety_stock_value AS "safetyStockValue",
-            b.material_name AS "materialName",
-            b.measure_unit AS "measureUnit",
-            b.material_name_code AS "materialNameCode",
-            c.material_supplier_name AS "materialSupplierName",
-            d.type_name AS "typeName",
-            e.sub_type_name AS "subTypeName"
+        a.id AS "id",
+        a.material_id AS "materialId",
+        a.material_type_id AS "materialTypeId",
+        a.material_type_id AS "subTypeId",
+        a.safety_stock_value AS "safetyStockValue",
+        b.material_name AS "materialName",
+        b.measure_unit AS "measureUnit",
+        b.material_name_code AS "materialNameCode",
+        c.material_supplier_name AS "materialSupplierName",
+        d.type_name AS "typeName",
+        e.sub_type_name AS "subTypeName",
+        a.sup_id AS "supId"
         FROM SWMS_basic_safety_stock a
         LEFT JOIN SWMS_basic_material_info b ON a.material_id = b.id
         LEFT JOIN SWMS_basic_supplier_info c ON a.sup_id = c.id
@@ -29,17 +30,18 @@
 
     <select id="selectPage" resultType="com.jc.api.entity.SwmsBasicSafetyStock">
         SELECT
-            a.id AS "id",
-            a.material_id AS "materialId",
-            a.material_type_id AS "materialTypeId",
-            a.material_type_id AS "subTypeId",
-            a.safety_stock_value AS "safetyStockValue",
-            b.material_name AS "materialName",
-            b.measure_unit AS "measureUnit",
-            b.material_name_code AS "materialNameCode",
-            c.material_supplier_name AS "materialSupplierName",
-            d.type_name AS "typeName",
-            e.sub_type_name AS "subTypeName"
+        a.id AS "id",
+        a.material_id AS "materialId",
+        a.material_type_id AS "materialTypeId",
+        a.material_type_id AS "subTypeId",
+        a.safety_stock_value AS "safetyStockValue",
+        b.material_name AS "materialName",
+        b.measure_unit AS "measureUnit",
+        b.material_name_code AS "materialNameCode",
+        c.material_supplier_name AS "materialSupplierName",
+        d.type_name AS "typeName",
+        e.sub_type_name AS "subTypeName",
+        a.sup_id AS "supId"
         FROM SWMS_basic_safety_stock a
         LEFT JOIN SWMS_basic_material_info b ON a.material_id = b.id
         LEFT JOIN SWMS_basic_supplier_info c ON a.sup_id = c.id

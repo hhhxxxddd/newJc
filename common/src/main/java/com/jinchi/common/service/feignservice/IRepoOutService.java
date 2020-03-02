@@ -24,4 +24,20 @@ public interface IRepoOutService {
 
     @PostMapping("/outRecord/matOut")
     String matOut(@RequestParam String startTime, @RequestParam String endTime, @RequestBody List<String> matName);
+
+    /**
+     * 审核通过
+     * @param commonBatchId
+     * @return
+     */
+    @PostMapping("/jc/passAudit")
+    Boolean passAudit(@RequestParam Long commonBatchId);
+
+    /**
+     * 审核不通过
+     * @param commonBatchId
+     * @return
+     */
+    @PostMapping("/jc/notPassAudit")
+    Boolean notPass(@RequestParam Long commonBatchId);
 }
