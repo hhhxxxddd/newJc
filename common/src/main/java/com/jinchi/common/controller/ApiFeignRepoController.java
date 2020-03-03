@@ -6,6 +6,7 @@ import com.jinchi.common.dto.AuthUserDTO;
 import com.jinchi.common.dto.repository.RepoOutHeadDTO;
 import com.jinchi.common.mapper.BasicInfoAnodeProductionLineMapper;
 import com.jinchi.common.mapper.BasicInfoPrecursorProductionLineMapper;
+import com.jinchi.common.mapper.BasicInfoUserDeviceDeptMapMapper;
 import com.jinchi.common.mapper.CommonBatchNumberMapper;
 import com.jinchi.common.model.factorypattern.CommonBatchFactory;
 import com.jinchi.common.service.*;
@@ -19,6 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.util.Date;
+import java.util.List;
 
 import static com.jinchi.common.constant.BatchTypeEnum.FIRE_MAGE_OUT;
 import static com.jinchi.common.constant.BatchTypeEnum.WET_OUT;
@@ -52,6 +54,9 @@ public class ApiFeignRepoController {
     DataTaskRecordService dataTaskRecordService;
     @Autowired
     ProductionBatchInfoService batchInfoService;
+    @Autowired
+    BasicInfoUserDeviceDeptMapMapper userDeviceDeptMapMapper;
+
     private Logger logger = LoggerFactory.getLogger(ApiFeignRepoController.class);
 
     /**
@@ -171,5 +176,17 @@ public class ApiFeignRepoController {
         logger.info("Feign-common：调用批次信息服务，查询批号是否存在");
         ProductionBatchInfo info = batchInfoService.getInfo(batch);
         return info==null?false:true;
+    }
+
+    @PostMapping(value = "getDeviceDept")
+    public String deptInfo(@RequestParam Integer userId){
+        logger.info("Feign-common:调用设备部门id");
+        BasicInfoUserDeviceDeptMapExample example = new BasicInfoUserDeviceDeptMapExample();
+        example.createCriteria().andAuthCodeEqualTo(userId);
+        List<BasicInfoUserDeviceDeptMap> user = userDeviceDeptMapMapper.selectByExample(example);
+        if(user.size() == 0){
+            return "-1@null";
+        }
+        return user.get(0).getDeptCode()+"@"+deptManageService.getDeptById(user.get(0).getDeptCode());
     }
 }
