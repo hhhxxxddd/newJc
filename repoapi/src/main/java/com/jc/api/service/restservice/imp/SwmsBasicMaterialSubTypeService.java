@@ -21,7 +21,7 @@ import java.util.Set;
 /**
  * @Auther: River
  * @Date: 2020/1/11 17:56
- * @Description:    物料子类型Service实现层
+ * @Description: 物料子类型Service实现层
  */
 @Service
 @Slf4j
@@ -35,11 +35,11 @@ public class SwmsBasicMaterialSubTypeService implements ISwmsBasicMaterialSubTyp
     private SwmsBasicMaterialTypeMapper swmsBasicMaterialTypeMapper;
 
     /**
-     * @Description:    物料子类型-不分页
+     * @Description: 物料子类型-不分页
      * @Author: River
      * @Date: 2020/1/11 18:00
-     {@link List< SwmsBasicMaterialSubType>}
-     java.util.List<com.jc.api.entity.SwmsBasicMaterialSubType>
+     * {@link List< SwmsBasicMaterialSubType>}
+     * java.util.List<com.jc.api.entity.SwmsBasicMaterialSubType>
      **/
     @Override
     public List<SwmsBasicMaterialSubType> getAll(String subTypeName) {
@@ -47,11 +47,11 @@ public class SwmsBasicMaterialSubTypeService implements ISwmsBasicMaterialSubTyp
     }
 
     /**
-     * @Description:    物料子类型-分页
+     * @Description: 物料子类型-分页
      * @Author: River
      * @Date: 2020/1/12 14:54
-     {@link IPage< SwmsBasicMaterialSubType>}
-     com.baomidou.mybatisplus.core.metadata.IPage<com.jc.api.entity.SwmsBasicMaterialSubType>
+     * {@link IPage< SwmsBasicMaterialSubType>}
+     * com.baomidou.mybatisplus.core.metadata.IPage<com.jc.api.entity.SwmsBasicMaterialSubType>
      **/
     @Override
     public IPage<SwmsBasicMaterialSubType> getAllByPage(Page<SwmsBasicMaterialSubType> page, String subTypeName) {
@@ -59,11 +59,11 @@ public class SwmsBasicMaterialSubTypeService implements ISwmsBasicMaterialSubTyp
     }
 
     /**
-     * @Description:    物料子类型-新增
+     * @Description: 物料子类型-新增
      * @Author: River
      * @Date: 2020/1/11 20:03
-     {@link Boolean}
-     java.lang.Boolean
+     * {@link Boolean}
+     * java.lang.Boolean
      **/
     @Override
     public Boolean add(SwmsBasicMaterialSubType swmsBasicMaterialSubType) {
@@ -85,31 +85,34 @@ public class SwmsBasicMaterialSubTypeService implements ISwmsBasicMaterialSubTyp
     }
 
     /**
-     * @Description:    物料子类型自动新增
+     * @Description: 物料子类型自动新增
      * @Author: River
      * @Date: 2020/1/11 20:04
-     {@link SwmsBasicMaterialSubType}
-     com.jc.api.entity.SwmsBasicMaterialSubType
+     * {@link SwmsBasicMaterialSubType}
+     * com.jc.api.entity.SwmsBasicMaterialSubType
      **/
     @Override
     public SwmsBasicMaterialSubType autoAdd(SwmsBasicMaterialSubType swmsBasicMaterialSubType) {
         if (StringUtils.isEmpty(swmsBasicMaterialSubType.getSubTypeCode())) {
             throw new DataDuplicateException("物料子类型代号不存在");
         }
-        QueryWrapper<SwmsBasicMaterialSubType> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("sub_type_code", swmsBasicMaterialSubType.getSubTypeCode());
-        SwmsBasicMaterialSubType queryByCode = swmsBasicMaterialSubTypeMapper.selectOne(queryWrapper);
-        if (queryByCode != null) {
-            return queryByCode;
-        }
-        log.info("发现新物料子类型,开始新增========>:");
+
         if (swmsBasicMaterialSubType.getTypeId() == null) {
             throw new DataDuplicateException("物料类型未选择");
         }
         SwmsBasicMaterialType typeQueryById = swmsBasicMaterialTypeMapper.selectById(swmsBasicMaterialSubType.getTypeId());
         if (typeQueryById == null) {
-            throw new DataDuplicateException("物料类型不存在");
+            throw new DataDuplicateException("物料主类型不存在");
         }
+        QueryWrapper<SwmsBasicMaterialSubType> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("sub_type_code", swmsBasicMaterialSubType.getSubTypeCode());
+        queryWrapper.eq("type_id",swmsBasicMaterialSubType.getTypeId());
+        SwmsBasicMaterialSubType queryByCodeAndTypeId = swmsBasicMaterialSubTypeMapper.selectOne(queryWrapper);
+        if (queryByCodeAndTypeId != null) {
+            return queryByCodeAndTypeId;
+        }
+
+        log.info("发现新物料子类型,开始新增========>:");
         swmsBasicMaterialSubType.setAutoFlag(true);
         swmsBasicMaterialSubType.setSubTypeName("未知子类型名称");
         swmsBasicMaterialSubTypeMapper.insert(swmsBasicMaterialSubType);
@@ -118,11 +121,11 @@ public class SwmsBasicMaterialSubTypeService implements ISwmsBasicMaterialSubTyp
     }
 
     /**
-     * @Description:    物料子类型-更新
+     * @Description: 物料子类型-更新
      * @Author: River
      * @Date: 2020/1/11 20:18
-     {@link Boolean}
-     java.lang.Boolean
+     * {@link Boolean}
+     * java.lang.Boolean
      **/
     @Override
     public Boolean update(SwmsBasicMaterialSubType swmsBasicMaterialSubType) {
@@ -149,11 +152,11 @@ public class SwmsBasicMaterialSubTypeService implements ISwmsBasicMaterialSubTyp
     }
 
     /**
-     * @Description:    物料子类型-删除
+     * @Description: 物料子类型-删除
      * @Author: River
      * @Date: 2020/1/11 20:27
-     {@link Boolean}
-     java.lang.Boolean
+     * {@link Boolean}
+     * java.lang.Boolean
      **/
     @Override
     public Boolean delete(Integer id) {
@@ -165,11 +168,11 @@ public class SwmsBasicMaterialSubTypeService implements ISwmsBasicMaterialSubTyp
     }
 
     /**
-     * @Description:    物料子类型-批量删除
+     * @Description: 物料子类型-批量删除
      * @Author: River
      * @Date: 2020/1/12 14:38
-     {@link Boolean}
-     java.lang.Boolean
+     * {@link Boolean}
+     * java.lang.Boolean
      **/
     @Override
     public Boolean batchDelete(Set<String> ids) {
@@ -182,13 +185,14 @@ public class SwmsBasicMaterialSubTypeService implements ISwmsBasicMaterialSubTyp
 
     /**
      * 根据大类查找小类
+     *
      * @param type
      * @return
      */
     @Override
     public List getByType(Integer type) {
         QueryWrapper<SwmsBasicMaterialSubType> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("type_id",type);
+        queryWrapper.eq("type_id", type);
         return swmsBasicMaterialSubTypeMapper.selectList(queryWrapper);
     }
 }
