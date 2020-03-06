@@ -6,6 +6,7 @@ import com.jc.api.entity.dto.AuditDTO;
 import com.jc.api.entity.vo.OutQueryVo;
 
 import java.util.List;
+import java.util.Map;
 
 public interface IWetMageOutService {
 
@@ -18,5 +19,6 @@ public interface IWetMageOutService {
     OutQueryVo getDataByMatid(Integer matId);
 
     List detail(Long headId);
+
 
 }

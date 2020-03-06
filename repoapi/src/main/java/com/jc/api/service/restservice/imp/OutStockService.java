@@ -97,4 +97,25 @@ public class OutStockService implements IOutStockService {
         }
         return ans;
     }
+
+    @Override
+    public Map getByCommonBatchId(Integer cId) {
+        Map map = new HashMap();
+        QueryWrapper<SwmsStockOutRecordHead> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("application_form_id",cId);
+        List<SwmsStockOutRecordHead> heads = outRecordHeadMapper.selectList(queryWrapper);
+        if (heads.size() == 0){
+            return map;
+        }
+        SwmsStockOutRecordHead head = heads.get(0);
+        map.put("head",head);
+        map.put("dept",iCommonService.deptName(head.getDeptCode()));
+        map.put("line",iCommonService.fireLine(head.getHfLineCode()));
+        //map.put("type",typeMapper.selectById(heads.get(i).getMaterialTypeId()));
+        //map.put("subtype",subTypeMapper.selectById(heads.get(i).getMaterialSubTypeId()));
+        map.put("outType",typeInfoMapper.selectById(head.getDeliveryTypeCode()));
+        map.put("address",addressInfoMapper.selectById(head.getDeliveryAddressCode()));
+        map.put("detail",detail(Long.valueOf(head.getId())));
+        return map;
+    }
 }

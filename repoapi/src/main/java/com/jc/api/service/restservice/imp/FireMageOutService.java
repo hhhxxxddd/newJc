@@ -225,4 +225,5 @@ public class FireMageOutService implements IFireMageOutService {
         return ans;
     }
 
+
 }
