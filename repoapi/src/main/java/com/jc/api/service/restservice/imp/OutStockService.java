@@ -119,6 +119,20 @@ public class OutStockService implements IOutStockService {
         map.put("outType",typeInfoMapper.selectById(head.getDeliveryTypeCode()));
         map.put("address",addressInfoMapper.selectById(head.getDeliveryAddressCode()));
         map.put("detail",detail(Long.valueOf(head.getId())));
+        Integer status = head.getMaterialStatus();
+        switch (status){
+            case 0:
+                map.put("status","未出库");
+                break;
+            case 1:
+                map.put("status","进行中");
+                break;
+            case 2:
+                map.put("status","已完成");
+                break;
+            default:
+                break;
+        }
         return map;
     }
 }
