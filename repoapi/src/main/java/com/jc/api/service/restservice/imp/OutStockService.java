@@ -110,7 +110,10 @@ public class OutStockService implements IOutStockService {
         SwmsStockOutRecordHead head = heads.get(0);
         map.put("head",head);
         map.put("dept",iCommonService.deptName(head.getDeptCode()));
-        map.put("line",iCommonService.fireLine(head.getHfLineCode()));
+        if (head.getHfLineCode() != null)
+            map.put("line",iCommonService.fireLine(head.getHfLineCode()));
+        if (head.getSfLineCode() != null)
+            map.put("line",iCommonService.line(head.getSfLineCode()));
         //map.put("type",typeMapper.selectById(heads.get(i).getMaterialTypeId()));
         //map.put("subtype",subTypeMapper.selectById(heads.get(i).getMaterialSubTypeId()));
         map.put("outType",typeInfoMapper.selectById(head.getDeliveryTypeCode()));
