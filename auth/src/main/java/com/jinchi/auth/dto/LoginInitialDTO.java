@@ -17,6 +17,7 @@ public class LoginInitialDTO {
     private Integer userId;
     private String name;
     private String username;
+    private Integer deptId;
     //所有拥有的角色
     List<SimpleRoleDTO> RoleList;
     //所有拥有的菜单
@@ -73,8 +74,17 @@ public class LoginInitialDTO {
                 "userId=" + userId +
                 ", name='" + name + '\'' +
                 ", username='" + username + '\'' +
+                ", deptId=" + deptId +
                 ", RoleList=" + RoleList +
                 ", menuList=" + menuList +
                 '}';
+    }
+
+    public Integer getDeptId() {
+        return deptId;
+    }
+
+    public void setDeptId(Integer deptId) {
+        this.deptId = deptId;
     }
 }

@@ -68,6 +68,11 @@ public class FallBack implements ICommonService {
     public Boolean validateBatch(String batch) {
         return null;
     }
+
+    @Override
+    public String sysDept(Integer id) {
+        return null;
+    }
 }
 
 
