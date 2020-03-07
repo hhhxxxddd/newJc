@@ -134,7 +134,7 @@ public class WetMageOutService implements IWetMageOutService {
         for(int i=0;i<heads.size();i++){
             Map<String,Object> map = new HashMap<>();
             map.put("head",heads.get(i));
-            map.put("dept",iCommonService.deptName(heads.get(i).getDeptCode()));
+            map.put("dept",iCommonService.sysDept(heads.get(i).getDeptCode()));
             map.put("line",iCommonService.line(heads.get(i).getSfLineCode()));
             //map.put("type",typeMapper.selectById(heads.get(i).getMaterialTypeId()));
             //map.put("subtype",subTypeMapper.selectById(heads.get(i).getMaterialSubTypeId()));

@@ -47,7 +47,7 @@ public class OutStockService implements IOutStockService {
         for(int i=0;i<heads.size();i++){
             Map<String,Object> map = new HashMap<>();
             map.put("head",heads.get(i));
-            map.put("dept",iCommonService.deptName(heads.get(i).getDeptCode()));
+            map.put("dept",iCommonService.sysDept(heads.get(i).getDeptCode()));
             if(heads.get(i).getHfLineCode() == null){
                 map.put("line",iCommonService.line(heads.get(i).getSfLineCode()));
             }
@@ -109,7 +109,7 @@ public class OutStockService implements IOutStockService {
         }
         SwmsStockOutRecordHead head = heads.get(0);
         map.put("head",head);
-        map.put("dept",iCommonService.deptName(head.getDeptCode()));
+        map.put("dept",iCommonService.sysDept(head.getDeptCode()));
         if (head.getHfLineCode() != null)
             map.put("line",iCommonService.fireLine(head.getHfLineCode()));
         if (head.getSfLineCode() != null)

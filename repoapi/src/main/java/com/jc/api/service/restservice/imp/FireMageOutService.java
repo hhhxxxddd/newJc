@@ -130,7 +130,7 @@ public class FireMageOutService implements IFireMageOutService {
         for(int i=0;i<heads.size();i++){
             Map<String,Object> map = new HashMap<>();
             map.put("head",heads.get(i));
-            map.put("dept",iCommonService.deptName(heads.get(i).getDeptCode()));
+            map.put("dept",iCommonService.sysDept(heads.get(i).getDeptCode()));
             map.put("line",iCommonService.fireLine(heads.get(i).getHfLineCode()));
             //map.put("type",typeMapper.selectById(heads.get(i).getMaterialTypeId()));
             //map.put("subtype",subTypeMapper.selectById(heads.get(i).getMaterialSubTypeId()));

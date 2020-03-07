@@ -2,12 +2,10 @@ package com.jinchi.common.controller;
 
 import com.alibaba.fastjson.JSONObject;
 import com.jinchi.common.domain.*;
+import com.jinchi.common.dto.AuthDepartmentDTO;
 import com.jinchi.common.dto.AuthUserDTO;
 import com.jinchi.common.dto.repository.RepoOutHeadDTO;
-import com.jinchi.common.mapper.BasicInfoAnodeProductionLineMapper;
-import com.jinchi.common.mapper.BasicInfoPrecursorProductionLineMapper;
-import com.jinchi.common.mapper.BasicInfoUserDeviceDeptMapMapper;
-import com.jinchi.common.mapper.CommonBatchNumberMapper;
+import com.jinchi.common.mapper.*;
 import com.jinchi.common.model.factorypattern.CommonBatchFactory;
 import com.jinchi.common.service.*;
 import com.jinchi.common.utils.NumberGenerator;
@@ -56,6 +54,8 @@ public class ApiFeignRepoController {
     ProductionBatchInfoService batchInfoService;
     @Autowired
     BasicInfoUserDeviceDeptMapMapper userDeviceDeptMapMapper;
+    @Autowired
+    AuthDepartmentMapper authDepartmentMapper;
 
     private Logger logger = LoggerFactory.getLogger(ApiFeignRepoController.class);
 
@@ -188,5 +188,14 @@ public class ApiFeignRepoController {
             return "-1@null";
         }
         return user.get(0).getDeptCode()+"@"+deptManageService.getDeptById(user.get(0).getDeptCode());
+    }
+
+    @PostMapping(value = "/jc/sysDept")
+    public String sysDept(@RequestParam Integer id){
+        logger.info("Feign-common调用系统部门接口");
+        AuthDepartmentDTO authDepartmentDTO = authDepartmentMapper.byId(id);
+        if(authDepartmentDTO == null)
+            return "dept not exist";
+        return authDepartmentDTO.getDepartmentName();
     }
 }
