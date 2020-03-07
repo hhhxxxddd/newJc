@@ -7,18 +7,15 @@
         a.id AS "id",
         a.material_id AS "materialId",
         a.material_type_id AS "materialTypeId",
-        a.material_type_id AS "subTypeId",
+        a.sub_type_id AS "subTypeId",
         a.safety_stock_value AS "safetyStockValue",
         b.material_name AS "materialName",
         b.measure_unit AS "measureUnit",
         b.material_name_code AS "materialNameCode",
-        c.material_supplier_name AS "materialSupplierName",
         d.type_name AS "typeName",
-        e.sub_type_name AS "subTypeName",
-        a.sup_id AS "supId"
+        e.sub_type_name AS "subTypeName"
         FROM SWMS_basic_safety_stock a
         LEFT JOIN SWMS_basic_material_info b ON a.material_id = b.id
-        LEFT JOIN SWMS_basic_supplier_info c ON a.sup_id = c.id
         LEFT JOIN SWMS_basic_material_type d ON a.material_type_id = d.id
         LEFT JOIN SWMS_basic_material_sub_type e ON a.sub_type_id = e.id
         <where>
@@ -33,18 +30,15 @@
         a.id AS "id",
         a.material_id AS "materialId",
         a.material_type_id AS "materialTypeId",
-        a.material_type_id AS "subTypeId",
+        a.sub_type_id AS "subTypeId",
         a.safety_stock_value AS "safetyStockValue",
         b.material_name AS "materialName",
         b.measure_unit AS "measureUnit",
         b.material_name_code AS "materialNameCode",
-        c.material_supplier_name AS "materialSupplierName",
         d.type_name AS "typeName",
-        e.sub_type_name AS "subTypeName",
-        a.sup_id AS "supId"
+        e.sub_type_name AS "subTypeName"
         FROM SWMS_basic_safety_stock a
         LEFT JOIN SWMS_basic_material_info b ON a.material_id = b.id
-        LEFT JOIN SWMS_basic_supplier_info c ON a.sup_id = c.id
         LEFT JOIN SWMS_basic_material_type d ON a.material_type_id = d.id
         LEFT JOIN SWMS_basic_material_sub_type e ON a.sub_type_id = e.id
         <where>

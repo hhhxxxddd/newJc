@@ -36,6 +36,7 @@ public class AuthoritiesUtil {
         LoginInitialDTO loginInitial = userMapper.getLoginInitial(userId);
         UserDTO user = userMapper.find(userId);
         loginInitial.setDeptId(user.getDepartmentId());
+        loginInitial.setDetpName(departmentMapper.byId(user.getDepartmentId()).getDepartmentName());
         //该用户能使用的所有子菜单
         List<Menu> menuList = userMapper.subMenusByUserId(userId);
 
