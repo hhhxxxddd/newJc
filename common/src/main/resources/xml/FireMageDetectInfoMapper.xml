@@ -471,7 +471,10 @@
 
   <select id="count" resultType="java.lang.Integer">
     select count(*) from fire_mage_detect_info
-    where check_in_time &gt;= #{start} and check_in_time &lt;= #{end} and flag = 1
+    where where flag = 1
+    <if test="start !=null">
+      and check_in_time &gt;= #{start} and check_in_time &lt;= #{end}
+    </if>
     <if test="deptCode != null">
       and dept_code = #{deptCode}
     </if>
