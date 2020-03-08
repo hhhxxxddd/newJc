@@ -471,7 +471,7 @@
 
   <select id="count" resultType="java.lang.Integer">
     select count(*) from fire_mage_detect_info
-    where where flag = 1
+    where flag = 1
     <if test="start !=null">
       and check_in_time &gt;= #{start} and check_in_time &lt;= #{end}
     </if>
