@@ -2436,7 +2436,8 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
         example.createCriteria().andMaterialCodeEqualTo(matId).andLineCodeEqualTo(lineCode).andMaterialAttEqualTo(attName);
         Integer plc = mapMapper.selectByExample(example).get(0).getPlcCode();
         BasicInfoAnodePlcAddress address = addressMapper.selectByPrimaryKey(plc);
-        return RealTimeUtil.dcsForAnode("http://192.168.190.162:10086/api/History",address.getPlcAddress(),date);
+        Float ans = RealTimeUtil.dcsForAnode("http://192.168.190.162:10086/api/History",address.getPlcAddress(),date);
+        return ans==null?0f:ans;
     }
 
     private Integer getDcsCount(Integer matId,Integer lineCode,Integer periodCode,Date date){
@@ -2452,7 +2453,8 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
         example.createCriteria().andMaterialCodeEqualTo(matId).andLineCodeEqualTo(lineCode).andMaterialAttEqualTo(attName);
         Integer plc = mapMapper.selectByExample(example).get(0).getPlcCode();
         BasicInfoAnodePlcAddress address = addressMapper.selectByPrimaryKey(plc);
-        return RealTimeUtil.dcsForAnode("http://192.168.190.162:10086/api/History",address.getPlcAddress(),date).intValue();
+        Float ans = RealTimeUtil.dcsForAnode("http://192.168.190.162:10086/api/History",address.getPlcAddress(),date);
+        return ans==null?0:ans.intValue();
     }
 }
 

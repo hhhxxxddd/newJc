@@ -74,8 +74,8 @@ public class RealTimeUtil {
         url += point;
         url += "&";
         url += "Time=";
-        //url += ComUtil.dateToString(date,"yyyy-MM-dd HH:mm:ss");
-        url += "2020-01-12 11:12:13";
+        url += ComUtil.dateToString(date,"yyyy-MM-dd HH:mm:ss");
+        //url += "2020-01-12 11:12:13";
         String response = restTemplate.getForObject(url, String.class);
         if("{}".equals(response)){
             return null;
@@ -85,6 +85,8 @@ public class RealTimeUtil {
         String res = response.substring(start+1,end);
         res = res.replaceAll(" ","");
         String[] strs = res.split(",");
+        if(strs.length == 0)
+            return null;
         String value = null;
         for(int i=0;i<strs.length;i++){
             if(strs[i].contains("Value")){
