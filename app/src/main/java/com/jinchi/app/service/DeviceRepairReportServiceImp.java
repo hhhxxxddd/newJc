@@ -74,6 +74,18 @@ public class DeviceRepairReportServiceImp implements DeviceRepairReportService {
             List<DeviceRepairApplication> repairApplications = repairApplicationMapper.selectBycondition(sql);
             total.addAll(repairApplications);
         }
+        if (repairPostDTO.getStatus() == 1 || repairPostDTO.getStatus() == 2) {
+            total.sort(new Comparator<DeviceRepairApplication>() {
+                @Override
+                public int compare(DeviceRepairApplication o1, DeviceRepairApplication o2) {
+                    if (o2.getReportTime().getTime() - o1.getReportTime().getTime() >= 0) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                }
+            });
+        }
         if (repairPostDTO.getStatus() == 4 || repairPostDTO.getStatus() == 3) {
             total.sort(new Comparator<DeviceRepairApplication>() {
                 @Override
