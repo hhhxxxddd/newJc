@@ -2434,7 +2434,10 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
     private Float getDcsValue(Integer matId, Integer lineCode, String attName, Date date) {
         BasicInfoAnodeMaterialPlcMapExample example = new BasicInfoAnodeMaterialPlcMapExample();
         example.createCriteria().andMaterialCodeEqualTo(matId).andLineCodeEqualTo(lineCode).andMaterialAttEqualTo(attName);
-        Integer plc = mapMapper.selectByExample(example).get(0).getPlcCode();
+        BasicInfoAnodeMaterialPlcMap temp = Optional.ofNullable(mapMapper.selectByExample(example)).map(e->e.get(0)).orElse(null);
+        if(temp == null)
+            return 0f;
+        Integer plc = temp.getPlcCode();
         BasicInfoAnodePlcAddress address = addressMapper.selectByPrimaryKey(plc);
         Float ans = RealTimeUtil.dcsForAnode("http://192.168.190.162:10086/api/History",address.getPlcAddress(),date);
         return ans==null?0f:ans;
@@ -2451,7 +2454,10 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
         }
         BasicInfoAnodeMaterialPlcMapExample example = new BasicInfoAnodeMaterialPlcMapExample();
         example.createCriteria().andMaterialCodeEqualTo(matId).andLineCodeEqualTo(lineCode).andMaterialAttEqualTo(attName);
-        Integer plc = mapMapper.selectByExample(example).get(0).getPlcCode();
+        BasicInfoAnodeMaterialPlcMap temp = Optional.ofNullable(mapMapper.selectByExample(example)).map(e->e.get(0)).orElse(null);
+        if(temp == null)
+            return 0;
+        Integer plc = temp.getPlcCode();
         BasicInfoAnodePlcAddress address = addressMapper.selectByPrimaryKey(plc);
         Float ans = RealTimeUtil.dcsForAnode("http://192.168.190.162:10086/api/History",address.getPlcAddress(),date);
         return ans==null?0:ans.intValue();
