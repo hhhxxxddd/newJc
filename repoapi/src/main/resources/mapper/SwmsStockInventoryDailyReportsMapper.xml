@@ -32,10 +32,10 @@
         </where>
     </select>
 
-    <update id="updateComments">
+    <!--<update id="updateComments">
         UPDATE SWMS_stock_inventory_daily_reports
         SET comments = #{comments}
         WHERE
         id = #{id}
-    </update>
+    </update>-->
 </mapper>
