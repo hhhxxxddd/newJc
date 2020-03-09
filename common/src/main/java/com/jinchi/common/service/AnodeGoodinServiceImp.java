@@ -1684,6 +1684,7 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                     info.setBalance(mat.getBalance());
                     info.setIntoFurnace(mat.getIntoFurnaceNum());
                     info.setOutFurnace(mat.getOutFurnaceNum());
+                    infos.add(info);
                     if (mat.getFeedstock() != null) {
                         tFee += mat.getFeedstock();
                     }
