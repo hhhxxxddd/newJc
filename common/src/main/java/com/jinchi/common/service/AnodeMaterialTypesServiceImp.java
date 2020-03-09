@@ -134,6 +134,8 @@ public class AnodeMaterialTypesServiceImp implements AnodeMaterialTypesService {
             dto.setProcessCode(item.getProcessCode());
             dto.setProcessName(mapProcess.get(item.getProcessCode()));
 
+            dto.setFlag(item.getFlag());
+
             BasicInfoAnodeMaterialLineMapExample mapExample = new BasicInfoAnodeMaterialLineMapExample();
             mapExample.createCriteria().andMaterialCodeEqualTo(item.getCode());
             List<BasicInfoAnodeMaterialLineMap> materialLineMaps = materialLineMapMapper.selectByExample(mapExample);
