@@ -1,17 +1,15 @@
 package com.jinchi.common.service;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
+import com.jinchi.common.aspect.ControllerAspect;
 import com.jinchi.common.domain.*;
-import com.jinchi.common.dto.HistoryDataDto;
 import com.jinchi.common.dto.Page;
 import com.jinchi.common.dto.anode.*;
 import com.jinchi.common.mapper.*;
 import com.jinchi.common.utils.ComUtil;
-import com.jinchi.common.utils.GzipUtil;
 import com.jinchi.common.utils.RealTimeUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.client.RestTemplate;
@@ -21,6 +19,8 @@ import java.util.*;
 @Service
 @Transactional
 public class AnodeGoodinServiceImp implements AnodeGoodinService {
+
+    private static final Logger logger = LoggerFactory.getLogger(AnodeGoodinServiceImp.class);
 
     @Autowired
     AnodeGoodsInProcessStatisticHeadMapper headMapper;
@@ -1684,6 +1684,7 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                     info.setBalance(mat.getBalance());
                     info.setIntoFurnace(mat.getIntoFurnaceNum());
                     info.setOutFurnace(mat.getOutFurnaceNum());
+                    infos.add(info);
                     if (mat.getFeedstock() != null) {
                         tFee += mat.getFeedstock();
                     }
@@ -2439,6 +2440,7 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
             return 0f;
         Integer plc = temp.get(0).getPlcCode();
         BasicInfoAnodePlcAddress address = addressMapper.selectByPrimaryKey(plc);
+        logger.info("Get " + address.getDescription() + " info");
         Float ans = RealTimeUtil.dcsForAnode("http://192.168.190.162:10086/api/History",address.getPlcAddress(),date);
         return ans==null?0f:ans;
     }
@@ -2459,6 +2461,7 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
             return 0;
         Integer plc = temp.get(0).getPlcCode();
         BasicInfoAnodePlcAddress address = addressMapper.selectByPrimaryKey(plc);
+        logger.info("Get " + address.getDescription() + " info");
         Float ans = RealTimeUtil.dcsForAnode("http://192.168.190.162:10086/api/History",address.getPlcAddress(),date);
         return ans==null?0:ans.intValue();
     }
