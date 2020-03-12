@@ -34,7 +34,7 @@ public class SwmsStockInventoryDailyReportsController {
                              @RequestParam(required = false) Integer subTypeId,
                              @RequestParam(required = false) String startTime,
                              @RequestParam(required = false) String endTime) {
-        return Result.success(inventoryDailyReportsService.selectByPage(page, typeId, subTypeId, startTime, endTime));
+        return Result.success(inventoryDailyReportsService.selectByPage1(page, typeId, subTypeId, startTime, endTime));
     }
 
     @ApiOperation(value = "编辑", notes = "编辑")
@@ -42,8 +42,16 @@ public class SwmsStockInventoryDailyReportsController {
     @PostMapping(value = "/edit")
     public Result update(@RequestParam(required = true) Long id,
                              @RequestParam(required = true) String comments) {
-        inventoryDailyReportsService.update(id,comments);
+        inventoryDailyReportsService.update1(id,comments);
         return Result.success();
     }
+
+    @ApiOperation(value = "详情", notes = "详情")
+    @ApiResponses(@ApiResponse(code = 200, message = "处理成功", response = Result.class))
+    @PostMapping(value = "/detail")
+    public Result detail(@RequestParam Long id){
+        return Result.success(inventoryDailyReportsService.detail(id));
+    }
+
 }
 

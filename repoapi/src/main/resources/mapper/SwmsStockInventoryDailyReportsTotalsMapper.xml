@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.jc.api.mapper.SwmsStockInventoryDailyReportsTotalsMapper">
+    <select id="selectPageVo" resultType="com.jc.api.entity.SwmsStockInventoryDailyReportsTotals">
+        SELECT
+        a.*,
+        b.type_name AS "typeName",
+        c.sub_type_name AS "subTypeName"
+
+        FROM
+        `SWMS_stock_inventory_daily_reports_totals` a
+        LEFT JOIN SWMS_basic_material_type b ON a.material_type_id = b.id
+        LEFT JOIN SWMS_basic_material_sub_type c ON a.material_sub_type_id = c.id
+
+        <where>
+            <if test="typeId != null">
+                and a.material_type_id = #{typeId}
+            </if>
+            <if test="subTypeId != null">
+                and a.material_sub_type_id = #{subTypeId}
+            </if>
+
+            <if test="startTime != null and startTime != ''">
+                and a.stock_date &gt; #{startTime}
+            </if>
+
+            <if test="endTime != null and endTime != ''">
+                and a.stock_date &lt; #{endTime}
+            </if>
+        </where>
+    </select>
+
+    <update id="updateComments">
+        UPDATE SWMS_stock_inventory_daily_reports_totals
+        SET comments = #{comments}
+        WHERE
+        id = #{id}
+    </update>
+
+    <select id="detail" resultType="com.jc.api.entity.SwmsStockInventoryDailyReports">
+        SELECT
+        a.*,
+        b.type_name AS "typeName",
+        c.sub_type_name AS "subTypeName",
+        d.material_supplier_name AS "supplierName"
+
+        FROM
+        `SWMS_stock_inventory_daily_reports` a
+        LEFT JOIN SWMS_basic_material_type b ON a.material_type_id = b.id
+        LEFT JOIN SWMS_basic_material_sub_type c ON a.material_sub_type_id = c.id
+        LEFT JOIN SWMS_basic_supplier_info d ON a.material_supplier_code = d.id
+
+        <where>
+            a.material_name_code = #{matId}
+            <if test="startTime != null and startTime != ''">
+                and a.stock_date &gt; #{startTime}
+            </if>
+
+            <if test="endTime != null and endTime != ''">
+                and a.stock_date &lt; #{endTime}
+            </if>
+        </where>
+    </select>
+</mapper>

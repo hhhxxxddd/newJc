@@ -248,7 +248,7 @@
     basic_info_anode_production_line e WHERE a.process_code = b.`code`
      and a.material_code = c.`code` and a.plc_code = d.`code`
       and a.line_code = e.`code`
-      and (c.material_name LIKE #{condition} or d.plc_address LIKE #{condition})
+      and (c.material_name LIKE #{condition}"%" or d.plc_address LIKE #{condition}"%")
   </select>
   <select id="selectById" resultType="com.jinchi.common.dto.AnodeMatPlcMapDTO">
     SELECT a.*,b.process_name,c.material_name,d.plc_address,e.`name`

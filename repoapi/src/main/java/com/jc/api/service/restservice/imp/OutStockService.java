@@ -47,7 +47,7 @@ public class OutStockService implements IOutStockService {
         for(int i=0;i<heads.size();i++){
             Map<String,Object> map = new HashMap<>();
             map.put("head",heads.get(i));
-            map.put("dept",iCommonService.deptName(heads.get(i).getDeptCode()));
+            map.put("dept",iCommonService.sysDept(heads.get(i).getDeptCode()));
             if(heads.get(i).getHfLineCode() == null){
                 map.put("line",iCommonService.line(heads.get(i).getSfLineCode()));
             }
@@ -96,5 +96,43 @@ public class OutStockService implements IOutStockService {
             ans.add(map);
         }
         return ans;
+    }
+
+    @Override
+    public Map getByCommonBatchId(Integer cId) {
+        Map map = new HashMap();
+        QueryWrapper<SwmsStockOutRecordHead> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("application_form_id",cId);
+        List<SwmsStockOutRecordHead> heads = outRecordHeadMapper.selectList(queryWrapper);
+        if (heads.size() == 0){
+            return map;
+        }
+        SwmsStockOutRecordHead head = heads.get(0);
+        map.put("head",head);
+        map.put("dept",iCommonService.sysDept(head.getDeptCode()));
+        if (head.getHfLineCode() != null)
+            map.put("line",iCommonService.fireLine(head.getHfLineCode()));
+        if (head.getSfLineCode() != null)
+            map.put("line",iCommonService.line(head.getSfLineCode()));
+        //map.put("type",typeMapper.selectById(heads.get(i).getMaterialTypeId()));
+        //map.put("subtype",subTypeMapper.selectById(heads.get(i).getMaterialSubTypeId()));
+        map.put("outType",typeInfoMapper.selectById(head.getDeliveryTypeCode()));
+        map.put("address",addressInfoMapper.selectById(head.getDeliveryAddressCode()));
+        map.put("detail",detail(Long.valueOf(head.getId())));
+        Integer status = head.getMaterialStatus();
+        switch (status){
+            case 0:
+                map.put("status","未出库");
+                break;
+            case 1:
+                map.put("status","进行中");
+                break;
+            case 2:
+                map.put("status","已完成");
+                break;
+            default:
+                break;
+        }
+        return map;
     }
 }

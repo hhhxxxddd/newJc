@@ -99,12 +99,12 @@ public class SwmsBasicSafetyStockService implements ISwmsBasicSafetyStockService
                 throw new DataDuplicateException("新增失败：子类型信息不存在：" + swmsBasicSafetyStock.getSubTypeId());
         }
         }
-        if (swmsBasicSafetyStock.getSupId() != null) {
+        /*if (swmsBasicSafetyStock.getSupId() != null) {
             SwmsBasicSupplierInfo supplierInfo = supplierInfoMapper.selectById(swmsBasicSafetyStock.getSupId());
             if (supplierInfo == null) {
                 throw new DataDuplicateException("新增失败：供应商不存在：" + swmsBasicSafetyStock.getSupId());
             }
-        }
+        }*/
         return swmsBasicSafetyStockMapper.insert(swmsBasicSafetyStock) > 0;
     }
 

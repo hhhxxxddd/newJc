@@ -40,6 +40,10 @@ public interface ICommonService {
     @RequestMapping(value = "/jc/deptName",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
     String deptName(@RequestParam Integer id);
 
+    //查询系统部门
+    @RequestMapping(value = "/jc/sysDept",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
+    String sysDept(@RequestParam Integer id);
+
     //查询火法产线
     @RequestMapping(value = "/jc/fireLine",method = RequestMethod.POST,produces = "application/json;charset=utf-8")
     String fireLine(@RequestParam Integer id);

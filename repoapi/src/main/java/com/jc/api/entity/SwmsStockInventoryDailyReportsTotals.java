@@ -17,7 +17,7 @@ import java.util.Date;
 
 /**
  * <p>
- * 物料库存日报表
+ * 物料库存日报总表
  * </p>
  *
  * @author LiuTaoYi
@@ -30,9 +30,9 @@ import java.util.Date;
 @Data
 @EqualsAndHashCode(callSuper = false)
 @Accessors(chain = true)
-@TableName("SWMS_stock_inventory_daily_reports")
-@ApiModel(value="SwmsStockInventoryDailyReports对象", description="物料库存日报表")
-public class SwmsStockInventoryDailyReports extends BasePo implements Serializable {
+@TableName("SWMS_stock_inventory_daily_reports_totals")
+@ApiModel(value="SwmsStockInventoryDailyReportsTotals对象", description="物料库存日报总表")
+public class SwmsStockInventoryDailyReportsTotals extends BasePo implements Serializable {
 
     private static final long serialVersionUID=1L;
 
@@ -45,9 +45,6 @@ public class SwmsStockInventoryDailyReports extends BasePo implements Serializab
 
     @ApiModelProperty(value = "物料名称代码")
     private Integer materialNameCode;
-
-    @ApiModelProperty(value = "物料供应商代码")
-    private Integer materialSupplierCode;
 
     @ApiModelProperty(value = "物料名称")
     private String materialName;
@@ -67,19 +64,16 @@ public class SwmsStockInventoryDailyReports extends BasePo implements Serializab
     @ApiModelProperty(value = "现存量")
     private Float weight;
 
-    /*@ApiModelProperty(value = "安全库存")
-    private Float safityInventory;*/
+    @ApiModelProperty(value = "安全库存")
+    private Float safityInventory;
 
     @ApiModelProperty(value = "库存日期")
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
     private Date stockDate;
 
-   /* @ApiModelProperty(value = "备注")
-    private String comments;*/
-
-    @TableField(exist = false)
-    private String supplierName;
+    @ApiModelProperty(value = "备注")
+    private String comments;
 
     @TableField(exist = false)
     private String typeName;

@@ -3,9 +3,12 @@ package com.jinchi.auth.utils;
 import com.jinchi.auth.domain.Menu;
 import com.jinchi.auth.domain.Operation;
 import com.jinchi.auth.domain.RoleMenuOperation;
+import com.jinchi.auth.domain.User;
 import com.jinchi.auth.dto.LoginInitialDTO;
 import com.jinchi.auth.dto.MenuDTO;
 import com.jinchi.auth.dto.SimpleRoleDTO;
+import com.jinchi.auth.dto.UserDTO;
+import com.jinchi.auth.mapper.DepartmentMapper;
 import com.jinchi.auth.mapper.MenuMapper;
 import com.jinchi.auth.mapper.UserMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,9 +29,14 @@ public class AuthoritiesUtil {
     private UserMapper userMapper;
     @Autowired
     private MenuMapper menuMapper;
+    @Autowired
+    private DepartmentMapper departmentMapper;
 
     public LoginInitialDTO loginSuccess(Integer userId) {
         LoginInitialDTO loginInitial = userMapper.getLoginInitial(userId);
+        UserDTO user = userMapper.find(userId);
+        loginInitial.setDeptId(user.getDepartmentId());
+        loginInitial.setDetpName(departmentMapper.byId(user.getDepartmentId()).getDepartmentName());
         //该用户能使用的所有子菜单
         List<Menu> menuList = userMapper.subMenusByUserId(userId);
 

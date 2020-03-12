@@ -51,7 +51,7 @@ public class FireMageOutService implements IFireMageOutService {
             return false;
         String[] s = common.split("@");
         AuditDTO auditDTO = mats.get(0);
-        SwmsBasicMaterialInfo materialInfo = infoMapper.selectById(auditDTO.getMatId());
+
         SwmsStockOutRecordHead head = new SwmsStockOutRecordHead();
         head
                 .setApplicationFormId(Long.parseLong(s[1]))
@@ -73,8 +73,6 @@ public class FireMageOutService implements IFireMageOutService {
         for(int i=0;i<mats.size();i++){
             SwmsStockOutRecordDetail detail = new SwmsStockOutRecordDetail();
             AuditDTO mat = mats.get(i);
-            SwmsBasicMaterialInfo material = infoMapper.selectById(mat.getMatId());
-
             /**
              * 修改入库台账中的物料变成待出库
              */
@@ -101,17 +99,17 @@ public class FireMageOutService implements IFireMageOutService {
                     .setStockOutRecordHeadCode(head.getStockOutRecordHeadCode())
                     .setGroupName(mat.getGroup())
                     .setStockInRecordAccountId(mat.getLedgersId())
-                    .setMaterialTypeId(material.getMaterialTypeId())
-                    .setMaterialSubTypeId(material.getSubTypeId())
+                    .setMaterialTypeId(ledgers.getMaterialTypeId())
+                    .setMaterialSubTypeId(ledgers.getMaterialSubTypeId())
                     .setMaterialWorkshopId(ledgers.getMaterialWorkshopId())
                     .setMaterialNameCode(mat.getMatId())
                     .setMaterialSupplierCode(ledgers.getMaterialSupplierCode())
-                    .setMaterialName(material.getMaterialName())
+                    .setMaterialName(ledgers.getMaterialName())
                     .setMaterialCode(ledgers.getMaterialCode())
                     .setMaterialBatch(ledgers.getMaterialBatch())
                     .setBagNum(ledgers.getBagNum())
                     .setWeight(mat.getWeight())
-                    .setMeasureUnit(material.getMeasureUnit())
+                    .setMeasureUnit(ledgers.getMeasureUnit())
                     .setCreatedTime(new Date())
                     .setCompletionFlag(false);
             outRecordDetailMapper.insert(detail);
@@ -132,7 +130,7 @@ public class FireMageOutService implements IFireMageOutService {
         for(int i=0;i<heads.size();i++){
             Map<String,Object> map = new HashMap<>();
             map.put("head",heads.get(i));
-            map.put("dept",iCommonService.deptName(heads.get(i).getDeptCode()));
+            map.put("dept",iCommonService.sysDept(heads.get(i).getDeptCode()));
             map.put("line",iCommonService.fireLine(heads.get(i).getHfLineCode()));
             //map.put("type",typeMapper.selectById(heads.get(i).getMaterialTypeId()));
             //map.put("subtype",subTypeMapper.selectById(heads.get(i).getMaterialSubTypeId()));
@@ -226,5 +224,6 @@ public class FireMageOutService implements IFireMageOutService {
         ans.setDetails(ledgersMapper.selectList(queryWrapper));
         return ans;
     }
+
 
 }

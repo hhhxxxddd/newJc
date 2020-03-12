@@ -26,4 +26,10 @@ public class OutStockController {
     public Result detail(@RequestParam Long headId){
         return Result.success(stockService.detail(headId));
     }
+
+    @GetMapping("commonBatchDetail")
+    @ApiOperation("根据批号查询详情")
+    public Result commonBatchDetail(@RequestParam Integer commonBatchId){
+        return Result.success(stockService.getByCommonBatchId(commonBatchId));
+    }
 }

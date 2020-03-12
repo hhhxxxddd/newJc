@@ -457,9 +457,13 @@ public class FireMageCheckManageServiceImp implements FireMageCheckManageService
             if (date != null) {
                 start = date + " 00:00:00";
                 end = date + " 23:59:59";
+                infos = infoMapper.select(deptCode, process, product, start, end, (page - 1) * size, page * size);
+                total = infoMapper.count(deptCode, process, product, start, end);
+            }else{
+                infos = infoMapper.select(deptCode, process, product, null, null, (page - 1) * size, page * size);
+                total = infoMapper.count(deptCode, process, product, null, null);
             }
-            infos = infoMapper.select(deptCode, process, product, start, end, (page - 1) * size, page * size);
-            total = infoMapper.count(deptCode, process, product, start, end);
+
         }
         List<FireMageDetectInfoDTO> ans = new ArrayList<>();
 
