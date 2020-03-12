@@ -55,10 +55,10 @@ public class ApiController {
 
     @PostMapping(value = "/inPost")
     @ApiOperation(value = "新松入库")
-    public Boolean inApply(HttpServletRequest request) {
+    public Integer inApply(HttpServletRequest request) {
         XinSongHttpAnalyzeUtil.StockInReceiver stockInReceiver = XinSongHttpAnalyzeUtil.stockInContentLoading(request);
         iSwmsStockInJournalAccountService.insert(stockInReceiver.getMaterialCode(), stockInReceiver.getOperator());
-        return true;
+        return 1;
     }
 
 }
