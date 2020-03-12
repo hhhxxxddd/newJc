@@ -14,6 +14,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author：XudongHu
@@ -34,31 +36,37 @@ public class ApiController {
     @Autowired
     private ISwmsStockInJournalAccountService iSwmsStockInJournalAccountService;
 
+    private static Map<String,Object> returnMap = new HashMap<>();
+    static {
+        returnMap.put("code",1);
+        returnMap.put("message","成功");
+    }
 
     @PostMapping(value = "/outPost")
     @ApiOperation(value = "新松出库上报")
-    public Boolean outPost(HttpServletRequest request) {
+    public Object outPost(HttpServletRequest request) {
         XinSongHttpAnalyzeUtil.StockOutReceiver stockOutReceiver = XinSongHttpAnalyzeUtil.stockOutContentLoading(request);
-        iStockOutRecordHeadService.outPost(stockOutReceiver.getPlanCode(),stockOutReceiver.getGoodsCode());
+        iStockOutRecordHeadService.outPost(stockOutReceiver.getPlanCode(), stockOutReceiver.getGoodsCode());
         log.info("出库上报接口调用完毕============================>");
-        return true;
+        return returnMap;
     }
 
     @PostMapping(value = "/outFinished")
     @ApiOperation(value = "新松返回出库结果完成")
-    public Boolean outResult(HttpServletRequest request) {
+    public Object outResult(HttpServletRequest request) {
         XinSongHttpAnalyzeUtil.StockOutFinishedReceiver stockOutFinishedReceiver = XinSongHttpAnalyzeUtil.stockOutFinishedContentLoading(request);
         iStockOutRecordHeadService.outFinished(stockOutFinishedReceiver.getPlanCode());
         log.info("出库结果上报接口调用完毕============================>");
-        return true;
+        return returnMap;
     }
 
     @PostMapping(value = "/inPost")
     @ApiOperation(value = "新松入库")
-    public Integer inApply(HttpServletRequest request) {
+    public Object inApply(HttpServletRequest request) {
         XinSongHttpAnalyzeUtil.StockInReceiver stockInReceiver = XinSongHttpAnalyzeUtil.stockInContentLoading(request);
         iSwmsStockInJournalAccountService.insert(stockInReceiver.getMaterialCode(), stockInReceiver.getOperator());
-        return 1;
+        return returnMap;
+
     }
 
 }
