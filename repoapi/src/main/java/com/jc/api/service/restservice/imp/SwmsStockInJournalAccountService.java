@@ -67,7 +67,7 @@ public class SwmsStockInJournalAccountService implements ISwmsStockInJournalAcco
     public List<SwmsStockInJournalAccount> getAll(String materialCode) {
         QueryWrapper<SwmsStockInJournalAccount> byMaterialCode = new QueryWrapper<>();
         if (!StringUtil.isNullOrEmpty(materialCode)) {
-            byMaterialCode.likeRight("material_code", materialCode);
+            byMaterialCode.likeRight("material_code", materialCode).orderByDesc("id");
         }
         return swmsStockInJournalAccountMapper.selectList(byMaterialCode);
     }
@@ -82,7 +82,7 @@ public class SwmsStockInJournalAccountService implements ISwmsStockInJournalAcco
     @Override
     public IPage getAllByPage(Page page, String materialCode) {
         QueryWrapper<SwmsStockInJournalAccount> byMaterialCode = new QueryWrapper<>();
-        byMaterialCode.likeRight("material_code", materialCode);
+        byMaterialCode.likeRight("material_code", materialCode).orderByDesc("id");
         return swmsStockInJournalAccountMapper.selectPage(page, byMaterialCode);
     }
 }
