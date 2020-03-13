@@ -289,6 +289,10 @@ public class StockOutRecordHeadService implements IStockOutRecordHeadService {
         QueryWrapper<StockInRecordAccount> byMaterialCode = new QueryWrapper<>();
         byMaterialCode.eq("material_code", materialCode).last("limit 1");
         StockInRecordAccount recordAccount = stockInRecordAccountMapper.selectOne(byMaterialCode);
+        if(recordAccount==null) {
+            log.info("出库上报失败,不存在此出库数据,单号{},编码{}", stockOutRecordHeadCode, materialCode);
+            return;
+        }
         Boolean out = iStockInRecordAccountService.out(recordAccount.getId(), MaterialStatusEnum.HAVE_OUT.getCode());
         log.info("物料状态更新为已出库:{}", out);
         //更新出库时间
