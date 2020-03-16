@@ -19,7 +19,7 @@ public interface ISwmsStockOutLedgersService {
      * @param swmsStockOutRecordDetailId 出库明细id
      * @return
      */
-    SwmsStockOutLedgers generate(String swmsStockOutRecordDetailId,String swmsStockInRecordAccountId,String swmsStockOutJournalAccountId);
+    SwmsStockOutLedgers generate(String swmsStockOutRecordDetailId,String swmsStockInRecordAccountId);
 
     /**
      * 查询所有 -名称模糊

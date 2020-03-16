@@ -41,7 +41,7 @@ public interface ISwmsBasicMaterialInfoService {
      * @param materialName
      * @return
      */
-    List<SwmsBasicMaterialInfo> getAll(String materialNamezz);
+    List<SwmsBasicMaterialInfo> getAll(String materialName);
 
     /**
      * 查询所有-名称模糊-分页

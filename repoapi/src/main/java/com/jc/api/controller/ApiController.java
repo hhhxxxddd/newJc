@@ -4,6 +4,7 @@ package com.jc.api.controller;
 import com.jc.api.service.restservice.IStockInRecordService;
 import com.jc.api.service.restservice.IStockOutRecordHeadService;
 import com.jc.api.service.restservice.ISwmsStockInJournalAccountService;
+import com.jc.api.service.restservice.ISwmsStockOutJournalAccountService;
 import com.jc.api.utils.XinSongHttpAnalyzeUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
@@ -34,6 +35,8 @@ public class ApiController {
     @Autowired
     private IStockOutRecordHeadService iStockOutRecordHeadService;
     @Autowired
+    private ISwmsStockOutJournalAccountService swmsStockOutJournalAccountService;
+    @Autowired
     private ISwmsStockInJournalAccountService iSwmsStockInJournalAccountService;
 
     private static Map<String,Object> returnMap = new HashMap<>();
@@ -46,7 +49,7 @@ public class ApiController {
     @ApiOperation(value = "新松出库上报")
     public Object outPost(HttpServletRequest request) {
         XinSongHttpAnalyzeUtil.StockOutReceiver stockOutReceiver = XinSongHttpAnalyzeUtil.stockOutContentLoading(request);
-        iStockOutRecordHeadService.outPost(stockOutReceiver.getPlanCode(), stockOutReceiver.getGoodsCode());
+        swmsStockOutJournalAccountService.outPost(stockOutReceiver.getPlanCode(), stockOutReceiver.getGoodsCode());
         log.info("出库上报接口调用完毕============================>");
         return returnMap;
     }
@@ -55,7 +58,7 @@ public class ApiController {
     @ApiOperation(value = "新松返回出库结果完成")
     public Object outResult(HttpServletRequest request) {
         XinSongHttpAnalyzeUtil.StockOutFinishedReceiver stockOutFinishedReceiver = XinSongHttpAnalyzeUtil.stockOutFinishedContentLoading(request);
-        iStockOutRecordHeadService.outFinished(stockOutFinishedReceiver.getPlanCode());
+        swmsStockOutJournalAccountService.outFinished(stockOutFinishedReceiver.getPlanCode());
         log.info("出库结果上报接口调用完毕============================>");
         return returnMap;
     }

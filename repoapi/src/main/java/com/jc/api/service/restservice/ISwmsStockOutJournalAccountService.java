@@ -41,6 +41,19 @@ public interface ISwmsStockOutJournalAccountService {
     List<SwmsStockOutJournalAccount> getAll(String materialCode);
 
     /**
+     * 出库上报
+     * @param stockOutRecordHeadCode
+     * @param materialCode
+     */
+    void outPost(String stockOutRecordHeadCode, String materialCode);
+
+    /**
+     * 出库完成上报
+     * @param stockOutRecordHeadCode
+     */
+    void outFinished(String stockOutRecordHeadCode);
+
+    /**
      * 查询所有出库流水 分页/物料编码模糊
      *
      * @param materialCode 物料编码
