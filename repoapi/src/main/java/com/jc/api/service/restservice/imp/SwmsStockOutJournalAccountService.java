@@ -149,7 +149,7 @@ public class SwmsStockOutJournalAccountService implements ISwmsStockOutJournalAc
         SwmsStockInLedgers stockInLedgers = swmsStockInLedgersMapper.selectOne(byMaterialCode);
         //是否存在出库单详情
         QueryWrapper<SwmsStockOutRecordDetail> detailByMaterialCode = new QueryWrapper<>();
-        byMaterialCode.eq("material_code", materialCode).last("limit 1");
+        detailByMaterialCode.eq("material_code", materialCode).last("limit 1");
         SwmsStockOutRecordDetail detail = swmsStockOutRecordDetailMapper.selectOne(detailByMaterialCode);
         //不存在或者已出库
         if (stockInLedgers == null || detail == null || stockInLedgers.getMaterialStatus().equals(2)) {
