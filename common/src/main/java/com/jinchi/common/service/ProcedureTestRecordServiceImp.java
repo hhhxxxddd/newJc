@@ -315,7 +315,7 @@ public class ProcedureTestRecordServiceImp implements ProcedureTestRecordService
             testItemRecordString.deleteCharAt(testItemRecordString.length() - 1);
 
             //构建DTO
-
+            QualityBaseDetectItem detectItem = detectItemMapper.selectByPrimaryKey(procedureTestRecord.getSerialNumberId().longValue());
             procedureTestRecordDTO
                     .setProcedureTestRecord(procedureTestRecord)                                               //详情
                     .setTester(authRoleMapper.findById(procedureTestRecord.getTester()).getDescription())      //角色名
@@ -323,7 +323,7 @@ public class ProcedureTestRecordServiceImp implements ProcedureTestRecordService
                     .setProductionProcess(productionProcessMapper.findById(procedureTestRecord.getProcedureId())) //工序
                     .setDeliveryFactory(deliveryFactoryMapper.findById(procedureTestRecord.getDeliveryFactoryId())) //送样工厂
                     //.setTestMaterialName(repoBaseSerialNumberMapper.findById(procedureTestRecord.getSerialNumberId()).getMaterialName())  //物料名称
-                    .setTestMaterialName(detectItemMapper.selectByPrimaryKey(procedureTestRecord.getSerialNumberId().longValue()).getName())
+                    .setTestMaterialName(detectItem == null?"未知名称":detectItem.getName())
                     .setTestItemString(testItemRecordString.toString());   //检测项目名
 
 
