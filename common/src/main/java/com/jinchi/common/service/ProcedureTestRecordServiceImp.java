@@ -48,8 +48,8 @@ public class ProcedureTestRecordServiceImp implements ProcedureTestRecordService
     private AuthRoleMapper authRoleMapper;
     @Autowired
     private RepoBaseSerialNumberMapper repoBaseSerialNumberMapper;
-    @Autowired
-    private QualityBaseDetectItemMapper detectItemMapper;
+    /*@Autowired
+    private QualityBaseDetectItemMapper detectItemMapper;*/
 
     /**
      * 新增制程检测
@@ -315,15 +315,15 @@ public class ProcedureTestRecordServiceImp implements ProcedureTestRecordService
             testItemRecordString.deleteCharAt(testItemRecordString.length() - 1);
 
             //构建DTO
-            QualityBaseDetectItem detectItem = detectItemMapper.selectByPrimaryKey(procedureTestRecord.getSerialNumberId().longValue());
+            //QualityBaseDetectItem detectItem = detectItemMapper.selectByPrimaryKey(procedureTestRecord.getSerialNumberId().longValue());
             procedureTestRecordDTO
                     .setProcedureTestRecord(procedureTestRecord)                                               //详情
                     .setTester(authRoleMapper.findById(procedureTestRecord.getTester()).getDescription())      //角色名
                     .setSampler(authRoleMapper.findById(procedureTestRecord.getSampler()).getDescription())    //角色名
                     .setProductionProcess(productionProcessMapper.findById(procedureTestRecord.getProcedureId())) //工序
                     .setDeliveryFactory(deliveryFactoryMapper.findById(procedureTestRecord.getDeliveryFactoryId())) //送样工厂
-                    //.setTestMaterialName(repoBaseSerialNumberMapper.findById(procedureTestRecord.getSerialNumberId()).getMaterialName())  //物料名称
-                    .setTestMaterialName(detectItem == null?"未知名称":detectItem.getName())
+                    .setTestMaterialName(repoBaseSerialNumberMapper.findById(procedureTestRecord.getSerialNumberId()).getMaterialName())  //物料名称
+                    //.setTestMaterialName(detectItem == null?"未知名称":detectItem.getName())
                     .setTestItemString(testItemRecordString.toString());   //检测项目名
 
 
@@ -383,11 +383,11 @@ public class ProcedureTestRecordServiceImp implements ProcedureTestRecordService
             //验证送货工厂
             Assert.notNull(deliveryFactoryMapper.findById(pr.getDeliveryFactoryId()), String.format("Id为%d的工厂不存在", pr.getDeliveryFactoryId()));
             //验证受检物料
-            //RepoBaseSerialNumber repoBaseSerialNumber = repoBaseSerialNumberMapper.findById(pr.getSerialNumberId());
-            //Assert.notNull(repoBaseSerialNumber, "不存在该物料编号");
-            //Assert.isTrue(repoBaseSerialNumber.getMaterialClass().equals(QualitySampleTypeEnum.SAMPLE_INTERMEDIATE.get()), "该物料不是中间品");
-            QualityBaseDetectItem detectItem = detectItemMapper.selectByPrimaryKey((long)pr.getSerialNumberId());
-            Assert.notNull(detectItem, "不存在该物料编号");
+            RepoBaseSerialNumber repoBaseSerialNumber = repoBaseSerialNumberMapper.findById(pr.getSerialNumberId());
+            Assert.notNull(repoBaseSerialNumber, "不存在该物料编号");
+            Assert.isTrue(repoBaseSerialNumber.getMaterialClass().equals(QualitySampleTypeEnum.SAMPLE_INTERMEDIATE.get()), "该物料不是中间品");
+           // QualityBaseDetectItem detectItem = detectItemMapper.selectByPrimaryKey((long)pr.getSerialNumberId());
+            //Assert.notNull(detectItem, "不存在该物料编号");
             //验证取样人
             Assert.notNull(authRoleMapper.findById(pr.getSampler()), "送样人不存在");
             //验证检测人
@@ -501,18 +501,18 @@ public class ProcedureTestRecordServiceImp implements ProcedureTestRecordService
 
             //前三项不为空则返回 对应的受检物料和检测项目的ids和检测频率
         } else {
-            //List<RepoBaseSerialNumber> materials = new ArrayList<>();
-            List<QualityBaseDetectItem> materials = new ArrayList<>();
+            List<RepoBaseSerialNumber> materials = new ArrayList<>();
+            //List<QualityBaseDetectItem> materials = new ArrayList<>();
             for (ProcedureTestRecord procedureTestRecord : procedureTestRecords) {
 
                 Integer testMaterialId = procedureTestRecord.getSerialNumberId();
 
-                //materials.add(repoBaseSerialNumberMapper.findById(testMaterialId));
-                materials.add(detectItemMapper.selectByPrimaryKey(testMaterialId.longValue()));
+                materials.add(repoBaseSerialNumberMapper.findById(testMaterialId));
+                //materials.add(detectItemMapper.selectByPrimaryKey(testMaterialId.longValue()));
             }
             logger.info("受检物料数量:"+materials.size());
-            //RepoBaseSerialNumber sn = materials.get(0);
-            QualityBaseDetectItem sn = materials.get(0);
+            RepoBaseSerialNumber sn = materials.get(0);
+            //QualityBaseDetectItem sn = materials.get(0);
             //List<RepoBaseSerialNumber> sn = materials;
             Map<Object,Object> map = new HashMap<>();
 
