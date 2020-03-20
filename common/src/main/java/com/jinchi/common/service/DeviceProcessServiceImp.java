@@ -38,8 +38,16 @@ public class DeviceProcessServiceImp implements DeviceProcessService {
         List<DeviceProcessDTO> ans = new ArrayList<>();
         for(int i=0;i<map.size();i++){
             DeviceProcessDTO processDTO = new DeviceProcessDTO();
-            processDTO.setDeviceMap(map.get(i));
-            processDTO.setStatus(deviceStatusService.getStatusById(map.get(i).getStatusCode()));
+            DeviceDocumentMainExample example = new DeviceDocumentMainExample();
+            example.createCriteria().andCodeEqualTo(map.get(i).getDeviceCode());
+            List<DeviceDocumentMain> mains = mainMapper.selectByExample(example);
+            if(mains.size() == 0)
+                continue;
+            DeviceDocumentMain main = mains.get(0);
+            ProductionProcessDeviceMap temp = map.get(i);
+            temp.transfer(main);
+            processDTO.setDeviceMap(temp);
+            processDTO.setStatus(deviceStatusService.getStatusById(temp.getStatusCode()));
             ans.add(processDTO);
         }
         Page pageInfo = new Page(ans,page,size);
@@ -111,7 +119,17 @@ public class DeviceProcessServiceImp implements DeviceProcessService {
     public List<ProductionProcessDeviceMap> getByProcessCodeByDeptCode(Integer processCode, Integer deptCode) {
         ProductionProcessDeviceMapExample example = new ProductionProcessDeviceMapExample();
         example.createCriteria().andDeptCodeEqualTo(deptCode).andProcessCodeEqualTo(processCode.shortValue());
-        return processDeviceMapMapper.selectByExample(example);
+        List<ProductionProcessDeviceMap> ans = processDeviceMapMapper.selectByExample(example);
+        for (int i=0;i<ans.size();i++) {
+            DeviceDocumentMainExample example1 = new DeviceDocumentMainExample();
+            example.createCriteria().andCodeEqualTo(ans.get(i).getDeviceCode());
+            List<DeviceDocumentMain> mains = mainMapper.selectByExample(example1);
+            if(mains.size() == 0)
+                continue;
+            DeviceDocumentMain main = mains.get(0);
+            ans.get(i).transfer(main);
+        }
+        return ans;
     }
 
     @Override

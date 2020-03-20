@@ -384,4 +384,14 @@ public class ProductionProcessDeviceMap {
     public void setStatusCode(Integer statusCode) {
         this.statusCode = statusCode;
     }
+
+    public void transfer(DeviceDocumentMain main){
+        this.deptCode = main.getDeptCode();
+        this.deviceName = main.getDeviceName();
+        this.fixedassetsCode = main.getFixedassetsCode();
+        this.specification = main.getSpecification();
+        this.startDate = main.getStartdate();
+        this.statusCode = main.getStatusCode();
+        this.idCode = main.getIdCode();
+    }
 }

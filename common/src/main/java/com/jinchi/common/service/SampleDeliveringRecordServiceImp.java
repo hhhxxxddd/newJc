@@ -487,7 +487,7 @@ public class SampleDeliveringRecordServiceImp implements SampleDeliveringRecordS
         List<SampleDeliveringRecordDTO> sampleDeliveringRecordDTOS = new ArrayList<>();
 
         List<SampleDeliveringRecord> sampleDeliveringRecords = sampleDeliveringRecordMapper.selectByBatch(batch+"%",(page-1)*size,size);
-        System.out.println(sampleDeliveringRecords);
+        //System.out.println(sampleDeliveringRecords);
         sampleDeliveringRecords.stream().forEach(e -> {
             String key = "sample_de_re_"+e.getId();
             if(redisTemplate.hasKey(key)){
