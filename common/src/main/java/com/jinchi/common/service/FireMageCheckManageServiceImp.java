@@ -81,10 +81,10 @@ public class FireMageCheckManageServiceImp implements FireMageCheckManageService
         String sql = "";
         if(!flag.equals("-1")) {
             example.createCriteria().andBatchLike(condition + "%").andFlagEqualTo(Byte.parseByte(flag));
-            sql = "select * from fire_mage_detect_info where batch like '" + condition + "%' and (flag = " + flag + ") order by code desc limit " + (page - 1) * size + "," + page * size;
+            sql = "select * from fire_mage_detect_info where batch like '" + condition + "%' and (flag = " + flag + ") order by code desc limit " + (page - 1) * size + "," + size;
         }else{
             example.createCriteria().andBatchLike(condition + "%");
-            sql = "select * from fire_mage_detect_info where batch like '" + condition + "%' order by code desc limit " + (page - 1) * size + "," + page * size;
+            sql = "select * from fire_mage_detect_info where batch like '" + condition + "%' order by code desc limit " + (page - 1) * size + "," + size;
         }
 
         Integer total = infoMapper.countByExample(example);
@@ -211,7 +211,7 @@ public class FireMageCheckManageServiceImp implements FireMageCheckManageService
         start += (time + " 00:00:00");
         end += (time + " 23:59:59");
 
-        String sql = "select * from fire_mage_detect_info where check_in_time >= '" + start + "' and check_in_time <= '" + end + "' and flag = 1  order by code desc limit " + (page - 1) * size + "," + page * size;
+        String sql = "select * from fire_mage_detect_info where check_in_time >= '" + start + "' and check_in_time <= '" + end + "' and flag = 1  order by code desc limit " + (page - 1) * size + "," + size;
         List<FireMageDetectInfo> infos = infoMapper.selectByTime(sql);
         List<FireMageDetectInfoDTO> ans = new ArrayList<>();
         for (int i = 0; i < infos.size(); i++) {
@@ -448,7 +448,7 @@ public class FireMageCheckManageServiceImp implements FireMageCheckManageService
             LocalDateTime dateTime = ComUtil.dateToLocalDateTime(now);
             Date startDate = ComUtil.localDateTimeToDate(dateTime.withHour(0).withMinute(0).withSecond(0));
             Date endDate = ComUtil.localDateTimeToDate(dateTime.withHour(23).withMinute(59).withSecond(39));
-            String sql = "select * from fire_mage_detect_info where check_in_time >= '" + start + "' and check_in_time <= '" + end + "' and flag = 1  order by code desc limit " + (page - 1) * size + "," + page * size;
+            String sql = "select * from fire_mage_detect_info where check_in_time >= '" + start + "' and check_in_time <= '" + end + "' and flag = 1  order by code desc limit " + (page - 1) * size + "," + size;
             FireMageDetectInfoExample example = new FireMageDetectInfoExample();
             example.createCriteria().andCheckInTimeBetween(startDate, endDate).andFlagEqualTo(new Integer(1).byteValue());
             infos = infoMapper.selectByTime(sql);

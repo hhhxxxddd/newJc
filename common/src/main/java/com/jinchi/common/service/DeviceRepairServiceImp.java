@@ -84,7 +84,7 @@ public class DeviceRepairServiceImp implements DeviceRepairService {
         }
         sql += " order by report_time desc";
         Integer total = deviceRepairApplicationMapper.count(sql.replaceAll("\\*","count(*)"));
-        sql += " limit "+(page-1)*size+","+page*size;
+        sql += " limit "+(page-1)*size+","+size;
         List<DeviceRepairApplication> deviceRepairApplications = deviceRepairApplicationMapper.selectBycondition(sql);
         for (int i=0;i<deviceRepairApplications.size();i++)
         {

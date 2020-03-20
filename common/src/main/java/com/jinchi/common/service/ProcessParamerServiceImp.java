@@ -372,7 +372,7 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
         sql += " where p.plant_code = d.code and p.process_code = b.code and p.status_flag = " + status;
         sql += " and (d.name like '" + condition +"%' or b.rule_desc like '" + condition + "%')";
         sql += " order by p.code desc";
-        sql += " limit " + (page-1)*size + "," + page*size;
+        sql += " limit " + (page-1)*size + "," + size;
         List<ProcessParametersListHead> heads = headMapper.selectBycondition(sql);
         sql = sql.replaceAll("p.\\*","count(p.code)");
         Integer total = headMapper.countBycondition(sql);

@@ -42,7 +42,7 @@ public class ChemicalServiceImp implements ChemicalService {
             sql += ",quality_common_batch_number_extra as c where t.sample_delivering_record_id = c.common_batch_id and c.batch like '" + condition + "%'";
         }
         //System.out.println(sql);
-        sql += " order by t.judge_date desc limit "+(page-1)*size + ","+page*size;*/
+        sql += " order by t.judge_date desc limit "+(page-1)*size + ","+size;*/
         String sql = "select distinct t.* from quality_test_report_record as t,quality_common_batch_number_extra as c,quality_sample_delivering_record as s";
         sql += " where t.sample_delivering_record_id = s.id";
         if (condition == null) {
@@ -50,7 +50,7 @@ public class ChemicalServiceImp implements ChemicalService {
         }
         sql += " and t.sample_delivering_record_id = c.common_batch_id";
         sql += " and c.batch like '" + condition + "%'";
-        sql += " order by s.sample_delivering_date desc limit " + (page - 1) * size + "," + page * size;
+        sql += " order by s.sample_delivering_date desc limit " + (page - 1) * size + "," + size;
 
         List<TestReportRecord> testReportRecords = testReportRecordMapper.selectByCondition(sql);
         List<ChemicalAppDTO> ans = new ArrayList<>();

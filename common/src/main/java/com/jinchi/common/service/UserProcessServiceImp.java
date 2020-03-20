@@ -52,7 +52,7 @@ public class UserProcessServiceImp implements UserProcessService{
         sql += " and m.dept_code = '" + deptId +"'";
         sql += " and u.username like '" + condition + "%'";
         Integer total = userDeviceDeptMapMapper.count(sql.replaceAll("m\\.\\*","count(*)"));
-        sql += " limit " + (page-1)*size + "," + page*size;
+        sql += " limit " + (page-1)*size + "," + size;
 
         List<BasicInfoUserDeviceDeptMap> maps = userDeviceDeptMapMapper.selectByCondition(sql);
         List<UserProcessDTO> ans = new ArrayList<>();
