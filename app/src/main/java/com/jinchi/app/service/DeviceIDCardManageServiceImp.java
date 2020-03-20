@@ -47,11 +47,19 @@ public class DeviceIDCardManageServiceImp implements DeviceIDCardManageService {
         List<DeviceIDCardDTO> deviceIDCardDTOS = new ArrayList<>();
         for (ProductionProcessDeviceMap map : mapList) {
             DeviceIDCardDTO dto = new DeviceIDCardDTO();
-            dto.setDeviceCode(map.getDeviceCode());
-            dto.setDeviceName(map.getDeviceName());
-            dto.setFixedassetsCode(map.getFixedassetsCode());
-            dto.setIdNum(map.getIdCode());
-            dto.setDeviceStatus(deviceStatusMapper.selectByPrimaryKey(map.getStatusCode()).getName());
+            DeviceDocumentMainExample examplee = new DeviceDocumentMainExample();
+            examplee.createCriteria().andCodeEqualTo(map.getDeviceCode());
+            List<DeviceDocumentMain> mains = mainMapper.selectByExample(examplee);
+            if(mains.size() == 0)
+                continue;
+            DeviceDocumentMain main = mains.get(0);
+            ProductionProcessDeviceMap temp = map;
+            temp.transfer(main);
+            dto.setDeviceCode(temp.getDeviceCode());
+            dto.setDeviceName(temp.getDeviceName());
+            dto.setFixedassetsCode(temp.getFixedassetsCode());
+            dto.setIdNum(temp.getIdCode());
+            dto.setDeviceStatus(deviceStatusMapper.selectByPrimaryKey(temp.getStatusCode()).getName());
             deviceIDCardDTOS.add(dto);
         }
         int page = conditionDTO.getPage() == null ? 1 : conditionDTO.getPage();
@@ -84,11 +92,19 @@ public class DeviceIDCardManageServiceImp implements DeviceIDCardManageService {
             List<ProductionProcessDeviceMap> mapList = mapMapper.selectByExample(example2);
             for (ProductionProcessDeviceMap map : mapList) {
                 DeviceIDCardDTO dto = new DeviceIDCardDTO();
-                dto.setDeviceCode(map.getDeviceCode());
-                dto.setDeviceName(map.getDeviceName());
-                dto.setFixedassetsCode(map.getFixedassetsCode());
-                dto.setIdNum(map.getIdCode());
-                dto.setDeviceStatus(deviceStatusMapper.selectByPrimaryKey(map.getStatusCode()).getName());
+                DeviceDocumentMainExample examplee = new DeviceDocumentMainExample();
+                examplee.createCriteria().andCodeEqualTo(map.getDeviceCode());
+                List<DeviceDocumentMain> mains = mainMapper.selectByExample(examplee);
+                if(mains.size() == 0)
+                    continue;
+                DeviceDocumentMain main = mains.get(0);
+                ProductionProcessDeviceMap temp = map;
+                temp.transfer(main);
+                dto.setDeviceCode(temp.getDeviceCode());
+                dto.setDeviceName(temp.getDeviceName());
+                dto.setFixedassetsCode(temp.getFixedassetsCode());
+                dto.setIdNum(temp.getIdCode());
+                dto.setDeviceStatus(deviceStatusMapper.selectByPrimaryKey(temp.getStatusCode()).getName());
                 deviceIDCardDTOS.add(dto);
             }
             return deviceIDCardDTOS;
