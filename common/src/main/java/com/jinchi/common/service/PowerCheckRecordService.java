@@ -17,11 +17,9 @@ public interface PowerCheckRecordService {
 
     PowerCheckRecordDTO detail(Long id);
 
-    List getAll(String condition);
+    List getAll(String start, String end, String condition);
 
-    Page page(String condition, Integer page, Integer size);
-
-    Page pageByDate(String start, String end, Integer page, Integer size);
+    Page page(String start, String end, String condition, Integer page, Integer size);
 
     List getOperator();
 }

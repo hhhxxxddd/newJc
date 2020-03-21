@@ -106,9 +106,17 @@ public class PowerCheckRecordServiceImp implements PowerCheckRecordService {
     }
 
     @Override
-    public List getAll(String condition) {
+    public List getAll(String start, String end, String condition) {
         PowerCheckRecordHeadExample example = new PowerCheckRecordHeadExample();
         example.createCriteria().andModelNameLike("%" + condition + "%");
+
+        if (!start.equals("") && !end.equals("")) {
+            example.clear();
+//            System.out.println("********************");
+            Date startTime = ComUtil.getDate(start, "yyyy-MM-dd HH:mm:ss");
+            Date endTime = ComUtil.getDate(end, "yyyy-MM-dd HH:mm:ss");
+            example.createCriteria().andCheckDateBetween(startTime, endTime).andModelNameLike("%" + condition + "%");
+        }
         example.setOrderByClause("code desc");
         List<PowerCheckRecordHead> powerCheckRecordHeads = headMapper.selectByExample(example);
 
@@ -126,36 +134,10 @@ public class PowerCheckRecordServiceImp implements PowerCheckRecordService {
         return res;
     }
 
-    @Override
-    public Page pageByDate(String start, String end, Integer page, Integer size) {
-
-        Date startTime = ComUtil.getDate(start, "yyyy-MM-dd HH:mm:ss");
-        Date endTime = ComUtil.getDate(end, "yyyy-MM-dd HH:mm:ss");
-
-        PowerCheckRecordHeadExample example = new PowerCheckRecordHeadExample();
-        example.createCriteria().andCheckDateBetween(startTime, endTime);
-        example.setOrderByClause("code desc");
-
-        List<PowerCheckRecordHead> powerCheckRecordHeads = headMapper.selectByExample(example);
-
-        List<PowerCheckSite> all = siteService.getAll("");
-        Map<Long, String> siteMap = new HashMap<>();
-        all.forEach(powerCheckSite -> siteMap.put(powerCheckSite.getCode(), powerCheckSite.getSiteName()));
-
-        List<PowerCheckRecordDTO> res = new ArrayList<>();
-        for (PowerCheckRecordHead head : powerCheckRecordHeads) {
-            PowerCheckRecordDTO dto = new PowerCheckRecordDTO();
-            dto.setHead(head);
-            dto.setSiteName(siteMap.get(head.getSiteCode()));
-            res.add(dto);
-        }
-
-        return new Page(res, page, size);
-    }
 
     @Override
-    public Page page(String condition, Integer page, Integer size) {
-        return new Page(getAll(condition), page, size);
+    public Page page(String start, String end, String condition, Integer page, Integer size) {
+        return new Page(getAll(start, end, condition), page, size);
     }
 
     @Override
