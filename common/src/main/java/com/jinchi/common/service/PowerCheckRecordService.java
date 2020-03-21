@@ -21,5 +21,7 @@ public interface PowerCheckRecordService {
 
     Page page(String condition, Integer page, Integer size);
 
+    Page pageByDate(String start, String end, Integer page, Integer size);
+
     List getOperator();
 }

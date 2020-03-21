@@ -63,6 +63,15 @@ public class PowerCheckRecordController {
         return ResultUtil.success(recordService.page(condition, page, size));
     }
 
+    @GetMapping(value = "byDate")
+    @ApiOperation(value = "按时间查询")
+    public Result page(@ApiParam(name = "start", value = "开始时间") @RequestParam(name = "start", defaultValue = "", required = false) String start,
+                       @ApiParam(name = "end", value = "结束时间") @RequestParam(name = "end", defaultValue = "", required = false) String end,
+                       @ApiParam(name = "page", value = "页码") @RequestParam(name = "page", defaultValue = "1") Integer page,
+                       @ApiParam(name = "size", value = "条目数") @RequestParam(name = "size", defaultValue = "10") Integer size) {
+        return ResultUtil.success(recordService.pageByDate(start, end, page, size));
+    }
+
     @GetMapping(value = "getOperator")
     @ApiOperation(value = "获取录检人")
     public Result getOperator() {

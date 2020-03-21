@@ -6,13 +6,11 @@ import com.jinchi.common.dto.PowerCheckRecordDTO;
 import com.jinchi.common.mapper.BasicInfoUserDeviceDeptMapMapper;
 import com.jinchi.common.mapper.PowerCheckRecordDetailMapper;
 import com.jinchi.common.mapper.PowerCheckRecordHeadMapper;
+import com.jinchi.common.utils.ComUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * @author: LiuTaoYi
@@ -110,7 +108,7 @@ public class PowerCheckRecordServiceImp implements PowerCheckRecordService {
     @Override
     public List getAll(String condition) {
         PowerCheckRecordHeadExample example = new PowerCheckRecordHeadExample();
-        example.createCriteria().andModelNameLike(condition + "%");
+        example.createCriteria().andModelNameLike("%" + condition + "%");
         example.setOrderByClause("code desc");
         List<PowerCheckRecordHead> powerCheckRecordHeads = headMapper.selectByExample(example);
 
@@ -126,6 +124,33 @@ public class PowerCheckRecordServiceImp implements PowerCheckRecordService {
             res.add(dto);
         }
         return res;
+    }
+
+    @Override
+    public Page pageByDate(String start, String end, Integer page, Integer size) {
+
+        Date startTime = ComUtil.getDate(start, "yyyy-MM-dd HH:mm:ss");
+        Date endTime = ComUtil.getDate(end, "yyyy-MM-dd HH:mm:ss");
+
+        PowerCheckRecordHeadExample example = new PowerCheckRecordHeadExample();
+        example.createCriteria().andCheckDateBetween(startTime, endTime);
+        example.setOrderByClause("code desc");
+
+        List<PowerCheckRecordHead> powerCheckRecordHeads = headMapper.selectByExample(example);
+
+        List<PowerCheckSite> all = siteService.getAll("");
+        Map<Long, String> siteMap = new HashMap<>();
+        all.forEach(powerCheckSite -> siteMap.put(powerCheckSite.getCode(), powerCheckSite.getSiteName()));
+
+        List<PowerCheckRecordDTO> res = new ArrayList<>();
+        for (PowerCheckRecordHead head : powerCheckRecordHeads) {
+            PowerCheckRecordDTO dto = new PowerCheckRecordDTO();
+            dto.setHead(head);
+            dto.setSiteName(siteMap.get(head.getSiteCode()));
+            res.add(dto);
+        }
+
+        return new Page(res, page, size);
     }
 
     @Override
