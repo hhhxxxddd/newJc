@@ -316,13 +316,14 @@ public class ProcedureTestRecordServiceImp implements ProcedureTestRecordService
 
             //构建DTO
             //QualityBaseDetectItem detectItem = detectItemMapper.selectByPrimaryKey(procedureTestRecord.getSerialNumberId().longValue());
+            RepoBaseSerialNumber repoBaseSerialNumber = repoBaseSerialNumberMapper.findById(procedureTestRecord.getSerialNumberId());
             procedureTestRecordDTO
                     .setProcedureTestRecord(procedureTestRecord)                                               //详情
                     .setTester(authRoleMapper.findById(procedureTestRecord.getTester()).getDescription())      //角色名
                     .setSampler(authRoleMapper.findById(procedureTestRecord.getSampler()).getDescription())    //角色名
                     .setProductionProcess(productionProcessMapper.findById(procedureTestRecord.getProcedureId())) //工序
                     .setDeliveryFactory(deliveryFactoryMapper.findById(procedureTestRecord.getDeliveryFactoryId())) //送样工厂
-                    .setTestMaterialName(repoBaseSerialNumberMapper.findById(procedureTestRecord.getSerialNumberId()).getMaterialName())  //物料名称
+                    .setTestMaterialName(repoBaseSerialNumber==null?"未知名称":repoBaseSerialNumber.getMaterialName())  //物料名称
                     //.setTestMaterialName(detectItem == null?"未知名称":detectItem.getName())
                     .setTestItemString(testItemRecordString.toString());   //检测项目名
 
@@ -511,7 +512,7 @@ public class ProcedureTestRecordServiceImp implements ProcedureTestRecordService
                 //materials.add(detectItemMapper.selectByPrimaryKey(testMaterialId.longValue()));
             }
             logger.info("受检物料数量:"+materials.size());
-            RepoBaseSerialNumber sn = materials.get(0);
+            RepoBaseSerialNumber sn = materials.size()>0?materials.get(0):null;
             //QualityBaseDetectItem sn = materials.get(0);
             //List<RepoBaseSerialNumber> sn = materials;
             Map<Object,Object> map = new HashMap<>();
