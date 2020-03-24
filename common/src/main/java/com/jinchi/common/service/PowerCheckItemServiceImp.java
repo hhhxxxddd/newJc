@@ -1,10 +1,9 @@
 package com.jinchi.common.service;
 
-import com.jinchi.common.domain.PowerCheckItem;
-import com.jinchi.common.domain.PowerCheckItemExample;
-import com.jinchi.common.domain.PowerCheckSite;
+import com.jinchi.common.domain.*;
 import com.jinchi.common.dto.Page;
 import com.jinchi.common.mapper.PowerCheckItemMapper;
+import com.jinchi.common.mapper.PowerCheckModelDetailMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -26,6 +25,8 @@ public class PowerCheckItemServiceImp implements PowerCheckItemService {
     PowerCheckItemMapper itemMapper;
     @Autowired
     PowerCheckSiteService siteService;
+    @Autowired
+    PowerCheckModelDetailMapper modelDetailMapper;
 
     @Override
     public PowerCheckItem add(PowerCheckItem item) {
@@ -36,6 +37,13 @@ public class PowerCheckItemServiceImp implements PowerCheckItemService {
     @Override
     public PowerCheckItem update(PowerCheckItem item) {
         itemMapper.updateByPrimaryKeySelective(item);
+        PowerCheckModelDetailExample example = new PowerCheckModelDetailExample();
+        example.createCriteria().andItemCodeEqualTo(item.getCode());
+        PowerCheckModelDetail detail = new PowerCheckModelDetail();
+        detail.setCheckContent(item.getCheckContent());
+        detail.setDataType(item.getDataType());
+        detail.setFrequency(item.getFrequency());
+        modelDetailMapper.updateByExampleSelective(detail, example);
         return item;
     }
 
