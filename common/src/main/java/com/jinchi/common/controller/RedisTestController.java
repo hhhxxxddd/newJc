@@ -37,6 +37,10 @@ public class RedisTestController {
     BasicInfoPrecursorMaterialDetailsMapper materialDetailsMapper;
     @Autowired
     ProductionInstrumentAddressMapper instrumentAddressMapper;
+    @Autowired
+    PowerCheckItemMapper powerCheckItemMapper;
+    @Autowired
+    PowerCheckModelDetailMapper powerCheckModelDetailMapper;
 
     @GetMapping
     public Result compare(){
@@ -130,6 +134,24 @@ public class RedisTestController {
     public String feign(@RequestParam String msg){
         System.out.println(msg);
         return msg;
+    }
+
+    @GetMapping(value = "setItemCode")
+    public String setItemCode(){
+        List<PowerCheckItem> items = powerCheckItemMapper.selectByExample(new PowerCheckItemExample());
+        List<PowerCheckModelDetail> details = powerCheckModelDetailMapper.selectByExample(new PowerCheckModelDetailExample());
+        for(int i=0;i<items.size();i++){
+            for(int k=0;k<details.size();k++){
+                if(details.get(k).getCheckItem().equals(items.get(i).getCheckItem())
+                        && details.get(k).getCheckContent().equals(items.get(i).getCheckContent())
+                        && details.get(k).getFrequency().equals(items.get(i).getFrequency())){
+                    PowerCheckModelDetail detail = details.get(k);
+                    detail.setItemCode(items.get(i).getCode());
+                    powerCheckModelDetailMapper.updateByPrimaryKey(detail);
+                }
+            }
+        }
+        return null;
     }
 
 }
