@@ -1,5 +1,6 @@
 package com.jinchi.app.controller;
 
+import com.jinchi.app.dto.IdDto;
 import com.jinchi.app.dto.QueryDTO;
 import com.jinchi.app.dto.Result;
 import com.jinchi.app.service.PowerCheckModelService;
@@ -39,7 +40,7 @@ public class PowerCheckSiteController {
 
     @PostMapping(value = "bySiteCode")
     @ApiOperation(value = "根据站点id获取模板")
-    public Result bySiteCode(@RequestParam Long siteCode) {
-        return ResultUtil.success(modelService.getModelBySiteCode(siteCode));
+    public Result bySiteCode(@RequestBody IdDto dto) {
+        return ResultUtil.success(modelService.getModelBySiteCode(dto.getId()));
     }
 }
