@@ -8,9 +8,11 @@ import io.swagger.annotations.Api;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
-@RestController("fireMage")
+@RestController
+@RequestMapping("fireMage")
 @Api(tags = "火法质量-化验数据")
 public class FireMageDetectController {
 
