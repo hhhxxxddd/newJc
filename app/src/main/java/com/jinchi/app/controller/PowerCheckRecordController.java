@@ -1,12 +1,12 @@
 package com.jinchi.app.controller;
 
 import com.jinchi.app.dto.PowerCheckRecordDTO;
+import com.jinchi.app.dto.QueryDTO;
 import com.jinchi.app.dto.Result;
 import com.jinchi.app.service.PowerCheckRecordService;
 import com.jinchi.app.utils.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -39,8 +39,7 @@ public class PowerCheckRecordController {
 
     @PostMapping(value = "page")
     @ApiOperation(value = "分页")
-    public Result page(@ApiParam(name = "page", value = "页码") @RequestParam(name = "page", defaultValue = "1") Integer page,
-                       @ApiParam(name = "size", value = "条目数") @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        return ResultUtil.success(recordService.page(page, size));
+    public Result page(@RequestBody QueryDTO dto) {
+        return ResultUtil.success(recordService.page(dto));
     }
 }

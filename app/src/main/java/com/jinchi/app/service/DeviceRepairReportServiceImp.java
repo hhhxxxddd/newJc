@@ -11,7 +11,6 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.List;
 
@@ -71,45 +70,16 @@ public class DeviceRepairReportServiceImp implements DeviceRepairReportService {
             if (repairPostDTO.getCondition() != null) {
                 sql += " and (r.device_name like '" + repairPostDTO.getCondition() + "%' or r.fixedassets_code like '" + repairPostDTO.getCondition() + "%' or d.name like '" + repairPostDTO.getCondition() + "%')";
             }
+            if (repairPostDTO.getStatus() == 1 || repairPostDTO.getStatus() == 2) {
+                sql += " order by report_time desc";
+            }
+            if (repairPostDTO.getStatus() == 4 || repairPostDTO.getStatus() == 3) {
+                sql += " order by finish_time desc, emerge_status desc";
+            }
+            int start = (page - 1) * size;
+            sql += " limit " + start + "," + size;
             List<DeviceRepairApplication> repairApplications = repairApplicationMapper.selectBycondition(sql);
             total.addAll(repairApplications);
-        }
-        if (repairPostDTO.getStatus() == 1 || repairPostDTO.getStatus() == 2) {
-            total.sort(new Comparator<DeviceRepairApplication>() {
-                @Override
-                public int compare(DeviceRepairApplication o1, DeviceRepairApplication o2) {
-                    if (o2.getReportTime().getTime() - o1.getReportTime().getTime() >= 0) {
-                        return 1;
-                    } else {
-                        return -1;
-                    }
-                }
-            });
-        }
-        if (repairPostDTO.getStatus() == 4 || repairPostDTO.getStatus() == 3) {
-            total.sort(new Comparator<DeviceRepairApplication>() {
-                @Override
-                public int compare(DeviceRepairApplication o1, DeviceRepairApplication o2) {
-                    if (o1.getFinishTime().getTime() > o2.getFinishTime().getTime()) {
-                        return -1;
-                    }
-                    if (o1.getFinishTime().getTime() < o2.getFinishTime().getTime()) {
-                        return 1;
-                    }
-                    if (o1.getFinishTime().getTime() == o2.getFinishTime().getTime()) {
-                        if (o1.getEmergeStatus() > o2.getEmergeStatus()) {
-                            return -1;
-                        }
-                        if (o1.getEmergeStatus() < o2.getEmergeStatus()) {
-                            return 1;
-                        }
-                        if (o1.getEmergeStatus() == o2.getEmergeStatus()) {
-                            return 0;
-                        }
-                    }
-                    return 0;
-                }
-            });
         }
         for (int l = 0; l < total.size(); l++) {
             RepairPageData data = new RepairPageData();
@@ -129,8 +99,7 @@ public class DeviceRepairReportServiceImp implements DeviceRepairReportService {
         dto.setApply(numApply);
         dto.setWait(numWait);
         dto.setConfirm(numConfirm);
-        Page pageInfo = new Page(size, page, ans);
-        dto.setList(pageInfo.getList() == null ? new RepairPageDataDTO().getList() : pageInfo.getList());
+        dto.setList(ans);
         return dto;
     }
 

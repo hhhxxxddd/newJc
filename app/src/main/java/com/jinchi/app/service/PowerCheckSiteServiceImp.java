@@ -3,6 +3,7 @@ package com.jinchi.app.service;
 import com.jinchi.app.domain.PowerCheckSite;
 import com.jinchi.app.domain.PowerCheckSiteExample;
 import com.jinchi.app.dto.Page;
+import com.jinchi.app.dto.QueryDTO;
 import com.jinchi.app.mapper.PowerCheckSiteMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,8 +53,8 @@ public class PowerCheckSiteServiceImp implements PowerCheckSiteService {
     }
 
     @Override
-    public List listByPage(String condition, Integer page, Integer size) {
-        return new Page(size, page, getAll(condition)).getList();
+    public List listByPage(QueryDTO dto) {
+        return new Page(dto.getSize(), dto.getPage(), getAll(dto.getCondi())).getList();
     }
 
 

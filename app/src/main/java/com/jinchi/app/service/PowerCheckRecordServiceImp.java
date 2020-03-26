@@ -3,6 +3,7 @@ package com.jinchi.app.service;
 import com.jinchi.app.domain.*;
 import com.jinchi.app.dto.Page;
 import com.jinchi.app.dto.PowerCheckRecordDTO;
+import com.jinchi.app.dto.QueryDTO;
 import com.jinchi.app.mapper.PowerCheckRecordDetailMapper;
 import com.jinchi.app.mapper.PowerCheckRecordHeadMapper;
 import com.jinchi.app.utils.ComUtil;
@@ -89,7 +90,7 @@ public class PowerCheckRecordServiceImp implements PowerCheckRecordService {
     }
 
     @Override
-    public List page(Integer page, Integer size) {
-        return new Page(size, page, getTodayRecords()).getList();
+    public List page(QueryDTO dto) {
+        return new Page(dto.getSize(), dto.getPage(), getTodayRecords()).getList();
     }
 }

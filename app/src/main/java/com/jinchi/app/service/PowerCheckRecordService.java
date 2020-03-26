@@ -1,6 +1,7 @@
 package com.jinchi.app.service;
 
 import com.jinchi.app.dto.PowerCheckRecordDTO;
+import com.jinchi.app.dto.QueryDTO;
 
 import java.util.List;
 
@@ -12,6 +13,6 @@ public interface PowerCheckRecordService {
 
     List getTodayRecords();
 
-    List page(Integer page, Integer size);
+    List page(QueryDTO dto);
 
 }

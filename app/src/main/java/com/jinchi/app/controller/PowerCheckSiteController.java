@@ -1,17 +1,14 @@
 package com.jinchi.app.controller;
 
+import com.jinchi.app.dto.QueryDTO;
 import com.jinchi.app.dto.Result;
 import com.jinchi.app.service.PowerCheckModelService;
 import com.jinchi.app.service.PowerCheckSiteService;
 import com.jinchi.app.utils.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author: LiuTaoYi
@@ -36,10 +33,8 @@ public class PowerCheckSiteController {
 
     @PostMapping(value = "page")
     @ApiOperation(value = "分页--名称模糊查询")
-    public Result page(@ApiParam(name = "condition", value = "站点名称") @RequestParam(name = "condition", defaultValue = "", required = false) String condition,
-                       @ApiParam(name = "page", value = "页码") @RequestParam(name = "page", defaultValue = "1") Integer page,
-                       @ApiParam(name = "size", value = "条目数") @RequestParam(name = "size", defaultValue = "10") Integer size) {
-        return ResultUtil.success(siteService.listByPage(condition, page, size));
+    public Result page(@RequestBody QueryDTO dto) {
+        return ResultUtil.success(siteService.listByPage(dto));
     }
 
     @PostMapping(value = "bySiteCode")
