@@ -4,7 +4,6 @@ package com.jinchi.app.service;
 import com.jinchi.app.domain.*;
 import com.jinchi.app.dto.*;
 import com.jinchi.app.mapper.*;
-import com.jinchi.app.utils.UnifyTransform;
 import io.jsonwebtoken.lang.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -49,38 +48,42 @@ public class DeviceRepairReportServiceImp implements DeviceRepairReportService {
         int numApply = 0;
         int numWait = 0;
         int numConfirm = 0;
-        String date = new UnifyTransform().getFirstDayOfCurrentMonth();
+
         List<DeviceRepairApplication> total = new ArrayList<>();
-        for (int i = 0; i < deps.size(); i++) {
-            String sql = null;
-            String sqlApply = "select count(*) from device_repair_application as r,basic_info_dept as d where r.repair_status = 1 and r.dept_code=d.`code` and d.`code` = " + deps.get(i).getCode();
-            String sqlWait = "select count(*) from device_repair_application as r,basic_info_dept as d where r.repair_status = 2 and r.dept_code=d.`code` and d.`code` = " + deps.get(i).getCode();
-            String sqlConfirm = "select COUNT(*) from device_repair_application as r,basic_info_dept as d where (r.repair_status = 3 or r.repair_status = 4) and r.dept_code=d.`code` and d.`code` = '" + deps.get(i).getCode() + "' and finish_time >" + " '" + date + "'";
-            numApply += repairApplicationMapper.countByCondition(sqlApply);
-            numWait += repairApplicationMapper.countByCondition(sqlWait);
-            numConfirm += repairApplicationMapper.countByCondition(sqlConfirm);
-            if (repairPostDTO.getStatus() != 3) {
-                sql = "select r.* from device_repair_application as r,basic_info_dept as d where r.repair_status = " + repairPostDTO.getStatus() + " and r.dept_code=d.`code` and d.`code` = " + deps.get(i).getCode();
-            } else {
-                sql = "select r.* from device_repair_application as r,basic_info_dept as d where (r.repair_status = 3 or r.repair_status = 4) and r.dept_code=d.`code` and d.`code` = " + deps.get(i).getCode();
-            }
-            if (repairPostDTO.getStartTime() != null && repairPostDTO.getEndTime() != null) {
-                sql += " and (r.finish_time > '" + repairPostDTO.getStartTime() + " 00:00:00' and r.finish_time < '" + repairPostDTO.getEndTime() + " 23:59:59')";
-            }
-            if (repairPostDTO.getCondition() != null) {
-                sql += " and (r.device_name like '" + repairPostDTO.getCondition() + "%' or r.fixedassets_code like '" + repairPostDTO.getCondition() + "%' or d.name like '" + repairPostDTO.getCondition() + "%')";
-            }
-            if (repairPostDTO.getStatus() == 1 || repairPostDTO.getStatus() == 2) {
-                sql += " order by report_time desc";
-            }
-            if (repairPostDTO.getStatus() == 4 || repairPostDTO.getStatus() == 3) {
-                sql += " order by finish_time desc, emerge_status desc";
-            }
-            int start = (page - 1) * size;
-            sql += " limit " + start + "," + size;
-            List<DeviceRepairApplication> repairApplications = repairApplicationMapper.selectBycondition(sql);
-            total.addAll(repairApplications);
+        if (deps.size() == 0) {
+            return new RepairPageDataDTO();
         }
+
+        String sql = null;
+        String sqlApply = "select count(*) from device_repair_application as r,basic_info_dept as d where r.repair_status = 1 and r.dept_code=d.`code` and d.`code` in (SELECT dept_code FROM basic_info_user_device_dept_map WHERE auth_code = '" + repairPostDTO.getId().intValue() + "')";
+        String sqlWait = "select count(*) from device_repair_application as r,basic_info_dept as d where r.repair_status = 2 and r.dept_code=d.`code` and d.`code` in (SELECT dept_code FROM basic_info_user_device_dept_map WHERE auth_code = '" + repairPostDTO.getId().intValue() + "')";
+        String sqlConfirm = "select COUNT(*) from device_repair_application as r,basic_info_dept as d where (r.repair_status = 3 or r.repair_status = 4) and r.dept_code=d.`code` and d.`code` in (SELECT dept_code FROM basic_info_user_device_dept_map WHERE auth_code = '" + repairPostDTO.getId().intValue() + "')";
+        numApply += repairApplicationMapper.countByCondition(sqlApply);
+        numWait += repairApplicationMapper.countByCondition(sqlWait);
+        numConfirm += repairApplicationMapper.countByCondition(sqlConfirm);
+        if (repairPostDTO.getStatus() != 3) {
+            sql = "select r.* from device_repair_application as r,basic_info_dept as d where r.repair_status = " + repairPostDTO.getStatus() + " and r.dept_code=d.`code` and d.`code` in (SELECT dept_code FROM basic_info_user_device_dept_map WHERE auth_code = '" + repairPostDTO.getId().intValue() + "')";
+        } else {
+            sql = "select r.* from device_repair_application as r,basic_info_dept as d where (r.repair_status = 3 or r.repair_status = 4) and r.dept_code=d.`code` and d.`code` in (SELECT dept_code FROM basic_info_user_device_dept_map WHERE auth_code = '" + repairPostDTO.getId().intValue() + "')";
+        }
+        if (repairPostDTO.getStartTime() != null && repairPostDTO.getEndTime() != null) {
+            sql += " and (r.finish_time > '" + repairPostDTO.getStartTime() + " 00:00:00' and r.finish_time < '" + repairPostDTO.getEndTime() + " 23:59:59')";
+        }
+        if (repairPostDTO.getCondition() != null) {
+            sql += " and (r.device_name like '" + repairPostDTO.getCondition() + "%' or r.fixedassets_code like '" + repairPostDTO.getCondition() + "%' or d.name like '" + repairPostDTO.getCondition() + "%')";
+        }
+        if (repairPostDTO.getStatus() == 1 || repairPostDTO.getStatus() == 2) {
+            sql += " order by report_time desc";
+        }
+        if (repairPostDTO.getStatus() == 4 || repairPostDTO.getStatus() == 3) {
+            sql += " order by finish_time desc, emerge_status desc";
+        }
+        int start = (page - 1) * size;
+        sql += " limit " + start + "," + size;
+        List<DeviceRepairApplication> repairApplications = repairApplicationMapper.selectBycondition(sql);
+        total.addAll(repairApplications);
+
+
         for (int l = 0; l < total.size(); l++) {
             RepairPageData data = new RepairPageData();
             data.setDeptName(deptService.getById(total.get(l).getDeptCode()).getName());
