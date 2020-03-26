@@ -7,6 +7,10 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.jc.api.constant.MaterialStatusEnum;
 import com.jc.api.constant.StockOutStatusEnum;
+import com.jc.api.entity.SwmsStockInLedgers;
+import com.jc.api.entity.SwmsStockInventoryReallyReports;
+import com.jc.api.entity.SwmsStockOutRecordDetail;
+import com.jc.api.entity.SwmsStockOutRecordHead;
 import com.jc.api.entity.param.StockOutRecordHeadQueryParam;
 import com.jc.api.entity.po.MaterialStock;
 import com.jc.api.entity.po.StockInRecordAccount;
@@ -16,9 +20,7 @@ import com.jc.api.entity.vo.StockOutHeadVo;
 import com.jc.api.entity.vo.StockOutRecordVo;
 import com.jc.api.exception.custom.DataNotFindException;
 import com.jc.api.exception.custom.StatusRefuseException;
-import com.jc.api.mapper.StockInRecordAccountMapper;
-import com.jc.api.mapper.StockOutRecordHeadMapper;
-import com.jc.api.mapper.StockOutRecordMapper;
+import com.jc.api.mapper.*;
 import com.jc.api.service.feignservice.ICommonService;
 import com.jc.api.service.restservice.IMaterialStockService;
 import com.jc.api.service.restservice.IStockInRecordAccountService;
@@ -43,7 +45,6 @@ import java.util.concurrent.atomic.AtomicReference;
  */
 @Service
 @Slf4j
-@Deprecated
 public class StockOutRecordHeadService implements IStockOutRecordHeadService {
     @Autowired
     private ICommonService iCommonService;
@@ -52,6 +53,10 @@ public class StockOutRecordHeadService implements IStockOutRecordHeadService {
     @Autowired
     private StockOutRecordHeadMapper stockOutRecordHeadMapper;
     @Autowired
+    private SwmsStockOutRecordHeadMapper swmsStockOutRecordHeadMapper;
+    @Autowired
+    private SwmsStockOutRecordDetailMapper swmsStockOutRecordDetailMapper;
+    @Autowired
     private StockInRecordAccountMapper stockInRecordAccountMapper;
     @Autowired
     private IStockInRecordAccountService iStockInRecordAccountService;
@@ -59,6 +64,12 @@ public class StockOutRecordHeadService implements IStockOutRecordHeadService {
     private IMaterialStockService iMaterialStockService;
     @Autowired
     private IStockOutRecordService iStockOutRecordService;
+    @Autowired
+    private SwmsBasicDeliveryAddressInfoMapper addressInfoMapper;
+    @Autowired
+    private SwmsStockInLedgersMapper inLedgersMapper;
+    @Autowired
+    private SwmsStockInventoryReallyReportsMapper reallyReportsMapper;
 
     /**
      * 新增出库计划
@@ -224,37 +235,57 @@ public class StockOutRecordHeadService implements IStockOutRecordHeadService {
     @Override
     @Transactional
     public Boolean outStart(Integer applicationFormId, Integer status) {
-        QueryWrapper<StockOutRecordHead> byApplicationId = new QueryWrapper<>();
+        /*QueryWrapper<StockOutRecordHead> byApplicationId = new QueryWrapper<>();
         byApplicationId.eq("application_form_id", applicationFormId).last("limit 1");
-        StockOutRecordHead head = stockOutRecordHeadMapper.selectOne(byApplicationId);
+        StockOutRecordHead head = stockOutRecordHeadMapper.selectOne(byApplicationId);*/
+        QueryWrapper<SwmsStockOutRecordHead> byApplicationId = new QueryWrapper<>();
+        byApplicationId.eq("application_form_id", applicationFormId).last("limit 1");
+        SwmsStockOutRecordHead head = swmsStockOutRecordHeadMapper.selectOne(byApplicationId);
+
         //修改状态
         if (head == null) throw new DataNotFindException("出库响应失败,不存在此审核id:" + applicationFormId);
-        head.setCompletionFlag(status);
-        stockOutRecordHeadMapper.updateById(head);
-        if (!status.equals(StockOutStatusEnum.OUT_START.getCode())) return true;
+        /*head.setCompletionFlag(status);
+        stockOutRecordHeadMapper.updateById(head);*/
+        head.setMaterialStatus(2);
+        head.setCompletionTime(new Date());
+        swmsStockOutRecordHeadMapper.updateById(head);
+
+        //if (!status.equals(StockOutStatusEnum.OUT_START.getCode())) return true;
         //出库开始
-        String endPosition = iCommonService.endPosition(head.getEndPositionId());
+        //String endPosition = iCommonService.endPosition(head.getEndPositionId());
+        String endPosition = addressInfoMapper.selectById(head.getDeliveryAddressCode()).getDeliveryAddressName();
         String personName = iCommonService.personName(head.getCreatedPersonId());
-        String productionLine = iCommonService.productionLine(head.getProductionLineId());
-        String stockOutRecordHeadCode = head.getStockOutRecordHeadCode();
+        String productionLine;
+        if (head.getSysFlag()) {
+            productionLine = iCommonService.line(head.getSfLineCode());
+        } else {
+            productionLine = iCommonService.fireLine(head.getHfLineCode());
+        }
+       /* String stockOutRecordHeadCode = head.getStockOutRecordHeadCode();
         //找详情
         QueryWrapper<StockOutRecord> byHeadId = new QueryWrapper<>();
         byHeadId.eq("stock_out_head_id", head.getId());
-        List<StockOutRecord> outRecords = stockOutRecordMapper.selectList(byHeadId);
+        List<StockOutRecord> outRecords = stockOutRecordMapper.selectList(byHeadId);*/
+        QueryWrapper<SwmsStockOutRecordDetail> byHeadId = new QueryWrapper<>();
+        byHeadId.eq("stock_out_record_head_id", head.getId());
+        List<SwmsStockOutRecordDetail> outRecordDetails = swmsStockOutRecordDetailMapper.selectList(byHeadId);
         //发送新松
         HashMap<String, Object> bigMap = new HashMap<>();
         HashMap<String, List<Object>> medMap = new HashMap<>();
-        bigMap.put("PLAN_CODE", stockOutRecordHeadCode);
+        bigMap.put("PLAN_CODE", head.getStockOutRecordHeadCode());
         bigMap.put("PLAN_CREATER", personName);
         bigMap.put("END_POSITION", endPosition);
         bigMap.put("PRODUCTION_LINE_NO", productionLine);
         bigMap.put("SEND_OUT_LIST", medMap);
         //存储组号
-        outRecords.forEach(e -> {
+        /*outRecords.forEach(e -> {
+            medMap.put(e.getGroupName(), new ArrayList<>());
+        });*/
+        outRecordDetails.forEach(e -> {
             medMap.put(e.getGroupName(), new ArrayList<>());
         });
         //存储每组的内容
-        outRecords.forEach(e -> {
+        /*outRecords.forEach(e -> {
             //修改库存
             StockOutRecord record = stockOutRecordMapper.selectById(e.getId());
             StockInRecordAccount account = stockInRecordAccountMapper.selectById(record.getStockInRecordAccountId());
@@ -266,7 +297,22 @@ public class StockOutRecordHeadService implements IStockOutRecordHeadService {
 //            smallMap.put("SUPPLIER", materialStock.getSupplier());
             smallMap.put("GOODS_BATCH_NO", account.getMaterialCode());
             list.add(smallMap);
-        });
+        });*/
+        outRecordDetails.forEach(e -> {
+                    //修改库存
+                    //StockOutRecord record = stockOutRecordMapper.selectById(e.getId());
+                    //StockInRecordAccount account = stockInRecordAccountMapper.selectById(record.getStockInRecordAccountId());
+                    SwmsStockInLedgers account = inLedgersMapper.selectById(e.getStockInRecordAccountId());
+                    List list = medMap.get(e.getGroupName());
+                    HashMap<String, String> smallMap = new HashMap<>();
+//            smallMap.put("WEIGHT", account.getWeight().toString()+"KG");
+//            smallMap.put("GOODS_NAME", );
+//            smallMap.put("GOODS_TYPE", materialStock.getMaterialType());
+//            smallMap.put("SUPPLIER", materialStock.getSupplier());
+                    smallMap.put("GOODS_BATCH_NO", account.getMaterialCode());
+                    list.add(smallMap);
+                }
+        );
         // 转成JSON
         JSONObject jsonObject = new JSONObject(bigMap);
         String response = WebServiceBindingUtil.outPlan(jsonObject.toJSONString());
@@ -284,62 +330,96 @@ public class StockOutRecordHeadService implements IStockOutRecordHeadService {
     @Async("PoolTaskExecutor")
     @Transactional
     public void outPost(String stockOutRecordHeadCode, String materialCode) {
+//        log.info("出库上报开始,接收到出库数据,单号{},编码{}", stockOutRecordHeadCode, materialCode);
         log.info("出库上报开始,接收到出库数据,单号{},编码{}", stockOutRecordHeadCode, materialCode);
-        //更新物料状态
-        QueryWrapper<StockInRecordAccount> byMaterialCode = new QueryWrapper<>();
-        byMaterialCode.eq("material_code", materialCode).last("limit 1");
-        StockInRecordAccount recordAccount = stockInRecordAccountMapper.selectOne(byMaterialCode);
-        if(recordAccount==null) {
+//        //更新物料状态
+//        QueryWrapper<StockInRecordAccount> byMaterialCode = new QueryWrapper<>();
+//        byMaterialCode.eq("material_code", materialCode).last("limit 1");
+//        StockInRecordAccount recordAccount = stockInRecordAccountMapper.selectOne(byMaterialCode);
+        QueryWrapper<SwmsStockOutRecordDetail> byStockByFormId = new QueryWrapper<>();
+        byStockByFormId.eq("stock_out_record_head_code", stockOutRecordHeadCode)
+                .eq("material_code", materialCode).last("limit 1");
+        SwmsStockOutRecordDetail detail = swmsStockOutRecordDetailMapper.selectOne(byStockByFormId);
+
+        if (detail == null) {
             log.info("出库上报失败,不存在此出库数据,单号{},编码{}", stockOutRecordHeadCode, materialCode);
             return;
+       }
+//        Boolean out = iStockInRecordAccountService.out(recordAccount.getId(), MaterialStatusEnum.HAVE_OUT.getCode());
+//        log.info("物料状态更新为已出库:{}", out);
+            SwmsStockInLedgers oldValue = inLedgersMapper.selectById(detail.getStockInRecordAccountId());
+            if (oldValue == null) throw new DataNotFindException("出库失败,未找到台账id:" + detail.getStockInRecordAccountId());
+            oldValue.setMaterialStatus(3);
+            boolean out = inLedgersMapper.updateById(oldValue) > 0;
+            log.info("物料状态更新为已出库:{}", out);
+//        //更新出库时间
+//        QueryWrapper<StockOutRecord> outRecordQueryWrapper = new QueryWrapper<>();
+//        outRecordQueryWrapper.eq("stock_in_record_account_id", recordAccount.getId()).last("limit 1");
+//        StockOutRecord record = stockOutRecordMapper.selectOne(outRecordQueryWrapper);
+//        record.setCompletionTime(new Date());
+//        boolean dateUpdate = stockOutRecordMapper.updateById(record) > 0;
+//        log.info("出库台账更新:{},出库时间:{}", dateUpdate, record.getCompletionTime());
+            detail.setCreatedTime(new Date());
+            detail.setCompletionFlag(true);
+            boolean dateUpdate = swmsStockOutRecordDetailMapper.updateById(detail) > 0;
+            log.info("出库台账更新:{},出库时间:{}", dateUpdate, detail.getCreatedTime());
+//        //更新库存
+//        MaterialStock materialStockMinus = MaterialStock
+//                .builder()
+//                .materialInfoId(recordAccount.getMaterialInfoId())
+//                .bagsSum(-1)
+//                .weightSum(-recordAccount.getWeight())
+//                .build();
+//        MaterialStock materialStock = iMaterialStockService.stockSetting(materialStockMinus);
+//            log.info("库存增减=====>库存{}剩余,袋数:{},重量:{}KG", materialStock.getMaterialInfoId(), materialStock.getBagsSum(), materialStock.getWeightSum());
+    //修改实际库存
+        QueryWrapper<SwmsStockInventoryReallyReports> queryWrapper = new QueryWrapper<>();
+        queryWrapper.eq("material_name_code",detail.getMaterialNameCode())
+                .eq("material_supplier_code",detail.getMaterialSupplierCode())
+                .eq("material_batch",detail.getMaterialBatch());
+        List<SwmsStockInventoryReallyReports> reports = reallyReportsMapper.selectList(queryWrapper);
+        if(reports.size() > 0){
+            SwmsStockInventoryReallyReports reports1 = reports.get(0);
+            reports1.setRealWeight(reports1.getRealWeight() - detail.getWeight());
+            reallyReportsMapper.updateById(reports1);
         }
-        Boolean out = iStockInRecordAccountService.out(recordAccount.getId(), MaterialStatusEnum.HAVE_OUT.getCode());
-        log.info("物料状态更新为已出库:{}", out);
-        //更新出库时间
-        QueryWrapper<StockOutRecord> outRecordQueryWrapper = new QueryWrapper<>();
-        outRecordQueryWrapper.eq("stock_in_record_account_id", recordAccount.getId()).last("limit 1");
-        StockOutRecord record = stockOutRecordMapper.selectOne(outRecordQueryWrapper);
-        record.setCompletionTime(new Date());
-        boolean dateUpdate = stockOutRecordMapper.updateById(record) > 0;
-        log.info("出库台账更新:{},出库时间:{}", dateUpdate, record.getCompletionTime());
-        //更新库存
-        MaterialStock materialStockMinus = MaterialStock
-                .builder()
-                .materialInfoId(recordAccount.getMaterialInfoId())
-                .bagsSum(-1)
-                .weightSum(-recordAccount.getWeight())
-                .build();
-        MaterialStock materialStock = iMaterialStockService.stockSetting(materialStockMinus);
-        log.info("库存增减=====>库存{}剩余,袋数:{},重量:{}KG", materialStock.getMaterialInfoId(), materialStock.getBagsSum(), materialStock.getWeightSum());
     }
 
-    /**
-     * 出库结果完成上报-测试用(新松)
-     *
-     * @param stockOutRecordHeadCode 出库表单
-     */
-    @Override
-    @Async("PoolTaskExecutor")
-    public void outFinished(String stockOutRecordHeadCode) {
-        log.info("出库结果完成上报开始,接收到单号:{},已完成出库任务", stockOutRecordHeadCode);
-        QueryWrapper<StockOutRecordHead> byOrderNo = new QueryWrapper<>();
-        byOrderNo.eq("stock_out_record_head_code", stockOutRecordHeadCode).last("limit 1");
-        StockOutRecordHead stockOutRecordHead = stockOutRecordHeadMapper.selectOne(byOrderNo);
-        if (stockOutRecordHead == null) throw new DataNotFindException("出库上报失败,单号未找到:" + stockOutRecordHeadCode);
-        stockOutRecordHead.setCompletionFlag(StockOutStatusEnum.OUT_COMPLETE.getCode());
-        stockOutRecordHead.setCompletionTime(new Date());
-        boolean success = stockOutRecordHeadMapper.updateById(stockOutRecordHead) > 0;
-        log.info("出库结果上报已保存:{}", success);
-    }
+        /**
+         * 出库结果完成上报-测试用(新松)
+         *
+         * @param stockOutRecordHeadCode 出库表单
+         */
+        @Override
+        @Async("PoolTaskExecutor")
+        public void outFinished (String stockOutRecordHeadCode){
+            log.info("出库结果完成上报开始,接收到单号:{},已完成出库任务", stockOutRecordHeadCode);
+//            QueryWrapper<StockOutRecordHead> byOrderNo = new QueryWrapper<>();
+//            byOrderNo.eq("stock_out_record_head_code", stockOutRecordHeadCode).last("limit 1");
+//            StockOutRecordHead stockOutRecordHead = stockOutRecordHeadMapper.selectOne(byOrderNo);
+//            if (stockOutRecordHead == null) throw new DataNotFindException("出库上报失败,单号未找到:" + stockOutRecordHeadCode);
+//            stockOutRecordHead.setCompletionFlag(StockOutStatusEnum.OUT_COMPLETE.getCode());
+//            stockOutRecordHead.setCompletionTime(new Date());
+//            boolean success = stockOutRecordHeadMapper.updateById(stockOutRecordHead) > 0;
+//            log.info("出库结果上报已保存:{}", success);
+            QueryWrapper<SwmsStockOutRecordHead> byOrderNo = new QueryWrapper<>();
+            byOrderNo.eq("stock_out_record_head_code",stockOutRecordHeadCode).last("limit 1");
+            SwmsStockOutRecordHead head = swmsStockOutRecordHeadMapper.selectOne(byOrderNo);
+            if (head == null) throw new DataNotFindException("出库上报失败,单号未找到:" + stockOutRecordHeadCode);
+            head.setCompletionTime(new Date());
+            head.setMaterialStatus(2);
+            boolean success = swmsStockOutRecordHeadMapper.updateById(head) > 0;
+            log.info("出库结果上报已保存:{}", success);
+        }
 
-    private StockOutHeadVo toVo(StockOutRecordHead head) {
-        String endPosition = iCommonService.endPosition(head.getEndPositionId());
-        String personName = iCommonService.personName(head.getCreatedPersonId());
-        String productionLine = iCommonService.productionLine(head.getProductionLineId());
-        StockOutHeadVo stockOutHeadVo = new StockOutHeadVo(head);
-        stockOutHeadVo.setEndPosition(endPosition);
-        stockOutHeadVo.setCreatedPerson(personName);
-        stockOutHeadVo.setProductionLine(productionLine);
-        return stockOutHeadVo;
+        private StockOutHeadVo toVo (StockOutRecordHead head){
+            String endPosition = iCommonService.endPosition(head.getEndPositionId());
+            String personName = iCommonService.personName(head.getCreatedPersonId());
+            String productionLine = iCommonService.productionLine(head.getProductionLineId());
+            StockOutHeadVo stockOutHeadVo = new StockOutHeadVo(head);
+            stockOutHeadVo.setEndPosition(endPosition);
+            stockOutHeadVo.setCreatedPerson(personName);
+            stockOutHeadVo.setProductionLine(productionLine);
+            return stockOutHeadVo;
+        }
     }
-}

@@ -46,7 +46,7 @@ public class FireMageDataReorganizeController {
 
     @GetMapping(value = "detail")
     @ApiOperation(value  = "详情")
-    public Result detai(@RequestParam Long id){
+    public Result detail(@RequestParam Long id){
         return ResultUtil.success(service.reDetail(id));
     }
 
