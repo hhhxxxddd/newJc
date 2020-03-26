@@ -6,6 +6,7 @@ import com.jc.api.mapper.SwmsStockInLedgersMapper;
 import com.jc.api.mapper.SwmsStockInventoryReallyReportsMapper;
 import com.jc.api.mapper.SwmsStockOutRecordDetailMapper;
 import com.jc.api.mapper.SwmsStockOutRecordHeadMapper;
+import com.jc.api.service.restservice.imp.StockOutRecordHeadService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -26,6 +27,8 @@ public class ApiFeignController {
     SwmsStockInLedgersMapper ledgersMapper;
     @Autowired
     SwmsStockInventoryReallyReportsMapper reallyReportsMapper;
+    @Autowired
+    StockOutRecordHeadService stockOutRecordHeadService;
     /**\
      * 审核通过，修改相应的标志位
      * @param commonBatchId
@@ -51,6 +54,9 @@ public class ApiFeignController {
         });
 
         //实际库存表不变，已经出库，在之前的地方已经修改过可用库存了。
+
+        //向新松发送请求
+        stockOutRecordHeadService.outStart(commonBatchId.intValue(),2);
         return true;
     }
 
