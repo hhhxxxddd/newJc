@@ -69,7 +69,7 @@ public class PowerCheckRecordServiceImp implements PowerCheckRecordService {
     @Override
     public List getTodayRecords() {
         PowerCheckRecordHeadExample example = new PowerCheckRecordHeadExample();
-        Date startOfToday = ComUtil.localDateTimeToDate(ComUtil.getTodayStart().minusYears(1));
+        Date startOfToday = ComUtil.localDateTimeToDate(ComUtil.getTodayStart());
         Date now = new Date();
         example.createCriteria().andCheckDateBetween(startOfToday, now);
 
