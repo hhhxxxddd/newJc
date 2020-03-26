@@ -238,6 +238,9 @@ public class DeviceRepairServiceImp implements DeviceRepairService {
                 if(accessory.getUnits() == 2){
                     temp += "套";
                 }
+                if(accessory.getUnits() == 3){
+                    temp += "米";
+                }
                 ans += temp;
                 if(l != accessories.size() - 1) {
                     ans += "\n";

@@ -181,6 +181,8 @@ public class DeviceRepairReportServiceImp implements DeviceRepairReportService {
                     unitString = "台";
                 if (unit == 2)
                     unitString = "套";
+                if(unit == 3)
+                    unitString = "米";
                 deviceRepairAccDTO.setUnit(unitString);
                 accs.add(deviceRepairAccDTO);
             }

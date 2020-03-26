@@ -52,7 +52,7 @@ public class DeviceMaintenanceRecordDetailHeadDto {
 
     private Integer editFlag;
 
-    private String[] units = new String[]{"个","台","套"};
+    private String[] units = new String[]{"个","台","套","米"};
 
     public DeviceMaintenanceRecordDetailHeadDto() {
     }

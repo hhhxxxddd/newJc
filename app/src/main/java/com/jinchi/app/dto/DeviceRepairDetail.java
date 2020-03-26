@@ -49,7 +49,7 @@ public class DeviceRepairDetail {
 
     Integer repairStatuts;
 
-    String[] unitContains = {"个","台","套"};
+    String[] unitContains = {"个","台","套","米"};
 
     Integer isCancel;
 
