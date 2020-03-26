@@ -1,7 +1,6 @@
 package com.jinchi.app.service;
 
 import com.jinchi.app.domain.fireMage.FireMageDetectInfo;
-import com.jinchi.app.domain.fireMage.FireMageDetectInfoExample;
 import com.jinchi.app.dto.Page;
 import com.jinchi.app.dto.QueryDTO;
 import com.jinchi.app.mapper.fireMage.FireMageDetectInfoMapper;

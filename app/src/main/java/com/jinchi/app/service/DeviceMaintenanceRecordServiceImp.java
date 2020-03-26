@@ -169,6 +169,9 @@ public class DeviceMaintenanceRecordServiceImp implements DeviceMaintenanceRecor
                 if (d.getUnits() == 2) {
                     dto.setUnits("套");
                 }
+                if(d.getUnits() == 3){
+                    dto.setUnits("米");
+                }
             } else {
                 dto.setUnits("");
             }
@@ -215,6 +218,9 @@ public class DeviceMaintenanceRecordServiceImp implements DeviceMaintenanceRecor
                         }
                         if (dto.getUnits().equals("套")) {
                             accessory.setUnits(Byte.parseByte("2"));
+                        }
+                        if(dto.getUnits().equals("米")){
+                            accessory.setUnits(Byte.parseByte("3"));
                         }
                     }
                     if (!dto.getName().equals("")) {

@@ -80,6 +80,8 @@ public class DeviceRepairedServiceImp implements DeviceRepairedService {
                     unitString = "台";
                 if (unit == 2)
                     unitString = "套";
+                if(unit == 3)
+                    unitString = "米";
                 deviceRepairAccDTO.setUnit(unitString);
                 accs.add(deviceRepairAccDTO);
             }
@@ -157,6 +159,9 @@ public class DeviceRepairedServiceImp implements DeviceRepairedService {
                 if (unitString.equals("套")) {
                     unit = 2;
                 }
+                if(unitString.equals("米")){
+                    unit = 3;
+                }
                 deviceRepairAccessory.setUnits(unit.byteValue());
                 deviceRepairAccessory.setRepairCode(repairId);
                 deviceRepairAccessoryMapper.insertSelective(deviceRepairAccessory);
@@ -196,6 +201,9 @@ public class DeviceRepairedServiceImp implements DeviceRepairedService {
                 }
                 if (unitString.equals("套")) {
                     unit = 2;
+                }
+                if(unitString.equals("米")){
+                    unit = 3;
                 }
                 deviceRepairAccessory.setUnits(unit == null ? null : unit.byteValue());
                 deviceRepairAccessory.setRepairCode(repairId);
