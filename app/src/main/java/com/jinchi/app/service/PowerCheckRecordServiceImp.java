@@ -1,9 +1,9 @@
 package com.jinchi.app.service;
 
 import com.jinchi.app.domain.*;
-import com.jinchi.app.dto.Page;
-import com.jinchi.app.dto.PowerCheckRecordDTO;
-import com.jinchi.app.dto.QueryDTO;
+import com.jinchi.app.dto.*;
+import com.jinchi.app.mapper.PowerCheckItemMapper;
+import com.jinchi.app.mapper.PowerCheckModelMapper;
 import com.jinchi.app.mapper.PowerCheckRecordDetailMapper;
 import com.jinchi.app.mapper.PowerCheckRecordHeadMapper;
 import com.jinchi.app.utils.ComUtil;
@@ -28,19 +28,54 @@ public class PowerCheckRecordServiceImp implements PowerCheckRecordService {
     @Autowired
     PowerCheckSiteService siteService;
 
-    @Override
-    public PowerCheckRecordDTO add(PowerCheckRecordDTO dto) {
-        PowerCheckRecordHead head = dto.getHead();
-        head.setStatus(true);
-        head.setEffectiveDate(dto.getEffectiveDate());
-        headMapper.insertSelective(head);
+    @Autowired
+    PowerCheckModelMapper modelMapper;
 
-        List<PowerCheckRecordDetail> details = dto.getDetails();
-        for (PowerCheckRecordDetail detail : details) {
-            detail.setRecordCode(head.getCode());
+    @Autowired
+    AuthUserService authUserService;
+
+    @Autowired
+    PowerCheckItemMapper itemMapper;
+
+
+    @Override
+    public PowerCheckDTO add(PowerCheckDTO dto) {
+
+        CheckHeadDTO head = dto.getHead();
+
+        AuthUserDTO byId = authUserService.findById(Integer.parseInt(head.getUserId()));
+
+        long modelCode = Long.parseLong(head.getModelCode());
+        long siteCode = Long.parseLong(head.getSiteCode());
+
+        PowerCheckModel checkModel = modelMapper.selectByPrimaryKey(modelCode);
+
+        PowerCheckRecordHead recordHead = new PowerCheckRecordHead();
+        recordHead.setSiteCode(siteCode);
+        recordHead.setModelName(checkModel.getModelName());
+        recordHead.setCheckDate(new Date());
+        recordHead.setOperator(byId.getName());
+        recordHead.setClassNum(head.getClassNum());
+        recordHead.setNote(head.getNote());
+        recordHead.setStatus(true);
+        recordHead.setEffectiveDate(checkModel.getEffectiveDate());
+        headMapper.insertSelective(recordHead);
+
+        for (CheckDetailDTO detailDTO : dto.getDetails()) {
+            long itemCode = Long.parseLong(detailDTO.getItemCode());
+            PowerCheckItem checkItem = itemMapper.selectByPrimaryKey(itemCode);
+
+            PowerCheckRecordDetail detail = new PowerCheckRecordDetail();
+            detail.setRecordCode(recordHead.getCode());
+            detail.setPlace(checkItem.getPlace());
+            detail.setCheckItem(checkItem.getCheckItem());
+            detail.setCheckContent(checkItem.getCheckContent());
+            detail.setCheckValue(Byte.valueOf(detailDTO.getCheckValue()));
+            detail.setCheckResult(detailDTO.getCheckResult());
+            detail.setDataType(Byte.valueOf(detailDTO.getDateType()));
+
             detailMapper.insertSelective(detail);
         }
-
         return dto;
     }
 
