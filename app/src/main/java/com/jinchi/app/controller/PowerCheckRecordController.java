@@ -1,7 +1,7 @@
 package com.jinchi.app.controller;
 
 import com.jinchi.app.dto.IdDto;
-import com.jinchi.app.dto.PowerCheckRecordDTO;
+import com.jinchi.app.dto.PowerCheckDTO;
 import com.jinchi.app.dto.QueryDTO;
 import com.jinchi.app.dto.Result;
 import com.jinchi.app.service.PowerCheckRecordService;
@@ -29,7 +29,7 @@ public class PowerCheckRecordController {
 
     @PostMapping(value = "commit")
     @ApiOperation(value = "提交")
-    public Result add(@RequestBody PowerCheckRecordDTO dto) {
+    public Result add(@RequestBody PowerCheckDTO dto) {
         return ResultUtil.success(recordService.add(dto));
     }
 
