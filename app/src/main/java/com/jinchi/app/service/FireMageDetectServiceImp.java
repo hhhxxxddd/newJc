@@ -1,14 +1,12 @@
 package com.jinchi.app.service;
 
-import com.jinchi.app.domain.fireMage.FireMageBatchItemsValues;
-import com.jinchi.app.domain.fireMage.FireMageBatchItemsValuesExample;
-import com.jinchi.app.domain.fireMage.FireMageDept;
-import com.jinchi.app.domain.fireMage.FireMageDetectInfo;
+import com.jinchi.app.domain.fireMage.*;
 import com.jinchi.app.dto.Page;
 import com.jinchi.app.dto.QueryDTO;
 import com.jinchi.app.mapper.fireMage.FireMageBatchItemsValuesMapper;
 import com.jinchi.app.mapper.fireMage.FireMageDeptMapper;
 import com.jinchi.app.mapper.fireMage.FireMageDetectInfoMapper;
+import com.jinchi.app.mapper.fireMage.FireMageTestItemsMapper;
 import com.jinchi.app.utils.ComUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -24,6 +22,8 @@ public class FireMageDetectServiceImp implements FireMageDetectService {
     FireMageBatchItemsValuesMapper itemsValuesMapper;
     @Autowired
     FireMageDeptMapper deptMapper;
+    @Autowired
+    FireMageTestItemsMapper itemsMapper;
 
     @Override
     public Page page(QueryDTO queryDTO) {
@@ -62,12 +62,16 @@ public class FireMageDetectServiceImp implements FireMageDetectService {
             throw new RuntimeException("找不到详情");
         FireMageBatchItemsValues itemsValues = values.get(0);
 
+        String[] ids = itemsValues.getItemCodes().split(",");
         String[] items = itemsValues.getItemNames().split(",");
         String[] vs = itemsValues.getItemValues().split(",");
 
         for(int i=0;i<items.length;i++){
             Map<String,String> map = new HashMap<>();
-            map.put(items[i],vs[i].equals("-1")?"":vs[i]);
+            FireMageTestItems item = itemsMapper.selectByPrimaryKey(new Long(ids[i]));
+            if(item == null)
+                throw new RuntimeException("不存在的检测项目"+ids[i]);
+            map.put(items[i],(vs[i].equals("-1")?"":vs[i])+item.getUnit());
             list.add(map);
         }
         String status = "";
