@@ -1,23 +1,29 @@
 package com.jinchi.app.service;
 
+import com.jinchi.app.domain.fireMage.FireMageBatchItemsValues;
+import com.jinchi.app.domain.fireMage.FireMageBatchItemsValuesExample;
+import com.jinchi.app.domain.fireMage.FireMageDept;
 import com.jinchi.app.domain.fireMage.FireMageDetectInfo;
 import com.jinchi.app.dto.Page;
 import com.jinchi.app.dto.QueryDTO;
+import com.jinchi.app.mapper.fireMage.FireMageBatchItemsValuesMapper;
+import com.jinchi.app.mapper.fireMage.FireMageDeptMapper;
 import com.jinchi.app.mapper.fireMage.FireMageDetectInfoMapper;
 import com.jinchi.app.utils.ComUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 @Service
 public class FireMageDetectServiceImp implements FireMageDetectService {
 
     @Autowired
     FireMageDetectInfoMapper infoMapper;
+    @Autowired
+    FireMageBatchItemsValuesMapper itemsValuesMapper;
+    @Autowired
+    FireMageDeptMapper deptMapper;
 
     @Override
     public Page page(QueryDTO queryDTO) {
@@ -42,11 +48,42 @@ public class FireMageDetectServiceImp implements FireMageDetectService {
 
     @Override
     public Map detail(Long id) {
-        Map<String,String> ans = new HashMap<>();
-        ans.put("dept",null);
-        ans.put("batch",null);
-        ans.put("status",null);
-        ans.put("result","list");
+        Map<String,Object> ans = new HashMap<>();
+        List<Map> list = new ArrayList<>();
+        FireMageDetectInfo info = infoMapper.selectByPrimaryKey(id);
+        if(info == null)
+            throw new RuntimeException("找不到该批号");
+        FireMageDept dept = deptMapper.selectByPrimaryKey(info.getDeptCode());
+
+        FireMageBatchItemsValuesExample example = new FireMageBatchItemsValuesExample();
+        example.createCriteria().andBatchCodeEqualTo(id);
+        List<FireMageBatchItemsValues> values = itemsValuesMapper.selectByExample(example);
+        if(values.size() == 0)
+            throw new RuntimeException("找不到详情");
+        FireMageBatchItemsValues itemsValues = values.get(0);
+
+        String[] items = itemsValues.getItemNames().split(",");
+        String[] vs = itemsValues.getItemValues().split(",");
+
+        for(int i=0;i<items.length;i++){
+            Map<String,String> map = new HashMap<>();
+            map.put(items[i],vs[i].equals("-1")?"":vs[i]);
+            list.add(map);
+        }
+        String status = "";
+        Byte b = info.getDetectStatus();
+        if(b != null){
+            if(b == 0)
+                status = "合格";
+            if(b == 1)
+                status = "不合格";
+            if(b == 2)
+                status = "让步接收";
+        }
+        ans.put("dept",dept.getDeptName());
+        ans.put("batch",info.getBatch());
+        ans.put("status",status);
+        ans.put("result",list);
         return ans;
     }
 }
