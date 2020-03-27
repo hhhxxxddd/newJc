@@ -9,11 +9,11 @@ public class CheckDetailDTO {
 
     String itemCode;
 
-    String dateType;
+    String dataType;
 
     String checkValue;
 
-    String CheckResult;
+    String checkResult;
 
     public String getItemCode() {
         return itemCode;
@@ -23,12 +23,12 @@ public class CheckDetailDTO {
         this.itemCode = itemCode;
     }
 
-    public String getDateType() {
-        return dateType;
+    public String getDataType() {
+        return dataType;
     }
 
-    public void setDateType(String dateType) {
-        this.dateType = dateType;
+    public void setDataType(String dataType) {
+        this.dataType = dataType;
     }
 
     public String getCheckValue() {
@@ -40,10 +40,10 @@ public class CheckDetailDTO {
     }
 
     public String getCheckResult() {
-        return CheckResult;
+        return checkResult;
     }
 
     public void setCheckResult(String checkResult) {
-        CheckResult = checkResult;
+        this.checkResult = checkResult;
     }
 }

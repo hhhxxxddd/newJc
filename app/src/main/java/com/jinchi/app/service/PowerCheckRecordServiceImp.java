@@ -70,9 +70,9 @@ public class PowerCheckRecordServiceImp implements PowerCheckRecordService {
             detail.setPlace(checkItem.getPlace());
             detail.setCheckItem(checkItem.getCheckItem());
             detail.setCheckContent(checkItem.getCheckContent());
-            detail.setCheckValue(Byte.valueOf(detailDTO.getCheckValue()));
+            detail.setCheckValue(detailDTO.getCheckValue() == null ? 0 : Byte.parseByte(detailDTO.getCheckValue()));
             detail.setCheckResult(detailDTO.getCheckResult());
-            detail.setDataType(Byte.valueOf(detailDTO.getDateType()));
+            detail.setDataType(Byte.parseByte(detailDTO.getDataType()));
 
             detailMapper.insertSelective(detail);
         }
