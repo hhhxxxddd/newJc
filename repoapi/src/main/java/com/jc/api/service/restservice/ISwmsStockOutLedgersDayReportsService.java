@@ -17,5 +17,4 @@ import com.jc.api.entity.SwmsStockOutLedgersDayReports;
 public interface ISwmsStockOutLedgersDayReportsService extends IService<SwmsStockOutLedgersDayReports> {
     IPage<SwmsStockOutLedgersDayReports> selectByPage(Page page, Integer typeId, Integer subTypeId, Integer deptId, String startTime, String endTime);
 
-    void generate();
 }

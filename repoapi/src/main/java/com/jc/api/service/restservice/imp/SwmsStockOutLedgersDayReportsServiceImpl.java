@@ -26,4 +26,5 @@ public class SwmsStockOutLedgersDayReportsServiceImpl extends ServiceImpl<SwmsSt
     public IPage<SwmsStockOutLedgersDayReports> selectByPage(Page page, Integer typeId, Integer subTypeId, Integer deptId, String startTime, String endTime) {
         return outLedgersDayReportsMapper.selectPageVo(page,typeId,subTypeId,deptId,startTime,endTime);
     }
+
 }
