@@ -22,6 +22,11 @@ public class AnodeProductionTypeServiceImp implements AnodeProductionTypeService
 
     @Override
     public BasicInfoAnodeProductionType add(BasicInfoAnodeProductionType productionType) {
+        BasicInfoAnodeProductionTypeExample example = new BasicInfoAnodeProductionTypeExample();
+        example.createCriteria().andNameEqualTo(productionType.getName());
+        if (typeMapper.selectByExample(example).size() > 0) {
+            return new BasicInfoAnodeProductionType();
+        }
         typeMapper.insertSelective(productionType);
         return productionType;
     }
