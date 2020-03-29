@@ -7,6 +7,7 @@ import com.jc.api.entity.*;
 import com.jc.api.exception.custom.DataNotFindException;
 import com.jc.api.mapper.SwmsMatSupMapper;
 import com.jc.api.mapper.SwmsStockInJournalAccountMapper;
+import com.jc.api.mapper.SwmsStockInLedgersDayReportsMapper;
 import com.jc.api.mapper.SwmsStockInLedgersMapper;
 import com.jc.api.service.restservice.*;
 import com.jc.api.utils.materialcode.DecoderV1;
@@ -17,6 +18,7 @@ import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Date;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -53,6 +55,10 @@ public class SwmsStockInLedgersService implements ISwmsStockInLedgersService {
     private ISwmsBasicMeasureUnitService iSwmsBasicMeasureUnitService;
     @Autowired
     private SwmsMatSupMapper matSupMapper;
+    @Autowired
+    private SwmsStockInLedgersDayReportsMapper inLedgersDayReportsMapper;
+    @Autowired
+    private ISwmsStockInventoryDailyReportsService inventoryDailyReportsService;
 
     /**
      * 解析编码并存入台账
@@ -155,6 +161,32 @@ public class SwmsStockInLedgersService implements ISwmsStockInLedgersService {
         }
         Boolean isInsert = swmsStockInLedgersMapper.insert(stockInLedgers) > 0;
         log.info("入库台账保存完成:{}", isInsert);
+
+        //开始新增入库日台帐
+        SwmsStockInLedgersDayReports inLedgersDayReports = new SwmsStockInLedgersDayReports();
+        inLedgersDayReports.setBagCounts(stockInLedgers.getBagNum())
+                .setCheckStatus(0)
+                .setCreatedDay(stockInLedgers.getCreatedTime())
+                .setFlag(false)
+                .setMaterialBatch(stockInLedgers.getMaterialBatch())
+                .setMaterialName(stockInLedgers.getMaterialName())
+                .setMaterialNameCode(stockInLedgers.getMaterialNameCode())
+                .setMaterialSubTypeId(stockInLedgers.getMaterialSubTypeId())
+                .setMaterialSupplierCode(stockInLedgers.getMaterialSupplierCode())
+                .setMaterialTypeId(stockInLedgers.getMaterialTypeId())
+                .setMaterialWorkshopId(stockInLedgers.getMaterialWorkshopId())
+                .setMeasureUnit(stockInLedgers.getMeasureUnit())
+                .setOutCounts(0) //问题
+                .setOutDay(new Date()) //问题
+                .setOutWeight(0f); //问题 2020.3.38 入库为什么也要加出库的信息。
+        Boolean dayInsert = swmsStockInLedgersMapper.insert(stockInLedgers) > 0;
+        //每天由新松接口写入入库、出库流水后，进行解析时，修改本表数据；
+        //物料按供应商统计计算。
+        inventoryDailyReportsService.updateDailyRecord(inLedgersDayReports,null);
+
+        log.info("入库日台账保存完成:{}", dayInsert);
+
+
         //增加库存
         SwmsStockInventoryReallyReports newValue = new SwmsStockInventoryReallyReports();
         newValue.setMaterialTypeId(Integer.valueOf(materialType.getId()))

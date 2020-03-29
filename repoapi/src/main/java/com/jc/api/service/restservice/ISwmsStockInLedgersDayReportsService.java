@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.IService;
 import com.jc.api.entity.SwmsStockInLedgersDayReports;
+import com.jc.api.entity.SwmsStockOutRecordDetail;
 
 /**
  * <p>
@@ -20,4 +21,6 @@ public interface ISwmsStockInLedgersDayReportsService extends IService<SwmsStock
     void updateByIds(Long[] ids, Integer status);
 
     void updateById(Long id, Integer status);
+
+    void updateInrecords(SwmsStockOutRecordDetail detail);
 }

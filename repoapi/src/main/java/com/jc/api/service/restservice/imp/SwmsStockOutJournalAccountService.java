@@ -8,7 +8,9 @@ import com.jc.api.exception.custom.DataDuplicateException;
 import com.jc.api.exception.custom.DataNotFindException;
 import com.jc.api.exception.custom.ParamVerifyException;
 import com.jc.api.mapper.*;
+import com.jc.api.service.restservice.ISwmsStockInLedgersDayReportsService;
 import com.jc.api.service.restservice.ISwmsStockOutJournalAccountService;
+import com.jc.api.service.restservice.ISwmsStockOutLedgersDayReportsService;
 import com.jc.api.service.restservice.ISwmsStockOutLedgersService;
 import io.netty.util.internal.StringUtil;
 import lombok.extern.slf4j.Slf4j;
@@ -43,6 +45,8 @@ public class SwmsStockOutJournalAccountService implements ISwmsStockOutJournalAc
     private ISwmsStockOutLedgersService iSwmsStockOutLedgersService;
     @Autowired
     private SwmsStockOutRecordHeadMapper swmsStockOutRecordHeadMapper;
+    @Autowired
+    private ISwmsStockInLedgersDayReportsService inLedgersDayReportsService;
 
     /**
      * 生成出库流水
@@ -161,6 +165,9 @@ public class SwmsStockOutJournalAccountService implements ISwmsStockOutJournalAc
         swmsStockOutRecordDetailMapper.updateById(detail);
         iSwmsStockOutLedgersService.generate(detail.getId(),stockInLedgers.getId());
 
+        //修改入库日台帐
+        //注意：出库时，根据物料批号查询对应的入库记录，修改对应的入库记录数据，其中，出库日期存储最后一次的出库日期；出库重量和出库袋数存储累加值。
+        inLedgersDayReportsService.updateInrecords(detail);
     }
 
     /**

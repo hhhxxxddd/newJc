@@ -49,7 +49,7 @@ public class ScheduledTask {
             LocalDateTime yesterdayStart = today.minusDays(1);
             yesterdayStart = yesterdayStart.withHour(0).withMinute(0).withSecond(0);
             LocalDateTime yesterdayEnd = yesterdayStart.withHour(23).withMinute(59).withSecond(59);
-            List condi = dailyReportsMapper.selectList(new QueryWrapper<>());
+            /*List condi = dailyReportsMapper.selectList(new QueryWrapper<>());
             if(condi.size() == 0){
                 QueryWrapper<SwmsStockInLedgersDayReports> queryWrapper = new QueryWrapper<>();
                 queryWrapper.ge("created_day",ComUtil.localDateTimeToDate(yesterdayStart))
@@ -82,7 +82,7 @@ public class ScheduledTask {
                 map.forEach((k,v)->{
                     dailyReportsMapper.insert(v);
                 });
-            }else {
+            }else {*/
                 QueryWrapper<SwmsStockInventoryDailyReports> queryWrapper = new QueryWrapper<>();
                 queryWrapper.ge("stock_date", ComUtil.localDateTimeToDate(yesterdayStart))
                         .le("stock_date", ComUtil.localDateTimeToDate(yesterdayEnd));
@@ -124,7 +124,7 @@ public class ScheduledTask {
                     entity.setLastWeight(entity.getWeight());
                     dailyReportsMapper.insert(entity);
                 }
-            }
+            //}
             log.info("定时服务物料库存日报表结束");
         }
     }
