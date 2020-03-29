@@ -13,6 +13,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class DeviceProcessServiceImp implements DeviceProcessService {
@@ -60,7 +61,45 @@ public class DeviceProcessServiceImp implements DeviceProcessService {
         BasicInfoDeviceProcess deviceProcess = deviceProcessMapper.selectByPrimaryKey(processDeptId.shortValue());
         List<DeviceDocumentMain> mains = deviceDocumentManageService.getAllByDeptId(deviceProcess.getDeptCode());
 
+        List<Long> mainIds = mains.stream().map(e->e.getCode()).collect(Collectors.toList());
+        List<Long> mainIdsCopy = new ArrayList<>(mainIds);
+        if(mainIds.size() == 0) {
+            mainIds.add(-1l);
+        }
+        ProductionProcessDeviceMapExample example = new ProductionProcessDeviceMapExample();
+        example.createCriteria().andDeviceCodeIn(mainIds).andProcessCodeEqualTo(processDeptId.shortValue());
+        List<ProductionProcessDeviceMap> deviceMaps = processDeviceMapMapper.selectByExample(example);
+        mainIds = deviceMaps.stream().map(e -> e.getDeviceCode()).collect(Collectors.toList());
+
+        example.clear();
+        example.createCriteria().andDeviceCodeIn(mainIdsCopy);
+        List<ProductionProcessDeviceMap> deviceMaps1 = processDeviceMapMapper.selectByExample(example);
+        List<Long> mainIds1 = deviceMaps1.stream().map(e->e.getDeviceCode()).collect(Collectors.toList());
+
         for(int i=0;i<mains.size();i++){
+            ProcessAssignDTO assignDTO = new ProcessAssignDTO();
+            if(mainIds.contains(mains.get(i).getCode())){
+                assignDTO.setChosen(true);
+                assignDTO.setDeviceCode(mains.get(i).getCode());
+                assignDTO.setDeviceName(mains.get(i).getDeviceName());
+                assignDTO.setFixedassetsCode(mains.get(i).getFixedassetsCode());
+                assignDTO.setSpecification(mains.get(i).getSpecification());
+                ans.add(assignDTO);
+                continue;
+            }else{
+                if(!mainIds1.contains(mains.get(i).getCode())){
+                    assignDTO.setChosen(false);
+                    assignDTO.setDeviceCode(mains.get(i).getCode());
+                    assignDTO.setDeviceName(mains.get(i).getDeviceName());
+                    assignDTO.setFixedassetsCode(mains.get(i).getFixedassetsCode());
+                    assignDTO.setSpecification(mains.get(i).getSpecification());
+                    ans.add(assignDTO);
+                    continue;
+                }
+            }
+        }
+
+        /*for(int i=0;i<mains.size();i++){
             ProcessAssignDTO assignDTO = new ProcessAssignDTO();
             ProductionProcessDeviceMapExample example = new ProductionProcessDeviceMapExample();
             example.createCriteria().andDeviceCodeEqualTo(mains.get(i).getCode()).andProcessCodeEqualTo(processDeptId.shortValue());
@@ -85,7 +124,7 @@ public class DeviceProcessServiceImp implements DeviceProcessService {
                     continue;
                 }
             }
-        }
+        }*/
         return ans;
     }
 
