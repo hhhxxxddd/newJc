@@ -1,10 +1,14 @@
 package com.jc.api.service.restservice.imp;
 
+import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.baomidou.mybatisplus.extension.service.impl.ServiceImpl;
+import com.jc.api.entity.SwmsStockInLedgersDayReports;
 import com.jc.api.entity.SwmsStockInventoryDailyReports;
 import com.jc.api.entity.SwmsStockInventoryDailyReportsTotals;
+import com.jc.api.entity.SwmsStockOutLedgersDayReports;
+import com.jc.api.exception.custom.DataNotFindException;
 import com.jc.api.mapper.SwmsStockInventoryDailyReportsMapper;
 import com.jc.api.mapper.SwmsStockInventoryDailyReportsTotalsMapper;
 import com.jc.api.service.restservice.ISwmsStockInventoryDailyReportsService;
@@ -59,5 +63,39 @@ public class SwmsStockInventoryDailyReportsServiceImpl extends ServiceImpl<SwmsS
         LocalDateTime start = ComUtil.dateToLocalDateTime(totals.getStockDate()).withHour(0).withMinute(0).withSecond(0);
         LocalDateTime end = ComUtil.dateToLocalDateTime(totals.getStockDate()).withHour(23).withMinute(59).withSecond(59);
         return totalsMapper.detail(totals.getMaterialNameCode(),ComUtil.localDateTimeToString(start,"yyyy-MM-dd HH:mm:ss"),ComUtil.localDateTimeToString(end,"yyyy-MM-dd HH:mm:ss"));
+    }
+
+    //每天由新松接口写入入库、出库流水后，进行解析时，修改本表数据；
+    //物料按供应商统计计算。
+    @Override
+    public void updateDailyRecord(SwmsStockInLedgersDayReports in, SwmsStockOutLedgersDayReports out) {
+        if(in != null){
+            QueryWrapper<SwmsStockInventoryDailyReports> byBatchByCode = new QueryWrapper<>();
+            byBatchByCode.eq("material_name_code",in.getMaterialNameCode())
+                    .eq("material_supplier_code",in.getMaterialSupplierCode())
+                    .last("orger by stock_date limit 1");//更新的物料信息的时间可能有问题
+            SwmsStockInventoryDailyReports entity = inventoryDailyReportsMapper.selectOne(byBatchByCode);
+
+            if(entity == null) throw new DataNotFindException("库存日报不存在:" + in.getMaterialNameCode());
+
+            entity.setCurrentInRecord(entity.getCurrentInRecord() + in.getWeight());
+            entity.setWeight(entity.getWeight() + in.getWeight());
+
+            inventoryDailyReportsMapper.updateById(entity);
+
+        }else{
+            QueryWrapper<SwmsStockInventoryDailyReports> byBatchByCode = new QueryWrapper<>();
+            byBatchByCode.eq("material_name_code",out.getMaterialNameCode())
+                    .eq("material_supplier_code",out.getMaterialSupplierCode())
+                    .last("orger by stock_date limit 1");//更新的物料信息的时间可能有问题
+            SwmsStockInventoryDailyReports entity = inventoryDailyReportsMapper.selectOne(byBatchByCode);
+
+            if(entity == null) throw new DataNotFindException("库存日报不存在:" + out.getMaterialNameCode());
+
+            entity.setCurrentOutRecord(entity.getCurrentOutRecord() + out.getWeight());
+            entity.setWeight(entity.getWeight() - out.getWeight());
+
+            inventoryDailyReportsMapper.updateById(entity);
+        }
     }
 }

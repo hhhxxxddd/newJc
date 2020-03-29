@@ -71,7 +71,9 @@ public class FireMageDetectServiceImp implements FireMageDetectService {
             FireMageTestItems item = itemsMapper.selectByPrimaryKey(new Long(ids[i]));
             if(item == null)
                 throw new RuntimeException("不存在的检测项目"+ids[i]);
-            map.put(items[i],(vs[i].equals("-1")?"":vs[i])+item.getUnit());
+            map.put("itemName",items[i]);
+            map.put("itemValue",(vs[i].equals("-1")?"":vs[i])+item.getUnit());
+           // map.put(items[i],(vs[i].equals("-1")?"":vs[i])+item.getUnit());
             list.add(map);
         }
         String status = "";

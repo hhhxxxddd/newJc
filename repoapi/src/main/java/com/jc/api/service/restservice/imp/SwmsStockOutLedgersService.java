@@ -3,21 +3,22 @@ package com.jc.api.service.restservice.imp;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.metadata.IPage;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
-import com.jc.api.entity.SwmsStockInventoryReallyReports;
-import com.jc.api.entity.SwmsStockOutLedgers;
-import com.jc.api.entity.SwmsStockOutRecordDetail;
+import com.jc.api.entity.*;
 import com.jc.api.exception.custom.DataDuplicateException;
 import com.jc.api.exception.custom.DataNotFindException;
 import com.jc.api.exception.custom.ParamVerifyException;
 import com.jc.api.mapper.SwmsStockInventoryReallyReportsMapper;
+import com.jc.api.mapper.SwmsStockOutLedgersDayReportsMapper;
 import com.jc.api.mapper.SwmsStockOutLedgersMapper;
 import com.jc.api.mapper.SwmsStockOutRecordDetailMapper;
+import com.jc.api.service.restservice.ISwmsStockInventoryDailyReportsService;
 import com.jc.api.service.restservice.ISwmsStockOutLedgersService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.BeanUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.xml.stream.events.EndElement;
 import java.util.List;
 
 /**
@@ -36,6 +37,10 @@ public class SwmsStockOutLedgersService implements ISwmsStockOutLedgersService {
     private SwmsStockOutRecordDetailMapper swmsStockOutRecordDetailMapper;
     @Autowired
     private SwmsStockInventoryReallyReportsMapper swmsStockInventoryReallyReportsMapper;
+    @Autowired
+    private SwmsStockOutLedgersDayReportsMapper outLedgersDayReportsMapper;
+    @Autowired
+    private ISwmsStockInventoryDailyReportsService inventoryDailyReportsService;
 
     /**
      * 生成出库台账表
@@ -67,6 +72,30 @@ public class SwmsStockOutLedgersService implements ISwmsStockOutLedgersService {
                 //出库单明细id
                 .setStockOutRecordAccountId(Long.valueOf(swmsStockOutRecordDetailId));
         swmsStockOutLedgersMapper.insert(entity);
+
+        //生成出库日台帐
+        SwmsStockOutLedgersDayReports outLedgersDayReports = new SwmsStockOutLedgersDayReports();
+        outLedgersDayReports.setBagCounts(entity.getBagNum())
+                .setCreatedDay(entity.getCreatedTime())
+                .setDeptCode(1)//不存在的领用单位
+                .setDeptName("未知部门")//不存在部门名称
+                .setMaterialBatch(entity.getMaterialBatch())
+                .setMaterialNameCode(entity.getMaterialNameCode())
+                .setMaterialSubTypeId(entity.getMaterialSubTypeId())
+                .setMaterialSupplierCode(entity.getMaterialSupplierCode())
+                .setMaterialTypeId(entity.getMaterialTypeId())
+                .setMaterialWorkshopId(entity.getMaterialWorkshopId())
+                .setMeasureUnit(entity.getMeasureUnit())
+                .setSubTypeName(entity.getSubTypeName())
+                .setSupplierName(entity.getSupplierName())
+                .setTypeName(entity.getMaterialTypeName())
+                .setWeight(entity.getWeight());
+        outLedgersDayReportsMapper.insert(outLedgersDayReports);
+
+        //每天由新松接口写入入库、出库流水后，进行解析时，修改本表数据；
+        //物料按供应商统计计算。
+        inventoryDailyReportsService.updateDailyRecord(null,outLedgersDayReports);
+
         //todo 修改库存
         Float outWeight = entity.getWeight();
         Integer materialNameCode = entity.getMaterialNameCode();
