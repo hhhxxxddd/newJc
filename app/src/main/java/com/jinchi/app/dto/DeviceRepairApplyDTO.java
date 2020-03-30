@@ -17,7 +17,9 @@ public class DeviceRepairApplyDTO {
     Integer flag;
     Integer userId;
 
-    @JsonFormat(shape= JsonFormat.Shape.STRING)
+    Integer repairTypeId;//维修类型id
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     public Long getRepairId() {
         return repairId;
     }
@@ -101,6 +103,14 @@ public class DeviceRepairApplyDTO {
 
     public void setDeptName(String deptName) {
         this.deptName = deptName;
+    }
+
+    public Integer getRepairTypeId() {
+        return repairTypeId;
+    }
+
+    public void setRepairTypeId(Integer repairTypeId) {
+        this.repairTypeId = repairTypeId;
     }
 }
 

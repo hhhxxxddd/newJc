@@ -72,6 +72,9 @@ public class DeviceRepairReportServiceImp implements DeviceRepairReportService {
         if (repairPostDTO.getCondition() != null) {
             sql += " and (r.device_name like '" + repairPostDTO.getCondition() + "%' or r.fixedassets_code like '" + repairPostDTO.getCondition() + "%' or d.name like '" + repairPostDTO.getCondition() + "%')";
         }
+        if (repairPostDTO.getRepairTypeId() != null) {
+            sql += " and repair_type_id = '" + repairPostDTO.getRepairTypeId() + "'";
+        }
         if (repairPostDTO.getStatus() == 1 || repairPostDTO.getStatus() == 2) {
             sql += " order by report_time desc";
         }
@@ -222,6 +225,9 @@ public class DeviceRepairReportServiceImp implements DeviceRepairReportService {
         deviceRepairApplication.setReportTime(new Date());
         deviceRepairApplication.setReportPeople(deviceRepairApplyDTO.getUserId());
         deviceRepairApplication.setRepairStatus(deviceRepairApplyDTO.getFlag());
+        // 2020/03/30 维修申请前选择维修类型
+        deviceRepairApplication.setRepairTypeId(deviceRepairApplyDTO.getRepairTypeId());
+
         if (deviceRepairApplyDTO.getRepairId() == null) {
             repairApplicationMapper.insertSelective(deviceRepairApplication);
         } else {

@@ -55,7 +55,6 @@ public class DeviceRepairedServiceImp implements DeviceRepairedService {
         ans.setPhone(authUserService.findById(deviceRepairApplication.getReportPeople()).getPhone());
         ans.setFaultComment(deviceRepairApplication.getFaultContent());
         ans.setEmergeStatus(deviceRepairApplication.getEmergeStatus());
-
         if (status == 2 || status == 3 || status == 4) {
             ans.setReveiveTime(deviceRepairApplication.getReceiveTime());
             ans.setFaultReason(deviceRepairApplication.getFaultReason());
@@ -90,6 +89,8 @@ public class DeviceRepairedServiceImp implements DeviceRepairedService {
         if (status == 3 || status == 4) {
             ans.setEvaluResult(deviceRepairApplication.getEvaluationResult());
             ans.setFinishiTime(deviceRepairApplication.getFinishTime());
+            // 2020-03-30 维修耗时
+            ans.setTimeConsuming(deviceRepairApplication.getRepairTimeConsuming());
             if (status == 4) {
                 DeviceRepairEvaluationsExample example1 = new DeviceRepairEvaluationsExample();
                 example1.createCriteria().andRepairCodeEqualTo(id);
@@ -137,6 +138,8 @@ public class DeviceRepairedServiceImp implements DeviceRepairedService {
             DeviceRepairApplication deviceRepairApplication = new DeviceRepairApplication();
             deviceRepairApplication.setRepairStatus(3);
             deviceRepairApplication.setFinishTime(new Date());
+            // 2020-03-30 提交维修耗时
+            deviceRepairApplication.setRepairTimeConsuming(deviceRepairedApplyDTO.getTimeConsuming());
             deviceRepairApplication.setFaultReason(deviceRepairedApplyDTO.getFaultReason());
             deviceRepairApplication.setReceivePeople(deviceRepairedApplyDTO.getReceivePeopleId());
             deviceRepairApplicationMapper.updateByExampleSelective(deviceRepairApplication, example);
@@ -180,6 +183,8 @@ public class DeviceRepairedServiceImp implements DeviceRepairedService {
 
             DeviceRepairApplication deviceRepairApplication = new DeviceRepairApplication();
             // deviceRepairApplication.setFinishTime(new Date());
+            // 2020-03-30 提交维修耗时
+            deviceRepairApplication.setRepairTimeConsuming(deviceRepairedApplyDTO.getTimeConsuming());
             deviceRepairApplication.setFaultReason(deviceRepairedApplyDTO.getFaultReason());
             deviceRepairApplication.setReceivePeople(deviceRepairedApplyDTO.getReceivePeopleId());
             deviceRepairApplicationMapper.updateByExampleSelective(deviceRepairApplication, example);
