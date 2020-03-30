@@ -457,7 +457,7 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
 
             if(product.contains(condition)){
                 ProcessParametersJqjhPrincipalComponentExample example3 = new ProcessParametersJqjhPrincipalComponentExample();
-                example3.createCriteria().andProcessCodeEqualTo(ids.get(i));p
+                example3.createCriteria().andProcessCodeEqualTo(ids.get(i));
                 List<ProcessParametersJqjhPrincipalComponent> components1 = jqjhPrincipalComponentMapper.selectByExample(example3);
                 ProcessParametersJqjhPrincipalComponent component = components1.get(components1.size()/2);
                 double ni = (new Double(""+component.getNiMax())+new Double(""+component.getNiMin()))/2;
