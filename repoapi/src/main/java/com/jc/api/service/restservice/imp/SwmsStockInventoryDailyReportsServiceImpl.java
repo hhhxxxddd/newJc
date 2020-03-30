@@ -13,6 +13,7 @@ import com.jc.api.mapper.SwmsStockInventoryDailyReportsMapper;
 import com.jc.api.mapper.SwmsStockInventoryDailyReportsTotalsMapper;
 import com.jc.api.service.restservice.ISwmsStockInventoryDailyReportsService;
 import com.jc.api.utils.ComUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +29,7 @@ import java.util.List;
  * @since 2020-01-13
  */
 @Service
+@Slf4j
 public class SwmsStockInventoryDailyReportsServiceImpl extends ServiceImpl<SwmsStockInventoryDailyReportsMapper, SwmsStockInventoryDailyReports> implements ISwmsStockInventoryDailyReportsService {
 
     @Autowired
@@ -73,11 +75,13 @@ public class SwmsStockInventoryDailyReportsServiceImpl extends ServiceImpl<SwmsS
             QueryWrapper<SwmsStockInventoryDailyReports> byBatchByCode = new QueryWrapper<>();
             byBatchByCode.eq("material_name_code",in.getMaterialNameCode())
                     .eq("material_supplier_code",in.getMaterialSupplierCode())
-                    .last("orger by stock_date limit 1");//更新的物料信息的时间可能有问题
+                    .last("order by stock_date limit 1");//更新的物料信息的时间可能有问题
             SwmsStockInventoryDailyReports entity = inventoryDailyReportsMapper.selectOne(byBatchByCode);
 
-            if(entity == null) throw new DataNotFindException("库存日报不存在:" + in.getMaterialNameCode());
-
+            if(entity == null) {
+                log.info("库存日报不存在:" + in.getMaterialNameCode());
+                return;
+            }
             entity.setCurrentInRecord(entity.getCurrentInRecord() + in.getWeight());
             entity.setWeight(entity.getWeight() + in.getWeight());
 
@@ -87,11 +91,13 @@ public class SwmsStockInventoryDailyReportsServiceImpl extends ServiceImpl<SwmsS
             QueryWrapper<SwmsStockInventoryDailyReports> byBatchByCode = new QueryWrapper<>();
             byBatchByCode.eq("material_name_code",out.getMaterialNameCode())
                     .eq("material_supplier_code",out.getMaterialSupplierCode())
-                    .last("orger by stock_date limit 1");//更新的物料信息的时间可能有问题
+                    .last("order by stock_date limit 1");//更新的物料信息的时间可能有问题
             SwmsStockInventoryDailyReports entity = inventoryDailyReportsMapper.selectOne(byBatchByCode);
 
-            if(entity == null) throw new DataNotFindException("库存日报不存在:" + out.getMaterialNameCode());
-
+            if(entity == null){
+                log.info("库存日报不存在:" + out.getMaterialNameCode());
+                return;
+            }
             entity.setCurrentOutRecord(entity.getCurrentOutRecord() + out.getWeight());
             entity.setWeight(entity.getWeight() - out.getWeight());
 

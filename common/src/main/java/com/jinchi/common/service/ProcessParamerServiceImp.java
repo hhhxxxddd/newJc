@@ -457,12 +457,12 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
 
             if(product.contains(condition)){
                 ProcessParametersJqjhPrincipalComponentExample example3 = new ProcessParametersJqjhPrincipalComponentExample();
-                example3.createCriteria().andProcessCodeEqualTo(ids.get(i));
+                example3.createCriteria().andProcessCodeEqualTo(ids.get(i));p
                 List<ProcessParametersJqjhPrincipalComponent> components1 = jqjhPrincipalComponentMapper.selectByExample(example3);
                 ProcessParametersJqjhPrincipalComponent component = components1.get(components1.size()/2);
                 double ni = (new Double(""+component.getNiMax())+new Double(""+component.getNiMin()))/2;
                 double co = (new Double(""+component.getCoMax())+new Double(""+component.getCoMin()))/2;
-                double mn = (new Double(""+component.getMnMax())+new Double(""+component.getMnMin()))/2;
+                double mn = (new Double(""+component.getMnMax())+new Double(""+component.getMnMin()))/2;//精度不足导致的
                 recipeGoodIn.setNi(new Float(ni));
                 recipeGoodIn.setCo(new Float(co));
                 recipeGoodIn.setMn(new Float(mn));
