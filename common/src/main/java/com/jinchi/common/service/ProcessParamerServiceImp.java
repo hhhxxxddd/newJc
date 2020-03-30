@@ -460,9 +460,12 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
                 example3.createCriteria().andProcessCodeEqualTo(ids.get(i));
                 List<ProcessParametersJqjhPrincipalComponent> components1 = jqjhPrincipalComponentMapper.selectByExample(example3);
                 ProcessParametersJqjhPrincipalComponent component = components1.get(components1.size()/2);
-                recipeGoodIn.setNi((component.getNiMax()+component.getNiMin())/2);
-                recipeGoodIn.setCo((component.getCoMax()+component.getCoMin())/2);
-                recipeGoodIn.setMn((component.getMnMax()+component.getMnMin())/2);
+                double ni = (component.getNiMax()+component.getNiMin())/2;
+                double co = (component.getCoMax()+component.getCoMin())/2;
+                double mn = (component.getMnMax()+component.getMnMin())/2;
+                recipeGoodIn.setNi(new Float(ni));
+                recipeGoodIn.setCo(new Float(co));
+                recipeGoodIn.setMn(new Float(mn));
                 recipeGoodIn.setProduct(product);
                 ans.add(recipeGoodIn);
             }
