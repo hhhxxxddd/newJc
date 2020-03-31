@@ -409,7 +409,7 @@ public class MiddleProductionDetectionServiceImp implements MiddleProductionDete
         Assert.notNull(userId, "无法识别此id卡");
 
         Calendar calendar = Calendar.getInstance();
-        calendar.add(Calendar.DAY_OF_MONTH, -1);
+        calendar.add(Calendar.DAY_OF_MONTH, -2);
         Date yesterday = calendar.getTime();
 
         List<CommonBatchNumber> results = commonBatchNumberMapper.delivererTask(BatchTypeEnum.QUALITY_INTERMEDIATE_TEST.typeCode(), userId, yesterday);

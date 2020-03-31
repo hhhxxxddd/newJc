@@ -521,8 +521,10 @@ public class ProcedureTestRecordServiceImp implements ProcedureTestRecordService
             Integer id = procedureTestRecord.getId();
 
             RepoBaseSerialNumber temp = new RepoBaseSerialNumber();
-            temp.setId(sn.getCode().intValue())
-                    .setMaterialName(sn.getName());
+            if(sn != null) {
+                temp.setId(sn.getCode().intValue())
+                        .setMaterialName(sn.getName());
+            }
             //map.put("物料",sn);
             map.put("物料",temp);
             map.put("检测频率",procedureTestRecord.getTestFrequency());
