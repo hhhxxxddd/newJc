@@ -1,5 +1,6 @@
 package com.jinchi.common.service;
 
+import com.alibaba.druid.sql.ast.statement.SQLUnionQuery;
 import com.jinchi.common.constant.BatchStatusEnum;
 import com.jinchi.common.constant.BatchTypeEnum;
 import com.jinchi.common.constant.QualitySampleStatusEnum;
@@ -56,6 +57,8 @@ public class MiddleProductionDetectionServiceImp implements MiddleProductionDete
     ProductionBatchInfoMapper batchInfoMapper;
     @Autowired
     BasicInfoBatchConfigMapper configMapper;
+    @Autowired
+    QualityBaseDetectItemMapper detectItemMapper;
 
     private SimpleDateFormat SDF = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
@@ -74,6 +77,7 @@ public class MiddleProductionDetectionServiceImp implements MiddleProductionDete
             AuthUserDTO authUserDTO1 = authUserMapper.byId(record.getDelivererId());
             DeliveryFactory deliveryFactory = deliveryFactoryMapper.findById(record.getDeliveryFactoryId());
             RepoBaseSerialNumber repoBaseSerialNumber = repoBaseSerialNumberMapper.findById(record.getSerialNumberId());
+            QualityBaseDetectItem detectItem = detectItemMapper.selectByPrimaryKey(record.getSerialNumberId().longValue());
 
             String itemNames = testItemUtil.convertItemNames(record.getTestItems());
 
@@ -82,7 +86,8 @@ public class MiddleProductionDetectionServiceImp implements MiddleProductionDete
             dto.setCommonBatchNumber(commonBatchNumber);
             dto.setDeliverer(authUserDTO1.getName());
             dto.setDeliveryFactoryName(deliveryFactory.getName());
-            dto.setSerialNumber(repoBaseSerialNumber.getSerialNumber());
+            //dto.setSerialNumber(repoBaseSerialNumber.getSerialNumber());
+            dto.setSerialNumber("新受检物料没有批号");
             dto.setTestItemString(itemNames);
             dtoList.add(dto);
         }
@@ -223,7 +228,9 @@ public class MiddleProductionDetectionServiceImp implements MiddleProductionDete
 
             AuthUserDTO authUserDTO1 = authUserMapper.byId(record.getDelivererId());
             DeliveryFactory deliveryFactory = deliveryFactoryMapper.findById(record.getDeliveryFactoryId());
-            RepoBaseSerialNumber repoBaseSerialNumber = repoBaseSerialNumberMapper.findById(record.getSerialNumberId());
+
+            //RepoBaseSerialNumber repoBaseSerialNumber = repoBaseSerialNumberMapper.findById(record.getSerialNumberId());
+            QualityBaseDetectItem detectItem = detectItemMapper.selectByPrimaryKey(record.getSerialNumberId().longValue());
 
             String itemNames = testItemUtil.convertItemNames(record.getTestItems());
 
@@ -238,7 +245,8 @@ public class MiddleProductionDetectionServiceImp implements MiddleProductionDete
             dto.setCommonBatchNumber(commonBatchNumber);
             dto.setDeliverer(authUserDTO1.getName());
             dto.setDeliveryFactoryName(deliveryFactory.getName());
-            dto.setSerialNumber(repoBaseSerialNumber.getSerialNumber());
+            //dto.setSerialNumber(repoBaseSerialNumber.getMaterialName());
+            dto.setSerialNumber(detectItem==null?"历史物料（未知）":detectItem.getName());
             dto.setTestItemString(itemNames);
             dtoList.add(dto);
             op.set(key,dto);
@@ -364,7 +372,8 @@ public class MiddleProductionDetectionServiceImp implements MiddleProductionDete
         if (null == sampleDeliveringRecord || !sampleDeliveringRecord.getType().equals(QualitySampleTypeEnum.SAMPLE_INTERMEDIATE.get()) || !sampleDeliveringRecord.getAcceptStatus().equals(QualitySampleStatusEnum.SAMPLE_ACCEPTED.get())) {
             return null;
         }
-        RepoBaseSerialNumber repoBaseSerialNumber = repoBaseSerialNumberMapper.findById(sampleDeliveringRecord.getSerialNumberId());
+        //RepoBaseSerialNumber repoBaseSerialNumber = repoBaseSerialNumberMapper.findById(sampleDeliveringRecord.getSerialNumberId());
+        QualityBaseDetectItem detectItem = detectItemMapper.selectByPrimaryKey(sampleDeliveringRecord.getSerialNumberId().longValue());
 
         AuthUserDTO authUserDTO = authUserMapper.byId(testReportRecord.getJudger());
         String username = authUserDTO == null ? "" : authUserDTO.getName();
@@ -388,8 +397,10 @@ public class MiddleProductionDetectionServiceImp implements MiddleProductionDete
 
         rawTestReportDTO.setTestDTOS(testDTOS);
         rawTestReportDTO.setSampleDeliveringRecord(sampleDeliveringRecord);
-        rawTestReportDTO.setMaterialName(repoBaseSerialNumber.getMaterialName());
-        rawTestReportDTO.setSerialNumber(repoBaseSerialNumber.getSerialNumber());
+        //rawTestReportDTO.setMaterialName(repoBaseSerialNumber.getMaterialName());
+        //rawTestReportDTO.setSerialNumber(repoBaseSerialNumber.getSerialNumber());
+        rawTestReportDTO.setSerialNumber("新受检物料没有批号");
+        rawTestReportDTO.setMaterialName(detectItem==null?"历史物料（未知）":detectItem.getName());
         rawTestReportDTO.setTester(username);
         rawTestReportDTO.setTestReportRecord(testReportRecord);
         rawTestReportDTO.setCommonBatchNumber(commonBatchNumber);
@@ -424,6 +435,8 @@ public class MiddleProductionDetectionServiceImp implements MiddleProductionDete
                 map.put("id", e.getId());
                 map.put("deliverDate", SDF.format(e.getCreateTime()));
                 map.put("batchNumber", e.getBatchNumber());
+                //QualityCommonBatchNumberExtraExample example = new QualityCommonBatchNumberExtraExample();
+                //map.put("batchNumber",);//朱工，批号改编号
                 map.put("status", BatchStatusEnum.getDescription(e.getStatus()));
                 listMain.add(map);
             }
