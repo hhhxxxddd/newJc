@@ -60,6 +60,8 @@ public class SampleDeliveringRecordServiceImp implements SampleDeliveringRecordS
     private QualitySampleDeliveringRecordRawMapper qualitySampleDeliveringRecordRawMapper;
     @Autowired
     RedisTemplate redisTemplate;
+    @Autowired
+    QualityBaseDetectItemMapper detectItemMapper;
 
     /**
      * 新增样品送检
@@ -382,13 +384,21 @@ public class SampleDeliveringRecordServiceImp implements SampleDeliveringRecordS
         //基础编号验证
         Integer serialNumberId = sampleDeliveringRecord.getSerialNumberId();
 
-        Assert.notNull(serialNumberId, "请选择物料");
+        /*Assert.notNull(serialNumberId, "请选择物料");
 
         RepoBaseSerialNumber repoBaseSerialNumber = repoBaseSerialNumberMapper.findById(serialNumberId);
 
         Assert.notNull(repoBaseSerialNumber, "不存在此基础编号信息id:"+serialNumberId);
 
         Assert.isTrue(sampleDeliveringRecord.getType().equals(repoBaseSerialNumber.getMaterialClass()), "物料类型不是所选的原料类型");
+        */
+
+        Assert.notNull(serialNumberId, "请选择物料");
+
+        QualityBaseDetectItem detectItem = detectItemMapper.selectByPrimaryKey(serialNumberId.longValue());
+
+        Assert.notNull(detectItem, "不存在此基础编号信息id:" + serialNumberId);
+        //朱工
 
         /**
          * 设置环节

@@ -4,13 +4,9 @@ package com.jinchi.common.service;
 import com.jinchi.common.domain.*;
 import com.jinchi.common.dto.DeviceDocumentMainDTO;
 import com.jinchi.common.dto.DeviceSpotcheckMainDTO;
-import com.jinchi.common.mapper.*;
 import com.jinchi.common.dto.Page;
 import com.jinchi.common.dto.SpotCheckPlanDTO;
-import com.jinchi.common.mapper.DeviceDocumentMainMapper;
-import com.jinchi.common.mapper.DeviceSpotcheckModelsHeadMapper;
-import com.jinchi.common.mapper.DeviceSpotcheckPlansMapper;
-import com.jinchi.common.mapper.DeviceSpotcheckRecordHeadMapper;
+import com.jinchi.common.mapper.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -210,6 +206,7 @@ public class DeviceSpotcheckPlansServiceImp implements DeviceSpotcheckPlansServi
         if(!condition.equals("")){
             sql += " and (code like '" + condition + "%' or fixedassets_code like '" + condition + "%' or code like '"+condition + "%')";
         }
+        sql += " order by code desc";
         System.out.println(sql);
         List<DeviceSpotcheckPlans> deviceSpotcheckPlans = deviceSpotcheckPlansMapper.selectByCondition(sql);
         DeviceSpotcheckRecordHeadExample example1 = new DeviceSpotcheckRecordHeadExample();

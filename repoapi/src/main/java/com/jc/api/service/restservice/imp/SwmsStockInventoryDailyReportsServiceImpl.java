@@ -8,11 +8,11 @@ import com.jc.api.entity.SwmsStockInLedgersDayReports;
 import com.jc.api.entity.SwmsStockInventoryDailyReports;
 import com.jc.api.entity.SwmsStockInventoryDailyReportsTotals;
 import com.jc.api.entity.SwmsStockOutLedgersDayReports;
-import com.jc.api.exception.custom.DataNotFindException;
 import com.jc.api.mapper.SwmsStockInventoryDailyReportsMapper;
 import com.jc.api.mapper.SwmsStockInventoryDailyReportsTotalsMapper;
 import com.jc.api.service.restservice.ISwmsStockInventoryDailyReportsService;
 import com.jc.api.utils.ComUtil;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -28,6 +28,7 @@ import java.util.List;
  * @since 2020-01-13
  */
 @Service
+@Slf4j
 public class SwmsStockInventoryDailyReportsServiceImpl extends ServiceImpl<SwmsStockInventoryDailyReportsMapper, SwmsStockInventoryDailyReports> implements ISwmsStockInventoryDailyReportsService {
 
     @Autowired
@@ -69,29 +70,33 @@ public class SwmsStockInventoryDailyReportsServiceImpl extends ServiceImpl<SwmsS
     //物料按供应商统计计算。
     @Override
     public void updateDailyRecord(SwmsStockInLedgersDayReports in, SwmsStockOutLedgersDayReports out) {
-        if(in != null){
+        if(in != null) {
             QueryWrapper<SwmsStockInventoryDailyReports> byBatchByCode = new QueryWrapper<>();
-            byBatchByCode.eq("material_name_code",in.getMaterialNameCode())
-                    .eq("material_supplier_code",in.getMaterialSupplierCode())
-                    .last("orger by stock_date limit 1");//更新的物料信息的时间可能有问题
+            byBatchByCode.eq("material_name_code", in.getMaterialNameCode())
+                    .eq("material_supplier_code", in.getMaterialSupplierCode())
+                    .last("order by stock_date limit 1");//更新的物料信息的时间可能有问题
             SwmsStockInventoryDailyReports entity = inventoryDailyReportsMapper.selectOne(byBatchByCode);
 
-            if(entity == null) throw new DataNotFindException("库存日报不存在:" + in.getMaterialNameCode());
-
+            if (entity == null) {
+                log.info("库存日报不存在:" + in.getMaterialNameCode());
+                return;
+            }
             entity.setCurrentInRecord(entity.getCurrentInRecord() + in.getWeight());
             entity.setWeight(entity.getWeight() + in.getWeight());
 
             inventoryDailyReportsMapper.updateById(entity);
 
-        }else{
+        }else {
             QueryWrapper<SwmsStockInventoryDailyReports> byBatchByCode = new QueryWrapper<>();
-            byBatchByCode.eq("material_name_code",out.getMaterialNameCode())
-                    .eq("material_supplier_code",out.getMaterialSupplierCode())
-                    .last("orger by stock_date limit 1");//更新的物料信息的时间可能有问题
+            byBatchByCode.eq("material_name_code", out.getMaterialNameCode())
+                    .eq("material_supplier_code", out.getMaterialSupplierCode())
+                    .last("order by stock_date limit 1");//更新的物料信息的时间可能有问题
             SwmsStockInventoryDailyReports entity = inventoryDailyReportsMapper.selectOne(byBatchByCode);
 
-            if(entity == null) throw new DataNotFindException("库存日报不存在:" + out.getMaterialNameCode());
-
+            if (entity == null) {
+                log.info("库存日报不存在:" + out.getMaterialNameCode());
+                return;
+            }
             entity.setCurrentOutRecord(entity.getCurrentOutRecord() + out.getWeight());
             entity.setWeight(entity.getWeight() - out.getWeight());
 
