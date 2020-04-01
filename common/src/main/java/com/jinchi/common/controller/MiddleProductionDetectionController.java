@@ -44,7 +44,7 @@ public class MiddleProductionDetectionController {
     @GetMapping(value = "/detailsByBatchNumberId/{id}")
     @ApiOperation(value = "详情")
     public Result<Object> findDetailByBatchNumberId(@ApiParam(name = "id", value = "batchNumber主键") @PathVariable Integer id) {
-        return ResultUtil.success(middleProductionDetectionService.findDetailsByBatchNumberId(id));
+        return ResultUtil.success(middleProductionDetectionService.findDetailsByBatchNumberIdForClient(id));
     }
 
     @PutMapping

@@ -26,6 +26,8 @@ public interface MiddleProductionDetectionService {
 
     Object findDetailsByBatchNumberId(Integer id);
 
+    Object findDetailsByBatchNumberIdForClient(Integer id);
+
     /**
      * 查看送样人的中间品送样结果
      * 返回24小时之内的数据
