@@ -506,6 +506,11 @@ public class FireMageCheckManageServiceImp implements FireMageCheckManageService
             FireMageTestItemsDTO itemsDTO = new FireMageTestItemsDTO();
             itemsDTO.setCode(Long.parseLong(codes[i]));
             itemsDTO.setName(names[i]);
+            FireMageTestItems temp = itemsMapper.selectByPrimaryKey(Long.parseLong(codes[i]));
+            if(temp == null)
+                itemsDTO.setUnit("?");
+            else
+                itemsDTO.setUnit(temp.getUnit());
             if (values[i].equals("-1")) {
                 itemsDTO.setValues(null);
             } else {
