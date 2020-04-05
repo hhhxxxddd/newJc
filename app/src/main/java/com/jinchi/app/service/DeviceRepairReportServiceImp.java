@@ -238,9 +238,10 @@ public class DeviceRepairReportServiceImp implements DeviceRepairReportService {
         Integer page = repairPostDTO.getPage() == null ? 1 : repairPostDTO.getPage();
         String sql = "select * from device_document_main where dept_code = " + repairPostDTO.getId();
         if (repairPostDTO.getCondition() != null) {
-            sql += " and (device_name like '" + repairPostDTO.getCondition() + "%' or fixedassets_code like '" + repairPostDTO.getCondition() + "%')";
+            sql += " and (device_name like '%" + repairPostDTO.getCondition() + "%' or fixedassets_code like '%" + repairPostDTO.getCondition() + "%')";
         }
         sql += " order by device_name";
+        sql += " limit " + size * (page - 1) + "," + size;
         List<DeviceDocumentMain> deviceDocumentMains = deviceDocumentMainMapper.selectByConditions(sql);
         for (int i = 0; i < deviceDocumentMains.size(); i++) {
             BasicDeviceDTO temp = new BasicDeviceDTO();
@@ -249,8 +250,8 @@ public class DeviceRepairReportServiceImp implements DeviceRepairReportService {
             temp.setFixedassets(deviceDocumentMains.get(i).getFixedassetsCode());
             ans.add(temp);
         }
-        Page pageInfo = new Page(size, page, ans);
-        return pageInfo.getList();
+
+        return ans;
     }
 
     @Override
