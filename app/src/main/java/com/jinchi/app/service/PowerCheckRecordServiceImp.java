@@ -41,57 +41,33 @@ public class PowerCheckRecordServiceImp implements PowerCheckRecordService {
     @Override
     public PowerCheckDTO add(PowerCheckDTO dto) {
 
-        boolean boo = dto.getRecordId().equals("");
         CheckHeadDTO head = dto.getHead();
+
         int flag = Integer.parseInt(dto.getFlag());
+        AuthUserDTO byId = authUserService.findById(Integer.parseInt(head.getUserId()));
 
-        long id = 0;
-        if (boo) {
+        long modelCode = Long.parseLong(head.getModelCode());
+        long siteCode = Long.parseLong(head.getSiteCode());
 
-            AuthUserDTO byId = authUserService.findById(Integer.parseInt(head.getUserId()));
+        PowerCheckModel checkModel = modelMapper.selectByPrimaryKey(modelCode);
 
-            long modelCode = Long.parseLong(head.getModelCode());
-            long siteCode = Long.parseLong(head.getSiteCode());
-
-            PowerCheckModel checkModel = modelMapper.selectByPrimaryKey(modelCode);
-
-            PowerCheckRecordHead recordHead = new PowerCheckRecordHead();
-            recordHead.setSiteCode(siteCode);
-            recordHead.setModelName(checkModel.getModelName());
-            recordHead.setCheckDate(new Date());
-            recordHead.setOperator(byId.getName());
-            recordHead.setClassNum(head.getClassNum());
-            recordHead.setNote(head.getNote());
-            recordHead.setStatus(flag == 1);
-            recordHead.setEffectiveDate(checkModel.getEffectiveDate());
-            headMapper.insertSelective(recordHead);
-
-            id = recordHead.getCode();
-        } else {
-            //如果id不是"",则表示更新
-            long recordId = Long.parseLong(dto.getRecordId().trim());
-            PowerCheckRecordHeadExample example = new PowerCheckRecordHeadExample();
-            example.createCriteria().andCodeEqualTo(recordId);
-
-            PowerCheckRecordHead recordHead = new PowerCheckRecordHead();
-            recordHead.setNote(head.getNote());
-            recordHead.setStatus(flag == 1);
-            recordHead.setCheckDate(new Date());
-            headMapper.updateByExampleSelective(recordHead, example);
-
-            PowerCheckRecordDetailExample example1 = new PowerCheckRecordDetailExample();
-            example1.createCriteria().andRecordCodeEqualTo(recordId);
-            detailMapper.deleteByExample(example1);
-
-            id = recordId;
-        }
+        PowerCheckRecordHead recordHead = new PowerCheckRecordHead();
+        recordHead.setSiteCode(siteCode);
+        recordHead.setModelName(checkModel.getModelName());
+        recordHead.setCheckDate(new Date());
+        recordHead.setOperator(byId.getName());
+        recordHead.setClassNum(head.getClassNum());
+        recordHead.setNote(head.getNote());
+        recordHead.setStatus(flag == 1);
+        recordHead.setEffectiveDate(checkModel.getEffectiveDate());
+        headMapper.insertSelective(recordHead);
 
         for (CheckDetailDTO detailDTO : dto.getDetails()) {
             long itemCode = Long.parseLong(detailDTO.getItemCode());
             PowerCheckItem checkItem = itemMapper.selectByPrimaryKey(itemCode);
 
             PowerCheckRecordDetail detail = new PowerCheckRecordDetail();
-            detail.setRecordCode(id);
+            detail.setRecordCode(recordHead.getCode());
             detail.setPlace(checkItem.getPlace());
             detail.setCheckItem(checkItem.getCheckItem());
             detail.setCheckContent(checkItem.getCheckContent());
@@ -130,7 +106,7 @@ public class PowerCheckRecordServiceImp implements PowerCheckRecordService {
     @Override
     public List getTodayRecords() {
         PowerCheckRecordHeadExample example = new PowerCheckRecordHeadExample();
-        Date startOfToday = ComUtil.localDateTimeToDate(ComUtil.getTodayStart());
+        Date startOfToday = ComUtil.localDateTimeToDate(ComUtil.getTodayStart().minusDays(7));
         Date now = new Date();
         example.createCriteria().andCheckDateBetween(startOfToday, now);
 
@@ -153,5 +129,18 @@ public class PowerCheckRecordServiceImp implements PowerCheckRecordService {
     @Override
     public List page(QueryDTO dto) {
         return new Page(dto.getSize(), dto.getPage(), getTodayRecords()).getList();
+    }
+
+    @Override
+    public PowerCheckRecordDTO update(PowerCheckRecordDTO dto) {
+
+        //更新头表
+        headMapper.updateByPrimaryKeySelective(dto.getHead());
+
+        //逐条更新详情
+        for (PowerCheckRecordDetail detail : dto.getDetails()) {
+            detailMapper.updateByPrimaryKeySelective(detail);
+        }
+        return dto;
     }
 }

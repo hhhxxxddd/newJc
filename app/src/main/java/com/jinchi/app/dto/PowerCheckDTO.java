@@ -15,16 +15,6 @@ public class PowerCheckDTO {
 
     String flag;
 
-    String recordId;
-
-    public String getRecordId() {
-        return recordId;
-    }
-
-    public void setRecordId(String recordId) {
-        this.recordId = recordId;
-    }
-
     public String getFlag() {
         return flag;
     }

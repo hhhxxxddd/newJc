@@ -16,4 +16,5 @@ public interface PowerCheckRecordService {
 
     List page(QueryDTO dto);
 
+    PowerCheckRecordDTO update(PowerCheckRecordDTO dto);
 }
