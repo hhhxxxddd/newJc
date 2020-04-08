@@ -1558,6 +1558,7 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                 info.setProcessName(processNameMapper.selectByPrimaryKey(totals.get(l).getProcessCode()).getProcessName());
                 AnodeGoodsInProcessStatisticByProcessTotals total = totals.get(l);
                 info.setComment(total==null?"null":total.getBalanceTotals());
+                info.setTotals(total);
                 if (totals.get(l).getFlag()) {
                     AnodeGoodsInProcessStatisticOnlineRawMaterialExample example2 = new AnodeGoodsInProcessStatisticOnlineRawMaterialExample();
                     example2.createCriteria().andStatisticCodeEqualTo(heads.get(i).getCode());
@@ -1565,7 +1566,7 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                     System.out.println(ts);
                     String qqt = "前驱体：" + ts.get(0).getBalance();
                     String tsl = "碳酸锂：" + ts.get(1).getBalance();
-                    info.setComment(qqt + "/n" + tsl);
+                    info.setComment(qqt + " " + tsl);
                 }
                 ans.add(info);
             }
