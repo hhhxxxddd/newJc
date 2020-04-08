@@ -75,16 +75,19 @@ public class DevicePatrolPlanServiceImp implements DevicePatrolPlanService {
 
     @Override
     @Transactional
-    public DevicePatrolPlanDTO update(Long planId, String planName, String planDate) {
+    public DevicePatrolPlanDTO update(Long planId, String planName, String planDate,String endDate) {
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
+        Date end = new Date();
         try{
             date = df.parse(planDate);
+            end = df.parse(endDate);
         }catch (Exception e){
             e.printStackTrace();
         }
         DevicePatrolPlanRecordHead devicePatrolPlanRecordHead = new DevicePatrolPlanRecordHead();
         devicePatrolPlanRecordHead.setPlanTime(date);
+        devicePatrolPlanRecordHead.setTabulatedate(end);
         devicePatrolPlanRecordHead.setPlanName(planName);
         DevicePatrolPlanRecordHeadExample example = new DevicePatrolPlanRecordHeadExample();
         example.createCriteria().andCodeEqualTo(planId);

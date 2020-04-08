@@ -29,13 +29,13 @@ public class DevicePatrolPlanController {
                                                   @ApiParam(name = "planDate", value = "计划日期") @RequestParam String planDate,
                                                   @ApiParam(name = "endDate", value = "结束日期") @RequestParam String endDate,
                                                   @ApiParam(name = "modelId", value = "巡检模板id") @RequestParam Long modelId,
-                                                  @ApiParam(name = "userId", value = "用户id") @RequestParam Integer userId){
-        return ResultUtil.success(devicePatrolPlanService.add(deptId,planName,checkType,planDate,endDate,modelId,userId));
+                                                  @ApiParam(name = "userId", value = "用户id") @RequestParam Integer userId) {
+        return ResultUtil.success(devicePatrolPlanService.add(deptId, planName, checkType, planDate, endDate, modelId, userId));
     }
 
     @GetMapping(value = "/detail")
     @ApiOperation(value = "详情")
-    public Result<DevicePatrolPlanDTO> detail(@ApiParam(name = "planId", value = "计划主键") @RequestParam Long planId){
+    public Result<DevicePatrolPlanDTO> detail(@ApiParam(name = "planId", value = "计划主键") @RequestParam Long planId) {
         return ResultUtil.success(devicePatrolPlanService.detail(planId));
     }
 
@@ -45,28 +45,29 @@ public class DevicePatrolPlanController {
                        @ApiParam(name = "status", value = "状态") @RequestParam(defaultValue = "-1") Integer status,
                        @ApiParam(name = "condition", value = "查询条件") @RequestParam(defaultValue = "") String condition,
                        @ApiParam(name = "page", value = "页码") @RequestParam(name = "page", defaultValue = "1") Integer page,
-                       @ApiParam(name = "size", value = "条目数") @RequestParam(name = "size", defaultValue = "10") Integer size){
-        return ResultUtil.success(devicePatrolPlanService.page(deptId,status,condition,page,size));
+                       @ApiParam(name = "size", value = "条目数") @RequestParam(name = "size", defaultValue = "10") Integer size) {
+        return ResultUtil.success(devicePatrolPlanService.page(deptId, status, condition, page, size));
     }
 
     @PutMapping(value = "/update")
     @ApiOperation(value = "编辑")
     public Result<DevicePatrolPlanDTO> update(@ApiParam(name = "planId", value = "计划主键") @RequestParam Long planId,
-                         @ApiParam(name = "planName", value = "计划名称") @RequestParam String planName,
-                         @ApiParam(name = "planDate", value = "计划日期") @RequestParam String planDate){
-        return ResultUtil.success(devicePatrolPlanService.update(planId,planName,planDate));
+                                              @ApiParam(name = "planName", value = "计划名称") @RequestParam String planName,
+                                              @ApiParam(name = "planDate", value = "计划日期") @RequestParam String planDate,
+                                              @ApiParam(name = "endDate", value = "结束日期") @RequestParam String endDate) {
+        return ResultUtil.success(devicePatrolPlanService.update(planId, planName, planDate,endDate));
     }
 
     @DeleteMapping(value = "/delete")
     @ApiOperation(value = "删除")
-    public Result delete(@ApiParam(name = "planId", value = "计划主键") @RequestParam Long planId){
+    public Result delete(@ApiParam(name = "planId", value = "计划主键") @RequestParam Long planId) {
         devicePatrolPlanService.delete(planId);
         return ResultUtil.success();
     }
 
     @DeleteMapping(value = "/deleteByIds")
     @ApiOperation(value = "删除")
-    public Result delete(@RequestBody @Valid Long[] planIds){
+    public Result delete(@RequestBody @Valid Long[] planIds) {
         devicePatrolPlanService.deleteByIds(planIds);
         return ResultUtil.success();
     }

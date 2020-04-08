@@ -11,7 +11,7 @@ public interface DevicePatrolPlanService {
 
     DevicePatrolPlanRecordHead add(Integer deptId, String planName,Integer checkType, String planDate,String endDate,Long modelId,Integer userId);
 
-    DevicePatrolPlanDTO update(Long planId,String planName,String planDate);
+    DevicePatrolPlanDTO update(Long planId,String planName,String planDate,String endDate);
 
     List<DevicePatrolPlanDTO> getAllByDeptIdByStatus(Integer deptId,Integer status,String condition);
 
