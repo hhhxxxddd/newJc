@@ -13,7 +13,7 @@ public class AnodeStatisticDTO {
 
     private String lineName;
 
-    private Object comment;
+    private Object comment;   //正极的已统计的小计
 
     private String processName;
 
@@ -39,7 +39,7 @@ public class AnodeStatisticDTO {
 
     private Float productWeight;
 
-    private Float productStorage;z
+    private Float productStorage;
 
     public Float getProductStorage() {
         return productStorage;
