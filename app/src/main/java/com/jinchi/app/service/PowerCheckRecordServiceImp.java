@@ -106,7 +106,7 @@ public class PowerCheckRecordServiceImp implements PowerCheckRecordService {
     @Override
     public List getTodayRecords() {
         PowerCheckRecordHeadExample example = new PowerCheckRecordHeadExample();
-        Date startOfToday = ComUtil.localDateTimeToDate(ComUtil.getTodayStart().minusDays(7));
+        Date startOfToday = ComUtil.localDateTimeToDate(ComUtil.getTodayStart());
         Date now = new Date();
         example.createCriteria().andCheckDateBetween(startOfToday, now);
 
@@ -134,8 +134,14 @@ public class PowerCheckRecordServiceImp implements PowerCheckRecordService {
     @Override
     public PowerCheckRecordDTO update(PowerCheckRecordDTO dto) {
 
-        //更新头表
-        headMapper.updateByPrimaryKeySelective(dto.getHead());
+        PowerCheckRecordHead recordHead = new PowerCheckRecordHead();
+        recordHead.setCode(dto.getHead().getCode());
+        recordHead.setNote(dto.getHead().getNote());
+        recordHead.setClassNum(dto.getHead().getClassNum());
+        recordHead.setCheckDate(new Date());
+        recordHead.setStatus(dto.getFlag() == 1);
+        headMapper.updateByPrimaryKeySelective(recordHead);
+
 
         //逐条更新详情
         for (PowerCheckRecordDetail detail : dto.getDetails()) {
