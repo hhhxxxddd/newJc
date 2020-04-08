@@ -1556,7 +1556,7 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                 info.setPeriodName(periodMapper.selectByPrimaryKey(heads.get(i).getPeriodCode()).getName());
                 info.setTypeName(typeMapper.selectByPrimaryKey(heads.get(i).getPeriodCode()).getName());
                 info.setProcessName(processNameMapper.selectByPrimaryKey(totals.get(l).getProcessCode()).getProcessName());
-                info.setTotals(totals.get(l));
+                info.setComment(totals.get(l).getBalanceTotals());
                 if (totals.get(l).getFlag()) {
                     AnodeGoodsInProcessStatisticOnlineRawMaterialExample example2 = new AnodeGoodsInProcessStatisticOnlineRawMaterialExample();
                     example2.createCriteria().andStatisticCodeEqualTo(heads.get(i).getCode());
