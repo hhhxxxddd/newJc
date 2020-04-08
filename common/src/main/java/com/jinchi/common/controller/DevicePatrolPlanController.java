@@ -27,9 +27,10 @@ public class DevicePatrolPlanController {
                                                   @ApiParam(name = "planName", value = "计划名称") @RequestParam String planName,
                                                   @ApiParam(name = "checkType", value = "计划类型") @RequestParam Integer checkType,
                                                   @ApiParam(name = "planDate", value = "计划日期") @RequestParam String planDate,
+                                                  @ApiParam(name = "endDate", value = "结束日期") @RequestParam String endDate,
                                                   @ApiParam(name = "modelId", value = "巡检模板id") @RequestParam Long modelId,
                                                   @ApiParam(name = "userId", value = "用户id") @RequestParam Integer userId){
-        return ResultUtil.success(devicePatrolPlanService.add(deptId,planName,checkType,planDate,modelId,userId));
+        return ResultUtil.success(devicePatrolPlanService.add(deptId,planName,checkType,planDate,endDate,modelId,userId));
     }
 
     @GetMapping(value = "/detail")

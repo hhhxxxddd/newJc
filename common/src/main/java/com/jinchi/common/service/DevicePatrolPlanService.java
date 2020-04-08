@@ -9,7 +9,7 @@ import java.util.List;
 
 public interface DevicePatrolPlanService {
 
-    DevicePatrolPlanRecordHead add(Integer deptId, String planName,Integer checkType, String planDate,Long modelId,Integer userId);
+    DevicePatrolPlanRecordHead add(Integer deptId, String planName,Integer checkType, String planDate,String endDate,Long modelId,Integer userId);
 
     DevicePatrolPlanDTO update(Long planId,String planName,String planDate);
 

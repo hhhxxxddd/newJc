@@ -19,6 +19,10 @@ public class PatrolDTO {
     @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
     Date planDate;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
+    Date endDate;
+
     Integer checkType;//0:机械，1:电气
 
     Integer status;
@@ -148,5 +152,13 @@ public class PatrolDTO {
 
     public void setFinishDate(Date finishDate) {
         this.finishDate = finishDate;
+    }
+
+    public Date getEndDate() {
+        return endDate;
+    }
+
+    public void setEndDate(Date endDate) {
+        this.endDate = endDate;
     }
 }

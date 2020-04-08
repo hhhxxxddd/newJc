@@ -53,6 +53,7 @@ public class DevicePatrolServiceImp implements DevicePatrolService{
                 patrolDTO.setPlanName(temp.getPlanName());
                 patrolDTO.setCheckType(temp.getCheckType()==false?0:1);
                 patrolDTO.setPlanDate(temp.getPlanTime());
+                patrolDTO.setEndDate(temp.getTabulatedate());
                 patrolDTO.setStatus(temp.getEditFlag());
                 patrolDTO.setDeptName(deptService.getById(temp.getDeptCode()).getName());
                 if(patrolPostDTO.getStatus() == 2 || patrolPostDTO.getStatus() == 3){
@@ -89,6 +90,7 @@ public class DevicePatrolServiceImp implements DevicePatrolService{
         ans.setCheckType(recordHead.getCheckType()==false?0:1);
         ans.setDeptName(deptService.getById(recordHead.getDeptCode()).getName());
         ans.setPlanDate(recordHead.getPlanTime());
+        ans.setEndDate(recordHead.getTabulatedate());
         ans.setPatrolComment(recordHead.getPatrolComment());
 
         List<PatrolItemsDTO> itemsDTOS = new ArrayList<>();

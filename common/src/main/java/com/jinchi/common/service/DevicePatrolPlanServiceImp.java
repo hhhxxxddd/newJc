@@ -33,11 +33,13 @@ public class DevicePatrolPlanServiceImp implements DevicePatrolPlanService {
 
     @Override
     @Transactional
-    public DevicePatrolPlanRecordHead add(Integer deptId, String planName,Integer checkType, String planDate, Long modelId,Integer userId){
+    public DevicePatrolPlanRecordHead add(Integer deptId, String planName,Integer checkType, String planDate, String endDate,Long modelId,Integer userId){
         SimpleDateFormat df = new SimpleDateFormat("yyyy-MM-dd");
         Date date = new Date();
+        Date end = new Date();
         try {
             date = df.parse(planDate);
+            end = df.parse(endDate);
         }catch (Exception e){
             e.printStackTrace();
         }
@@ -48,7 +50,7 @@ public class DevicePatrolPlanServiceImp implements DevicePatrolPlanService {
         devicePatrolPlanRecordHead.setPlanTime(date);
         devicePatrolPlanRecordHead.setModelCode(modelId);
         devicePatrolPlanRecordHead.setSetPeople(userId);
-        devicePatrolPlanRecordHead.setTabulatedate(new Date());
+        devicePatrolPlanRecordHead.setTabulatedate(end);
         devicePatrolPlanRecordHeadMapper.insertSelective(devicePatrolPlanRecordHead);
         Long planId = devicePatrolPlanRecordHead.getCode();
         DevicePatrolModelDTO devicePatrolModelDTO = devicePatrolModelService.detail(modelId);
