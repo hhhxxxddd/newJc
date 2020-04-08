@@ -1560,7 +1560,10 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                 if (totals.get(l).getFlag()) {
                     AnodeGoodsInProcessStatisticOnlineRawMaterialExample example2 = new AnodeGoodsInProcessStatisticOnlineRawMaterialExample();
                     example2.createCriteria().andStatisticCodeEqualTo(heads.get(i).getCode());
-                    info.setComment(onlineRawMaterialMapper.selectByExample(example2));
+                    List<AnodeGoodsInProcessStatisticOnlineRawMaterial> ts = onlineRawMaterialMapper.selectByExample(example2);
+                    String qqt = "前驱体：" + ts.get(0).getBalance();
+                    String tsl = "碳酸锂：" + ts.get(1).getBalance();
+                    info.setComment(qqt + "\n" + tsl);
                 }
                 ans.add(info);
             }

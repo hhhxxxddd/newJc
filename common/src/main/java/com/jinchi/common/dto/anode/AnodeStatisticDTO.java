@@ -39,7 +39,7 @@ public class AnodeStatisticDTO {
 
     private Float productWeight;
 
-    private Float productStorage;
+    private Float productStorage;z
 
     public Float getProductStorage() {
         return productStorage;
