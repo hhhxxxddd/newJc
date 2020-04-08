@@ -130,7 +130,7 @@ public class MiddleProductionDetectionServiceImp implements MiddleProductionDete
         rawTestReportDTO.setSampleDeliveringRecord(sampleDeliveringRecord);
         //rawTestReportDTO.setMaterialName(repoBaseSerialNumber.getMaterialName());
         //rawTestReportDTO.setSerialNumber(repoBaseSerialNumber.getSerialNumber());
-        rawTestReportDTO.setMaterialName(detectItem.getName());
+        rawTestReportDTO.setMaterialName(detectItem==null?"老受检物料-未知":detectItem.getName());
         rawTestReportDTO.setSerialNumber("新受检物料没有批号");
         String username = authUserDTO == null ? "" : authUserDTO.getName();
         rawTestReportDTO.setTester(username);
