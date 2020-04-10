@@ -101,9 +101,18 @@ public class ChemicalServiceImp implements ChemicalService {
         RepoBaseSerialNumber repoBaseSerialNumber = repoBaseSerialNumberMapper.findById(sampleDeliveringRecord.getSerialNumberId());
         ans.setName(repoBaseSerialNumber.getMaterialName());
 
-        DataTaskRecord dataTaskRecord = dataTaskRecordMapper.findByDataBatchNumberId(record.getBatchNumberId());
-        List<TaskHandlingRecord> tasks = taskHandlingRecordMapper.findAllByDataTaskId(dataTaskRecord.getId());
         List<AuditDTO> auditDTOs = new ArrayList<>();
+        DataTaskRecord dataTaskRecord = dataTaskRecordMapper.findByDataBatchNumberId(record.getBatchNumberId());
+        if(dataTaskRecord == null){
+            ans.setAudit(auditDTOs);
+            ans.setJudgePeole(authUserService.findById(record.getJudger()).getName());
+            ans.setJudgeDate(record.getJudgeDate());
+            ans.setDeliveryPeople(authUserService.findById(sampleDeliveringRecord.getDelivererId()).getName());
+            ans.setDeliveryDate(sampleDeliveringRecord.getSampleDeliveringDate());
+            return ans;
+        }
+        List<TaskHandlingRecord> tasks = taskHandlingRecordMapper.findAllByDataTaskId(dataTaskRecord.getId());
+
         for(int i=0;i<tasks.size();i++){
             AuditDTO auditDTO = new AuditDTO();
             auditDTO.setTime(tasks.get(i).getHandleTime());
