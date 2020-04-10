@@ -105,7 +105,7 @@ public class ChemicalServiceImp implements ChemicalService {
         DataTaskRecord dataTaskRecord = dataTaskRecordMapper.findByDataBatchNumberId(record.getBatchNumberId());
         if(dataTaskRecord == null){
             ans.setAudit(auditDTOs);
-            ans.setJudgePeole(authUserService.findById(record.getJudger()).getName());
+            ans.setJudgePeole(record.getJudger()==null?"unknown":authUserService.findById(record.getJudger()).getName());
             ans.setJudgeDate(record.getJudgeDate());
             ans.setDeliveryPeople(authUserService.findById(sampleDeliveringRecord.getDelivererId()).getName());
             ans.setDeliveryDate(sampleDeliveringRecord.getSampleDeliveringDate());
