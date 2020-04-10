@@ -29,6 +29,8 @@ public class ChemicalServiceImp implements ChemicalService {
     DataTaskRecordMapper dataTaskRecordMapper;
     @Autowired
     TaskHandlingRecordMapper taskHandlingRecordMapper;
+    @Autowired
+    QualityBaseDetectItemMapper detectItemMapper;
 
     @Override
     public List getAll(Integer userId, String condition) {
@@ -98,8 +100,12 @@ public class ChemicalServiceImp implements ChemicalService {
             ans.setCommonBatchNumber(extras.get(0).getBatch());
         }
         ans.setIsQuality(record.getIsQualified());
-        RepoBaseSerialNumber repoBaseSerialNumber = repoBaseSerialNumberMapper.findById(sampleDeliveringRecord.getSerialNumberId());
-        ans.setName(repoBaseSerialNumber.getMaterialName());
+        QualityBaseDetectItem detectItem = detectItemMapper.selectByPrimaryKey(sampleDeliveringRecord.getSerialNumberId().longValue());
+        if(detectItem == null){
+            RepoBaseSerialNumber repoBaseSerialNumber = repoBaseSerialNumberMapper.findById(sampleDeliveringRecord.getSerialNumberId());
+            ans.setName(repoBaseSerialNumber.getMaterialName());
+        }
+        ans.setName(detectItem.getName());
 
         List<AuditDTO> auditDTOs = new ArrayList<>();
         DataTaskRecord dataTaskRecord = dataTaskRecordMapper.findByDataBatchNumberId(record.getBatchNumberId());
