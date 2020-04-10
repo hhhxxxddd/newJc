@@ -104,8 +104,9 @@ public class ChemicalServiceImp implements ChemicalService {
         if(detectItem == null){
             RepoBaseSerialNumber repoBaseSerialNumber = repoBaseSerialNumberMapper.findById(sampleDeliveringRecord.getSerialNumberId());
             ans.setName(repoBaseSerialNumber.getMaterialName());
+        }else {
+            ans.setName(detectItem.getName());
         }
-        ans.setName(detectItem.getName());
 
         List<AuditDTO> auditDTOs = new ArrayList<>();
         DataTaskRecord dataTaskRecord = dataTaskRecordMapper.findByDataBatchNumberId(record.getBatchNumberId());
