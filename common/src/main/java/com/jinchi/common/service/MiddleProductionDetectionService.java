@@ -32,7 +32,8 @@ public interface MiddleProductionDetectionService {
      * 查看送样人的中间品送样结果
      * 返回24小时之内的数据
      * 刷卡
+     *
      * @return
      */
-    List<Map<Object,Object>> delivererTask(String idCard);
+    List<Map<Object, Object>> delivererTask(String idCard);
 }

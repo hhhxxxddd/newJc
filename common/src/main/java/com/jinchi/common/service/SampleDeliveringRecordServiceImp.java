@@ -62,6 +62,7 @@ public class SampleDeliveringRecordServiceImp implements SampleDeliveringRecordS
     RedisTemplate redisTemplate;
     @Autowired
     QualityBaseDetectItemMapper detectItemMapper;
+
     /**
      * 新增样品送检
      *
@@ -396,7 +397,7 @@ public class SampleDeliveringRecordServiceImp implements SampleDeliveringRecordS
 
         QualityBaseDetectItem detectItem = detectItemMapper.selectByPrimaryKey(serialNumberId.longValue());
 
-        Assert.notNull(detectItem, "不存在此基础编号信息id:"+serialNumberId);
+        Assert.notNull(detectItem, "不存在此基础编号信息id:" + serialNumberId);
         //朱工
 
         /**

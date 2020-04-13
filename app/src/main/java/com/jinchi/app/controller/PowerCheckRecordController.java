@@ -1,9 +1,6 @@
 package com.jinchi.app.controller;
 
-import com.jinchi.app.dto.IdDto;
-import com.jinchi.app.dto.PowerCheckDTO;
-import com.jinchi.app.dto.QueryDTO;
-import com.jinchi.app.dto.Result;
+import com.jinchi.app.dto.*;
 import com.jinchi.app.service.PowerCheckRecordService;
 import com.jinchi.app.utils.ResultUtil;
 import io.swagger.annotations.Api;
@@ -33,6 +30,11 @@ public class PowerCheckRecordController {
         return ResultUtil.success(recordService.add(dto));
     }
 
+    @PostMapping(value = "update")
+    @ApiOperation(value = "更新")
+    public Result update(@RequestBody PowerCheckRecordDTO dto) {
+        return ResultUtil.success(recordService.update(dto));
+    }
 
     @PostMapping(value = "detail")
     @ApiOperation(value = "详情")

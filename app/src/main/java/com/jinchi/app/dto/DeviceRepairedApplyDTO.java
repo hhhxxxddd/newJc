@@ -16,6 +16,8 @@ public class DeviceRepairedApplyDTO {
 
     String partners;
 
+    String timeConsuming;
+
     List<DeviceRepairAccDTO> accs;
 
     Integer receivePeopleId;
@@ -69,5 +71,13 @@ public class DeviceRepairedApplyDTO {
 
     public void setPartners(String partners) {
         this.partners = partners;
+    }
+
+    public String getTimeConsuming() {
+        return timeConsuming;
+    }
+
+    public void setTimeConsuming(String timeConsuming) {
+        this.timeConsuming = timeConsuming;
     }
 }

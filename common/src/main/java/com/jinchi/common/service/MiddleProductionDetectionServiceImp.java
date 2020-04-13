@@ -1,6 +1,5 @@
 package com.jinchi.common.service;
 
-import com.alibaba.druid.sql.ast.statement.SQLUnionQuery;
 import com.jinchi.common.constant.BatchStatusEnum;
 import com.jinchi.common.constant.BatchTypeEnum;
 import com.jinchi.common.constant.QualitySampleStatusEnum;
@@ -241,7 +240,7 @@ public class MiddleProductionDetectionServiceImp implements MiddleProductionDete
             QualityCommonBatchNumberExtraExample extraExample = new QualityCommonBatchNumberExtraExample();
             extraExample.createCriteria().andCommonBatchIdEqualTo(record.getId());
             List<QualityCommonBatchNumberExtra> extras = extraMapper.selectByExample(extraExample);
-            if(extras.size() != 0){
+            if (extras.size() != 0) {
                 dto.setBatch(extras.get(0).getBatch());
             }
             dto.setTestReportRecord(testReportRecord);
@@ -250,10 +249,10 @@ public class MiddleProductionDetectionServiceImp implements MiddleProductionDete
             dto.setDeliverer(authUserDTO1.getName());
             dto.setDeliveryFactoryName(deliveryFactory.getName());
             //dto.setSerialNumber(repoBaseSerialNumber.getMaterialName());
-            dto.setSerialNumber(detectItem==null?"历史物料（未知）":detectItem.getName());
+            dto.setSerialNumber(detectItem == null ? "历史物料（未知）" : detectItem.getName());
             dto.setTestItemString(itemNames);
             dtoList.add(dto);
-            op.set(key,dto);
+            op.set(key, dto);
         }
 
         pageBean.setList(dtoList);
@@ -387,7 +386,7 @@ public class MiddleProductionDetectionServiceImp implements MiddleProductionDete
         // 只显示 有数据的并(没审核过or审核没通过的)
         for (TestItemResultRecord record : testItemResultRecords) {
             TestDTO testDTO = new TestDTO();
-            if (record.getTestResult() != null && record.getTestResult().trim().length()!=0) {
+            if (record.getTestResult() != null && record.getTestResult().trim().length() != 0) {
                 TestItem testItem = testItemMapper.find(record.getTestItemId());
                 testDTO.setName(testItem == null ? "" : testItem.getName());
                 testDTO.setTestItemResultRecord(record);
@@ -404,7 +403,7 @@ public class MiddleProductionDetectionServiceImp implements MiddleProductionDete
         //rawTestReportDTO.setMaterialName(repoBaseSerialNumber.getMaterialName());
         //rawTestReportDTO.setSerialNumber(repoBaseSerialNumber.getSerialNumber());
         rawTestReportDTO.setSerialNumber("新受检物料没有批号");
-        rawTestReportDTO.setMaterialName(detectItem==null?"历史物料（未知）":detectItem.getName());
+        rawTestReportDTO.setMaterialName(detectItem == null ? "历史物料（未知）" : detectItem.getName());
         rawTestReportDTO.setTester(username);
         rawTestReportDTO.setTestReportRecord(testReportRecord);
         rawTestReportDTO.setCommonBatchNumber(commonBatchNumber);
@@ -414,6 +413,7 @@ public class MiddleProductionDetectionServiceImp implements MiddleProductionDete
 
     /**
      * 朱工客户端需求 批号和编号互换
+     *
      * @param id
      * @return
      */
@@ -448,7 +448,7 @@ public class MiddleProductionDetectionServiceImp implements MiddleProductionDete
         // 只显示 有数据的并(没审核过or审核没通过的)
         for (TestItemResultRecord record : testItemResultRecords) {
             TestDTO testDTO = new TestDTO();
-            if (record.getTestResult() != null && record.getTestResult().trim().length()!=0) {
+            if (record.getTestResult() != null && record.getTestResult().trim().length() != 0) {
                 TestItem testItem = testItemMapper.find(record.getTestItemId());
                 testDTO.setName(testItem == null ? "" : testItem.getName());
                 testDTO.setTestItemResultRecord(record);
@@ -465,7 +465,7 @@ public class MiddleProductionDetectionServiceImp implements MiddleProductionDete
         List<QualityCommonBatchNumberExtra> extras = extraMapper.selectByExample(extraExample);
 
         String batch = "not exist";
-        if(extras.size() != 0){
+        if (extras.size() != 0) {
             batch = extras.get(0).getBatch();
         }
 
@@ -474,7 +474,7 @@ public class MiddleProductionDetectionServiceImp implements MiddleProductionDete
         //rawTestReportDTO.setMaterialName(repoBaseSerialNumber.getMaterialName());
         //rawTestReportDTO.setSerialNumber(repoBaseSerialNumber.getSerialNumber());
         rawTestReportDTO.setSerialNumber(batch);
-        rawTestReportDTO.setMaterialName(detectItem==null?"历史物料（未知）":detectItem.getName());
+        rawTestReportDTO.setMaterialName(detectItem == null ? "历史物料（未知）" : detectItem.getName());
         rawTestReportDTO.setTester(username);
         rawTestReportDTO.setTestReportRecord(testReportRecord);
         rawTestReportDTO.setCommonBatchNumber(commonBatchNumber);
@@ -511,22 +511,22 @@ public class MiddleProductionDetectionServiceImp implements MiddleProductionDete
                 map.put("deliverDate", SDF.format(e.getCreateTime()));
                 //map.put("batchNumber", e.getBatchNumber());
                 TestReportRecord record = testReportRecordMapper.getByBatchNumberId(e.getId());
-                if(record == null) {
+                if (record == null) {
                     map.put("batchNumber", "不存在");
-                }else {
+                } else {
                     SampleDeliveringRecord sample = sampleDeliveringRecordMapper.getById(record.getSampleDeliveringRecordId());
                     if (sample == null)
                         map.put("batchNumber", "不存在");
-                    else{
+                    else {
                         QualityCommonBatchNumberExtraExample extraExample = new QualityCommonBatchNumberExtraExample();
                         extraExample.createCriteria().andCommonBatchIdEqualTo(sample.getId());
                         List<QualityCommonBatchNumberExtra> extras = extraMapper.selectByExample(extraExample);
 
-                        if(extras.size() == 0)
-                            map.put("batchNumber","不存在");
-                        else{
+                        if (extras.size() == 0)
+                            map.put("batchNumber", "不存在");
+                        else {
                             String batch1 = extras.get(0).getBatch();
-                            map.put("batchNumber",batch1);
+                            map.put("batchNumber", batch1);
                         }
                     }
                 }

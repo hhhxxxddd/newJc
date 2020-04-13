@@ -43,6 +43,7 @@ public class PowerCheckRecordServiceImp implements PowerCheckRecordService {
 
         CheckHeadDTO head = dto.getHead();
 
+        int flag = Integer.parseInt(dto.getFlag());
         AuthUserDTO byId = authUserService.findById(Integer.parseInt(head.getUserId()));
 
         long modelCode = Long.parseLong(head.getModelCode());
@@ -57,7 +58,7 @@ public class PowerCheckRecordServiceImp implements PowerCheckRecordService {
         recordHead.setOperator(byId.getName());
         recordHead.setClassNum(head.getClassNum());
         recordHead.setNote(head.getNote());
-        recordHead.setStatus(true);
+        recordHead.setStatus(flag == 1);
         recordHead.setEffectiveDate(checkModel.getEffectiveDate());
         headMapper.insertSelective(recordHead);
 
@@ -109,7 +110,7 @@ public class PowerCheckRecordServiceImp implements PowerCheckRecordService {
         Date now = new Date();
         example.createCriteria().andCheckDateBetween(startOfToday, now);
 
-        example.setOrderByClause("check_date desc");
+        example.setOrderByClause("status asc, check_date desc");
         List<PowerCheckRecordHead> powerCheckRecordHeads = headMapper.selectByExample(example);
 
         List<Map<String, String>> res = new ArrayList<>();
@@ -119,6 +120,7 @@ public class PowerCheckRecordServiceImp implements PowerCheckRecordService {
             map.put("modelName", head.getModelName());
             map.put("checkDate", ComUtil.dateToString(head.getCheckDate(), "yyyy-MM-dd HH:mm:ss"));
             map.put("shift", head.getClassNum());
+            map.put("status", String.valueOf(head.getStatus()));
             res.add(map);
         }
         return res;
@@ -127,5 +129,24 @@ public class PowerCheckRecordServiceImp implements PowerCheckRecordService {
     @Override
     public List page(QueryDTO dto) {
         return new Page(dto.getSize(), dto.getPage(), getTodayRecords()).getList();
+    }
+
+    @Override
+    public PowerCheckRecordDTO update(PowerCheckRecordDTO dto) {
+
+        PowerCheckRecordHead recordHead = new PowerCheckRecordHead();
+        recordHead.setCode(dto.getHead().getCode());
+        recordHead.setNote(dto.getHead().getNote());
+        recordHead.setClassNum(dto.getHead().getClassNum());
+        recordHead.setCheckDate(new Date());
+        recordHead.setStatus(dto.getFlag() == 1);
+        headMapper.updateByPrimaryKeySelective(recordHead);
+
+
+        //逐条更新详情
+        for (PowerCheckRecordDetail detail : dto.getDetails()) {
+            detailMapper.updateByPrimaryKeySelective(detail);
+        }
+        return dto;
     }
 }

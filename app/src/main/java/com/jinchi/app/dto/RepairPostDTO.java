@@ -12,6 +12,15 @@ public class RepairPostDTO {
     String condition;
     String startTime;
     String endTime;
+    Integer repairTypeId;
+
+    public Integer getRepairTypeId() {
+        return repairTypeId;
+    }
+
+    public void setRepairTypeId(Integer repairTypeId) {
+        this.repairTypeId = repairTypeId;
+    }
 
     public String getStartTime() {
         return startTime;

@@ -19,14 +19,16 @@ public class DeviceRepairDetail {
 
     String faultComment;
 
+    String timeConsuming;
+
     Integer emergeStatus;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     Date reportTime;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
-    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss",timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd HH:mm:ss", timezone = "GMT+8")
     Date reveiveTime;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
@@ -49,9 +51,17 @@ public class DeviceRepairDetail {
 
     Integer repairStatuts;
 
-    String[] unitContains = {"个","台","套","米"};
+    String[] unitContains = {"个", "台", "套", "米"};
 
     Integer isCancel;
+
+    public String getTimeConsuming() {
+        return timeConsuming;
+    }
+
+    public void setTimeConsuming(String timeConsuming) {
+        this.timeConsuming = timeConsuming;
+    }
 
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     public Integer getIsCancel() {
