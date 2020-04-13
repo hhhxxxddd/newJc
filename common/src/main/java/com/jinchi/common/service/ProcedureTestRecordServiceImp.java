@@ -281,7 +281,7 @@ public class ProcedureTestRecordServiceImp implements ProcedureTestRecordService
      * @return
      */
     @Override
-    public PageInfo findAllByPage(String personName, Integer page, Integer size, String fieldName, String orderType) {
+    public PageInfo findAllByPage(String personName, Integer newId,Integer page, Integer size, String fieldName, String orderType) {
         String orderBy = fieldName + " " + orderType;
         PageHelper.startPage(page, size, orderBy);
         List<CommonBatchNumberDTO> commonBatchNumberDTOS = commonBatchNumberMapper

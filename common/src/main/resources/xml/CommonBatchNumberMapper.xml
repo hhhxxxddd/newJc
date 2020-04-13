@@ -166,6 +166,9 @@
                 <if test="dto.commonBatchNumber.description!=null and dto.commonBatchNumber.description!=''">
                     AND com.description like '${dto.commonBatchNumber.description}%'
                 </if>
+                <if test="dto.produceLine!=null">
+                    AND qptr.delivery_factory_id = #{dto.produceLine}
+                </if>
             </if>
         </if>
         <if test="dto!=null and dto.createPersonName!=null and dto.createPersonName!=''">
@@ -203,10 +206,11 @@
 
 
     <select id="createDTOsByCommonDTO" parameterType="CommonBatchNumberDTO" resultMap="CommonBatchNumberDTO">
-        SELECT com.id as id,au.name as createPersonName
+        SELECT com.id as id,au.name as createPersonName, qbdf.name as produceLine
         FROM jc_integration_db.quality_common_batch_number AS com
-        LEFT JOIN jc_auth_db.auth_user AS au
-        ON au.id = com.create_person_id
+        LEFT JOIN jc_auth_db.auth_user AS au ON au.id = com.create_person_id
+        LEFT JOIN jc_integration_db.quality_procedure_test_record AS qptr ON com.id = qptr.batch_number_id
+        LEFT JOIN jc_integration_db.quality_base_delivery_factory AS qbdf ON qptr.delivery_factory_id = qbdf.id
         WHERE 1=1
         <include refid="part2"/>
     </select>

@@ -115,11 +115,12 @@ public class ProcedureTestRecordController {
     @ApiOperation(value = "查询所有-分页")
     public Result<PageInfo<CommonBatchNumberDTO>> getAllByPage(
             @ApiParam(value = "创建人名称", name = "personName") @RequestParam(required = false) String personName,
+            @ApiParam(value = "产线（送样工厂id）" ,name = "newId") @RequestParam(required =  false) Integer newId,
             @ApiParam(value = "页码", name = "page") @RequestParam(name = "page", defaultValue = "0") Integer page,
             @ApiParam(value = "条目数", name = "size") @RequestParam(name = "size", defaultValue = "10") Integer size,
             @ApiParam(value = "排序属性", name = "orderField") @RequestParam(name = "orderField", defaultValue = "id") String orderField,
             @ApiParam(value = "排序方法,只能是asc升序或者desc降序", name = "orderType") @RequestParam(name = "orderType", defaultValue = "desc") String orderType) {
-        return ResultUtil.success(procedureTestRecordService.findAllByPage(personName, page, size, orderField, orderType));
+        return ResultUtil.success(procedureTestRecordService.findAllByPage(personName, newId,page, size, orderField, orderType));
     }
 
 

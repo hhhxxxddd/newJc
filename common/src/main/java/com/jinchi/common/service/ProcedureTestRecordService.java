@@ -53,7 +53,7 @@ public interface ProcedureTestRecordService {
     /**
      * 创建人名称模糊查询所有-分页
      */
-    PageInfo findAllByPage(String personName, Integer page, Integer size, String fieldName, String orderType);
+    PageInfo findAllByPage(String personName, Integer newId,Integer page, Integer size, String fieldName, String orderType);
 
 
     /**
