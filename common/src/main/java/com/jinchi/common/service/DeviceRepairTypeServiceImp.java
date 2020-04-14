@@ -2,6 +2,7 @@ package com.jinchi.common.service;
 
 import com.jinchi.common.domain.DeviceRepairType;
 import com.jinchi.common.domain.DeviceRepairTypeExample;
+import com.jinchi.common.dto.Page;
 import com.jinchi.common.mapper.DeviceRepairTypeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -37,9 +38,19 @@ public class DeviceRepairTypeServiceImp implements DeviceRepairTypeService {
     }
 
     @Override
-    public List page(Integer page, Integer size) {
-        String sql = "select * from device_repair_type order by code limit "
-                + size * (page - 1) + "," + size;
-        return deviceRepairTypeMapper.selectBySql(sql);
+    public Page page(String condition, Integer page, Integer size) {
+        DeviceRepairTypeExample example = new DeviceRepairTypeExample();
+        example.createCriteria().andTypeNameLike(condition + "%");
+
+        List<DeviceRepairType> typeList = deviceRepairTypeMapper.selectByExample(example);
+
+        return new Page(typeList, page, size);
+    }
+
+    @Override
+    public void deleteByIds(Integer[] ids) {
+        for (Integer id : ids) {
+            deviceRepairTypeMapper.deleteByPrimaryKey(id);
+        }
     }
 }

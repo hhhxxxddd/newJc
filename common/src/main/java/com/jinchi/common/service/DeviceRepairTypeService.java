@@ -1,6 +1,7 @@
 package com.jinchi.common.service;
 
 import com.jinchi.common.domain.DeviceRepairType;
+import com.jinchi.common.dto.Page;
 
 import java.util.List;
 
@@ -17,5 +18,7 @@ public interface DeviceRepairTypeService {
 
     List getAll();
 
-    List page(Integer page, Integer size);
+    Page page(String condition, Integer page, Integer size);
+
+    void deleteByIds(Integer[] ids);
 }
