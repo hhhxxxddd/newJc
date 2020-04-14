@@ -115,7 +115,8 @@ public class WetMageOutService implements IWetMageOutService {
                     .setBagNum(ledgers.getBagNum())
                     .setMeasureUnit(ledgers.getMeasureUnit())
                     .setCreatedTime(new Date())
-                    .setCompletionFlag(false);
+                    .setCompletionFlag(false)
+                    .setMaterialWorkshopId(ledgers.getMaterialWorkshopId());
             outRecordDetailMapper.insert(detail);
         }
         return true;

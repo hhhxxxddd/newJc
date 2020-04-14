@@ -111,7 +111,8 @@ public class FireMageOutService implements IFireMageOutService {
                     .setWeight(mat.getWeight())
                     .setMeasureUnit(ledgers.getMeasureUnit())
                     .setCreatedTime(new Date())
-                    .setCompletionFlag(false);
+                    .setCompletionFlag(false)
+                    .setMaterialWorkshopId(ledgers.getMaterialWorkshopId());
             outRecordDetailMapper.insert(detail);
         }
         return true;
