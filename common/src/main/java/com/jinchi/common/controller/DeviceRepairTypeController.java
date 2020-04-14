@@ -42,8 +42,16 @@ public class DeviceRepairTypeController {
 
     @GetMapping(value = "page")
     @ApiOperation(value = "分页查询")
-    public Result getPage(@RequestParam(value = "page", defaultValue = "1") Integer page,
+    public Result getPage(@RequestParam(value = "condition", defaultValue = "", required = false) String condition,
+                          @RequestParam(value = "page", defaultValue = "1") Integer page,
                           @RequestParam(value = "size", defaultValue = "10") Integer size) {
-        return ResultUtil.success(repairTypeService.page(page, size));
+        return ResultUtil.success(repairTypeService.page(condition, page, size));
+    }
+
+    @DeleteMapping(value = "byIds")
+    @ApiOperation(value = "删除")
+    public Result delete(@RequestBody Integer[] ids) {
+        repairTypeService.deleteByIds(ids);
+        return ResultUtil.success();
     }
 }
