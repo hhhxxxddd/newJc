@@ -365,6 +365,7 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
                         }
                        // processes.get(i).getMaterialDetails().get(l).setVolume(compound.getVolumes());
                         processes.get(i).getMaterialDetails().get(l).setSolidContent(compound.getSolidContainingContent());
+                        processes.get(i).getMaterialDetails().get(l).setWeight(compound.getWeight());
                     }
                 }
                 //陈化工序
@@ -633,7 +634,8 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
                     compound.setProcessCode(ProcessEnum.COMPOUND.getProcessId());
                     compound.setVolumes(info.getVolume());
                     compound.setSolidContainingContent(info.getSolidContent());
-                    Float weight = info.getVolume() * info.getSolidContent() / 1000;
+                    //Float weight = info.getVolume() * info.getSolidContent() / 1000;
+                    Float weight = info.getWeight();
                     compound.setWeight(weight);
                     if (info.getMn() == 1) {
                         compound.setMnConcentration(info.getMnPotency());
