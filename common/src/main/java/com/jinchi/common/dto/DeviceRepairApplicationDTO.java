@@ -10,17 +10,8 @@ public class DeviceRepairApplicationDTO {
     List<DeviceRepairAccessory> deviceRepairAccessory ;
     String reportPeople;
     String receivePeople;
+    String helpPeoples;
 
-
-    @Override
-    public String toString() {
-        return " SecondDeptDTO{" +
-                "deviceRepairApplication=" + deviceRepairApplication +
-                ",deviceRepairAccessory=" + deviceRepairAccessory +
-                ".reportPeople" + reportPeople +
-                ",receivePeople" + receivePeople +
-                '}';
-    }
 
     public DeviceRepairApplication getDeviceRepairApplication() {
         return deviceRepairApplication;
@@ -52,5 +43,24 @@ public class DeviceRepairApplicationDTO {
 
     public void setReceivePeople(String receivePeople) {
         this.receivePeople = receivePeople;
+    }
+
+    @Override
+    public String toString() {
+        return "DeviceRepairApplicationDTO{" +
+                "deviceRepairApplication=" + deviceRepairApplication +
+                ", deviceRepairAccessory=" + deviceRepairAccessory +
+                ", reportPeople='" + reportPeople + '\'' +
+                ", receivePeople='" + receivePeople + '\'' +
+                ", helpPeoples='" + helpPeoples + '\'' +
+                '}';
+    }
+
+    public String getHelpPeoples() {
+        return helpPeoples;
+    }
+
+    public void setHelpPeoples(String helpPeoples) {
+        this.helpPeoples = helpPeoples;
     }
 }

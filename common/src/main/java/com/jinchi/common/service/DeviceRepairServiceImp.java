@@ -4,10 +4,7 @@ package com.jinchi.common.service;
 import com.jinchi.common.constant.AddressEnum;
 import com.jinchi.common.domain.*;
 import com.jinchi.common.dto.*;
-import com.jinchi.common.mapper.BasicInfoDeptMapper;
-import com.jinchi.common.mapper.DeviceRepairAccessoryMapper;
-import com.jinchi.common.mapper.DeviceRepairApplicationMapper;
-import com.jinchi.common.mapper.DeviceRepairEvaluationsMapper;
+import com.jinchi.common.mapper.*;
 import com.jinchi.common.utils.ComUtil;
 import com.jinchi.common.utils.ExportUtil;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -41,6 +38,9 @@ public class DeviceRepairServiceImp implements DeviceRepairService {
 
     @Autowired
     RedisTemplate redisTemplate;
+
+    @Autowired
+    DeviceRepairHelperMapper helperMapper;
 
     @Override
     public List<DeviceRepairApplicationAndPeopleDTO> getAllByDeviceName(Integer repairStatus,Integer secondDeptCode, String condition,String startTime,String endTime) {
@@ -123,6 +123,14 @@ public class DeviceRepairServiceImp implements DeviceRepairService {
         res.setDeviceRepairAccessory(deviceRepairAccessory);
         res.setReceivePeople(authUserService.findById(deviceRepairApplication.getReceivePeople()).getName());
         res.setReportPeople(authUserService.findById(deviceRepairApplication.getReportPeople()).getName());
+
+        DeviceRepairHelperExample example2 = new DeviceRepairHelperExample();
+        example2.createCriteria().andRepairCodeEqualTo(id);
+        List<DeviceRepairHelper> helpers = helperMapper.selectByExample(example2);
+
+        if(helpers.size()>0)
+            res.setHelpPeoples(helpers.get(0).getUsers());
+
         return res;
 
     }
