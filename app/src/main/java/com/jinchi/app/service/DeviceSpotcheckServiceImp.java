@@ -143,7 +143,7 @@ public class DeviceSpotcheckServiceImp implements DeviceSpotcheckService {
                 plansDTO.setDeviceCode(deviceSpotcheckPlans.get(j).getDeviceCode());//主设备编号
                 // 2020-04-20 放弃冗余 和主表同步
                 DeviceDocumentMainExample example = new DeviceDocumentMainExample();
-                example.createCriteria().andCodeEqualTo(plansDTO.getDeviceCode());
+                example.createCriteria().andCodeEqualTo(deviceSpotcheckPlans.get(j).getDeviceCode());
                 List<DeviceDocumentMain> mains = deviceDocumentMainMapper.selectByExample(example);
                 plansDTO.setDeviceName(mains.get(0).getDeviceName());//设备名称
                 plansDTO.setFixedassetsCode(mains.get(0).getFixedassetsCode());//固定资产编号
