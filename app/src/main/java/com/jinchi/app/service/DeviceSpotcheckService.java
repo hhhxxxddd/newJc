@@ -34,7 +34,6 @@ public interface DeviceSpotcheckService {
 
     List<DeviceSpotcheckRecordHistoryGetDTO> page(DeviceSpotcheckRecordHistoryPostDTO dto);
 
-//    List<DeviceSpotcheckRecordHistoryGetDTO> pageToday(DeviceSpotcheckRecordHistoryPostDTO dto);//点检主管 今日记录
 
     //点检主管 点检主管查询  今日记录statusId=0 异常记录statusId=1 历史记录statusId=2
     List<DeviceSpotcheckRecordHistoryGetDTO> pageAbnormal(DeviceSpotcheckRecordHistoryPostDTO dto);

@@ -115,7 +115,7 @@ public class DeviceSpotcheckServiceImp implements DeviceSpotcheckService {
         UnifyTransform unifyTransform = new UnifyTransform();
         List<BasicInfoDeptDto> basicInfoDeptDtos = userDeviceService.getDeptByAuthId(deviceSpotcheckPlansPostDTO.getUserId());
         List<DeviceSpotcheckPlansGetDTO> deviceSpotcheckPlansGetDTOS = new ArrayList<>();
-//        DeviceSpotcheckModelsHeadExample example = new DeviceSpotcheckModelsHeadExample();
+
         for (int i = 0; i < basicInfoDeptDtos.size(); i++) {
             String sql = "select * from device_spotcheck_plans as a,basic_info_dept as b,device_spotcheck_models_head as c,production_process_device_map as d where (a.dept_code = b.code and a.dept_code = d.dept_code and a.device_code = d.device_code and d.process_code in (SELECT process_code FROM basic_info_user_device_process_map where user_code = '" + deviceSpotcheckPlansPostDTO.getUserId() + "') and a.model_code = c.code and a.dept_code = " + basicInfoDeptDtos.get(i).getCode() + ")";
             if (deviceSpotcheckPlansPostDTO.getCondition() != null && !deviceSpotcheckPlansPostDTO.getCondition().equals("")) {
@@ -125,10 +125,6 @@ public class DeviceSpotcheckServiceImp implements DeviceSpotcheckService {
             List<DeviceSpotcheckPlans> deviceSpotcheckPlans = deviceSpotcheckPlansMapper.selectByCondition(sql);
 
             for (int j = 0; j < deviceSpotcheckPlans.size(); j++) {
-//                long modelCode = deviceSpotcheckPlans.get(j).getModelCode();//获取这个计划的模板id
-//                example.createCriteria().andCodeEqualTo(modelCode);
-//                DeviceSpotcheckModelsHead mHead = deviceSpotcheckModelsHeadMapper.selectByExample(example).get(0);
-//                example.clear();
                 //统计这个用户对当天对这个设备的点检次数
                 Date st = unifyTransform.get0PointOfDay();
                 Date et = unifyTransform.get24PointOfDay();
@@ -139,15 +135,20 @@ public class DeviceSpotcheckServiceImp implements DeviceSpotcheckService {
                 int num = headMapper.countByExample(headExample);
                 DeviceSpotcheckPlansGetDTO plansDTO = new DeviceSpotcheckPlansGetDTO();
                 plansDTO.setPlanCode(deviceSpotcheckPlans.get(j).getCode());//计划编号
-//                plansDTO.setPlanName(mHead.getModelName());
                 ProductionProcessDeviceMapExample example1 = new ProductionProcessDeviceMapExample();
                 example1.createCriteria().andDeviceCodeEqualTo(deviceSpotcheckPlans.get(j).getDeviceCode());
                 ProductionProcessDeviceMap map = mapMapper.selectByExample(example1).get(0);
                 plansDTO.setProcessCode(map.getProcessCode());//所属工序id
                 plansDTO.setProcessName(map.getProcessName());//所属工序名称
                 plansDTO.setDeviceCode(deviceSpotcheckPlans.get(j).getDeviceCode());//主设备编号
-                plansDTO.setDeviceName(deviceSpotcheckPlans.get(j).getDeviceName());//设备名称
-                plansDTO.setFixedassetsCode(deviceSpotcheckPlans.get(j).getFixedassetsCode());//固定资产编号
+                // 2020-04-20 放弃冗余 和主表同步
+                DeviceDocumentMainExample example = new DeviceDocumentMainExample();
+                example.createCriteria().andCodeEqualTo(plansDTO.getDeviceCode());
+                List<DeviceDocumentMain> mains = deviceDocumentMainMapper.selectByExample(example);
+                plansDTO.setDeviceName(mains.get(0).getDeviceName());//设备名称
+                plansDTO.setFixedassetsCode(mains.get(0).getFixedassetsCode());//固定资产编号
+
+
                 plansDTO.setDeptName(basicInfoDeptDtos.get(i).getName());//部门名称
                 plansDTO.setDeptCode(deviceSpotcheckPlans.get(j).getDeptCode());//部门编号
                 plansDTO.setNum(num);
@@ -155,14 +156,9 @@ public class DeviceSpotcheckServiceImp implements DeviceSpotcheckService {
                 deviceSpotcheckPlansGetDTOS.add(plansDTO);
             }
         }
-        int size = 5;
-        int page = 1;
-        if (deviceSpotcheckPlansPostDTO.getSize() != null) {
-            size = deviceSpotcheckPlansPostDTO.getSize();
-        }
-        if (deviceSpotcheckPlansPostDTO.getPage() != null) {
-            page = deviceSpotcheckPlansPostDTO.getPage();
-        }
+
+        int page = deviceSpotcheckPlansPostDTO.getPage() == null ? 1 : deviceSpotcheckPlansPostDTO.getPage();
+        int size = deviceSpotcheckPlansPostDTO.getSize() == null ? 5 : deviceSpotcheckPlansPostDTO.getSize();
         Page<DeviceSpotcheckPlansGetDTO> pageInfo = new Page<>(size, page, deviceSpotcheckPlansGetDTOS);
         return pageInfo.getList();
     }
@@ -177,20 +173,6 @@ public class DeviceSpotcheckServiceImp implements DeviceSpotcheckService {
         List<DeviceSpotcheckPlans> plans = deviceSpotcheckPlansMapper.selectByExample(example);
         DeviceSpotcheckPlans plan = plans.size() == 0 ? null : plans.get(0);
         Assert.notNull(plan, "不存在这条记录");
-        //拿到点检计划的基础数据 生成一条点检记录 插入数据库
-//        DeviceSpotcheckRecordHead deviceSpotcheckRecordHead = new DeviceSpotcheckRecordHead();
-//        deviceSpotcheckRecordHead.setPlanCode(plan.getCode());
-//        deviceSpotcheckRecordHead.setDeviceCode(plan.getDeviceCode());
-//        deviceSpotcheckRecordHead.setFixedassetsCode(plan.getFixedassetsCode());
-//        deviceSpotcheckRecordHead.setDeviceName(plan.getDeviceName());
-//        deviceSpotcheckRecordHead.setDeptCode(plan.getDeptCode());
-//        deviceSpotcheckRecordHead.setEditFlag(0);//edit_flag 置为 0
-//        deviceSpotcheckRecordHead.setReceiveTime(new Date());//接单时间为当前时间
-//        deviceSpotcheckRecordHead.setReceivePeople(userId);//接单人
-//        deviceSpotcheckRecordHead.setSpotcheckPeople(userId);//点检人
-//        deviceSpotcheckRecordHeadMapper.insertSelective(deviceSpotcheckRecordHead);
-
-//        long recordCode = deviceSpotcheckRecordHead.getCode();
 
         DeviceSpotcheckModelsDetailsExample example1 = new DeviceSpotcheckModelsDetailsExample();
         example1.createCriteria().andModelCodeEqualTo(plan.getModelCode());
@@ -199,19 +181,11 @@ public class DeviceSpotcheckServiceImp implements DeviceSpotcheckService {
         List<SpotcheckItemDetailDTO> detailDTOList = new ArrayList<>();
 
         for (DeviceSpotcheckModelsDetails d : deviceSpotcheckModelsDetails) {
-//            long modelDetailCode = d.getCode();
             String spotcheckItems = d.getSpotcheckItems();
             String spotcheckContent = d.getSpotcheckContent();
             String spotcheckAddress = d.getSpotcheckAddress() == null ? "" : d.getSpotcheckAddress();
             //http://img.ivsky.com/img/tupian/pre/201901/18/shengdanjie-003.jpg
-//            DeviceSpotcheckRecordDetails temp = new DeviceSpotcheckRecordDetails();
-//            temp.setRecordCode(recordCode);
-//            temp.setModelDetailCode(modelDetailCode);
-//            temp.setSpotcheckItems(spotcheckItems);
-//            temp.setSpotcheckContent(spotcheckContent);
-//            deviceSpotcheckRecordDetailsMapper.insertSelective(temp);
             SpotcheckItemDetailDTO sidDTO = new SpotcheckItemDetailDTO();
-//            sidDTO.setItemId(temp.getCode());
             sidDTO.setSpotcheckItem(spotcheckItems);
             sidDTO.setSpotcheckContent(spotcheckContent);
             sidDTO.setSpotcheckAddress(spotcheckAddress);
@@ -230,7 +204,6 @@ public class DeviceSpotcheckServiceImp implements DeviceSpotcheckService {
         dto.setFixedassetsCode(plan.getFixedassetsCode());
         dto.setPlanCode(plan.getCode());
         dto.setDeviceCode(plan.getDeviceCode());
-//        dto.setRecordId(recordCode);
         dto.setDeviceStatus(statusMapper.selectByPrimaryKey(statusCode).getName());
         long modelCode = plan.getModelCode();
         DeviceSpotcheckModelsHeadExample example2 = new DeviceSpotcheckModelsHeadExample();
@@ -263,9 +236,7 @@ public class DeviceSpotcheckServiceImp implements DeviceSpotcheckService {
             dto1.setDeviceName(head.getDeviceName());
             dto1.setFixedassetsCode(head.getFixedassetsCode());
             dto1.setFinishTime(head.getFinishTime());
-//            dto1.setSpotcheckPeople();
             dto1.setConfirmTime(head.getConfirmTime());
-//            dto1.setConfirmPeople();
             dto1.setFlag(head.getEditFlag());
             deviceSpotcheckRecordHistoryGetDTOS.add(dto1);
         }
@@ -316,14 +287,8 @@ public class DeviceSpotcheckServiceImp implements DeviceSpotcheckService {
             deviceSpotcheckRecordHistoryGetDTOS.add(dto1);
         }
 
-        int size = 5;
-        int page = 1;
-        if (dto.getPage() != null) {
-            page = dto.getPage();
-        }
-        if (dto.getSize() != null) {
-            size = dto.getSize();
-        }
+        int size = dto.getSize() == null ? 5 : dto.getSize();
+        int page = dto.getPage() == null ? 1 : dto.getPage();
         Page<DeviceSpotcheckRecordHistoryGetDTO> pageInfo =
                 new Page<>(size, page, deviceSpotcheckRecordHistoryGetDTOS);
         return pageInfo.getList();
@@ -367,14 +332,8 @@ public class DeviceSpotcheckServiceImp implements DeviceSpotcheckService {
             }
             deviceSpotcheckRecordHistoryGetDTOS.add(spDTO);
         }
-        int size = 5;
-        int page = 1;
-        if (dto.getPage() != null) {
-            page = dto.getPage();
-        }
-        if (dto.getSize() != null) {
-            size = dto.getSize();
-        }
+        int page = dto.getPage() == null ? 1 : dto.getPage();
+        int size = dto.getSize() == null ? 5 : dto.getSize();
         Page<DeviceSpotcheckRecordHistoryGetDTO> pageInfo =
                 new Page<>(size, page, deviceSpotcheckRecordHistoryGetDTOS);
         return pageInfo.getList();
@@ -569,14 +528,10 @@ public class DeviceSpotcheckServiceImp implements DeviceSpotcheckService {
             }
         }
 
-        int size = 5;
-        int page = 1;
-        if (dto.getPage() != null) {
-            page = dto.getPage();
-        }
-        if (dto.getSize() != null) {
-            size = dto.getSize();
-        }
+        int size = dto.getSize() == null ? 5 : dto.getSize();
+
+        int page = dto.getPage() == null ? 1 : dto.getPage();
+
         Page<DeviceSpotcheckRecordHistoryGetDTO> pageInfo =
                 new Page<>(size, page, deviceSpotcheckRecordHistoryGetDTOS);
         return pageInfo.getList();
@@ -645,61 +600,6 @@ public class DeviceSpotcheckServiceImp implements DeviceSpotcheckService {
     public void cancelLoad(String path) {
         UploadUtil.deleteFile(AddressEnum.getCurrentPath(AddressEnum.DEVICE_SPOTCHECK_RECORD.getCode()), path);
     }
-
-//    @Override
-//    public List<DeviceSpotcheckRecordHistoryGetDTO> pageToday(DeviceSpotcheckRecordHistoryPostDTO dto) {
-//        List<DeviceSpotcheckRecordHistoryGetDTO> deviceSpotcheckRecordHistoryGetDTOS = new ArrayList<>();
-//
-//        UnifyTransform unifyTransform = new UnifyTransform();
-//
-//        int userId = dto.getUserId();
-//
-//        BasicInfoUserDeviceProcessMapExample mapExample = new BasicInfoUserDeviceProcessMapExample();
-//        mapExample.createCriteria().andUserCodeEqualTo(userId);
-//        List<BasicInfoUserDeviceProcessMap> maps = userProcessMapper.selectByExample(mapExample);
-//        BasicInfoUserDeviceProcessMap map = maps.size() == 0 ? null : maps.get(0);
-//        Assert.notNull(map, "此用户还未分配工序");
-//
-//        short defaultProcessCode = map.getProcessCode();
-//        short processCode = dto.getProcessCode() == null ? defaultProcessCode : dto.getProcessCode();
-//
-//        Date d0 = unifyTransform.get0PointOfDay();
-//        Date d1 = unifyTransform.get24PointOfDay();
-//
-//        DeviceSpotcheckRecordHeadExample example = new DeviceSpotcheckRecordHeadExample();
-//        DeviceSpotcheckRecordHeadExample.Criteria criteria1 = example.createCriteria();
-//        criteria1.andProcessCodeEqualTo(processCode).andFinishTimeBetween(d0, d1);
-//
-//        DeviceSpotcheckRecordHeadExample.Criteria criteria2 = example.createCriteria();
-//        criteria2.andProcessCodeEqualTo(processCode).andConfirmTimeBetween(d0, d1);
-//
-//        example.or(criteria2);
-//        List<DeviceSpotcheckRecordHead> heads = headMapper.selectByExample(example);
-//
-//        for (DeviceSpotcheckRecordHead head : heads) {
-//            DeviceSpotcheckRecordHistoryGetDTO dto1 = new DeviceSpotcheckRecordHistoryGetDTO();
-//            dto1.setRecordId(head.getCode());
-//            dto1.setDeviceName(head.getDeviceName());
-//            dto1.setFixedassetsCode(head.getFixedassetsCode());
-//            dto1.setFinishTime(head.getFinishTime());
-//            dto1.setSpotcheckPeople(head.getSpotcheckPeople() == null ? null : authUserService.findById(head.getSpotcheckPeople()).getName());
-//            dto1.setConfirmTime(head.getConfirmTime());
-////            dto1.setConfirmPeople();
-//            dto1.setFlag(head.getEditFlag());
-//            dto1.setProcessCode(head.getProcessCode());
-//            dto1.setProcessName(processMapper.selectByPrimaryKey(head.getProcessCode()).getProcessName());
-//            DeviceSpotcheckRecordDetailsExample detailsExample = new DeviceSpotcheckRecordDetailsExample();
-//            detailsExample.createCriteria().andRecordCodeEqualTo(head.getCode()).andMainValuesEqualTo(1);
-//            int num = deviceSpotcheckRecordDetailsMapper.countByExample(detailsExample);
-//            dto1.setErrorNum(num);
-//            deviceSpotcheckRecordHistoryGetDTOS.add(dto1);
-//        }
-//        deviceSpotcheckRecordHistoryGetDTOS.sort((DeviceSpotcheckRecordHistoryGetDTO o1, DeviceSpotcheckRecordHistoryGetDTO o2) -> (o1.getErrorNum() - o2.getErrorNum()) >= 0 ? -1 : 1);
-//        int size = dto.getSize() == null ? 5 : dto.getSize();
-//        int page = dto.getPage() == null ? 1 : dto.getPage();
-//        Page pageInfo = new Page(size, page, deviceSpotcheckRecordHistoryGetDTOS);
-//        return pageInfo.getList();
-//    }
 
     @Override
     public List<DeviceSpotcheckRecordHistoryGetDTO> pageAbnormal(DeviceSpotcheckRecordHistoryPostDTO dto) {
