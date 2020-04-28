@@ -278,8 +278,27 @@ public class DeviceRepairServiceImp implements DeviceRepairService {
             }
             afterHandler.add(handleMap);
         }
-
-        return AddressEnum.EXCEL_REPAIR.getPath() + ExportUtil.exportExcel(afterHandler, AddressEnum.getCurrentPath(AddressEnum.EXCEL_REPAIR.getCode()));
+        List<Map<String,Object>> fin = new ArrayList<>();
+        for(Map map:afterHandler){
+            Map<String,Object> temp = new LinkedHashMap<>();
+            temp.put("维修编号",map.get("维修编号"));
+            temp.put("部门",map.get("部门"));
+            temp.put("设备名",map.get("设备名"));
+            temp.put("固定资产编码",map.get("固定资产编码"));
+            temp.put("报修人",map.get("报修人"));
+            temp.put("报修时间",map.get("报修时间"));
+            temp.put("紧急程度",map.get("紧急程度"));
+            temp.put("故障原因",map.get("故障原因"));
+            temp.put("故障描述",map.get("故障描述"));
+            temp.put("维修配件",map.get("维修配件"));
+            temp.put("接单人",map.get("接单人"));
+            temp.put("接单时间",map.get("接单时间"));
+            temp.put("完成时间",map.get("完成时间"));
+            temp.put("评价时间",map.get("评价时间"));
+            temp.put("评价结果",map.get("评价结果"));
+            fin.add(temp);
+        }
+        return AddressEnum.EXCEL_REPAIR.getPath() + ExportUtil.exportExcel(fin, AddressEnum.getCurrentPath(AddressEnum.EXCEL_REPAIR.getCode()));
     }
 
     @Override

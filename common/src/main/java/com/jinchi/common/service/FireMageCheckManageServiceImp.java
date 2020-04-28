@@ -378,7 +378,12 @@ public class FireMageCheckManageServiceImp implements FireMageCheckManageService
                 data.put("检验状态", detectaInfo);
             }
             FireMageBatchItemsValues itemsValues = itemsValuesMapper.getByBatchCode(info.getCode());
+            List<String> codes = Arrays.asList(itemsValues.getItemCodes().split(","));
             List<String> names = Arrays.asList(itemsValues.getItemNames().split(","));
+            //名称加上单位 2020 4 28
+            for(int l=0;l<names.size();l++){
+                names.set(l,names.get(l)+"-"+itemsMapper.selectByPrimaryKey(Long.valueOf(codes.get(l))));
+            }
             List<String> values = Arrays.asList(itemsValues.getItemValues().split(","));
             for (int l = 0; l < names.size(); l++) {
                 for (int k = 1; k < head.size(); k++) {
