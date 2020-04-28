@@ -591,13 +591,13 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
                     deploy.setVolumes(info.getVolume());
                     if (info.getMn() == 1) {
                         deploy.setMnConcentration(info.getMonPotency());
-                        deploy.setMnMetallicity(info.getVolume() * info.getMonPotency() / 100000);
+                        deploy.setMnMetallicity(info.getVolume() * info.getMonPotency() / 1000);
                     } else if (info.getCo() == 1) {
                         deploy.setCoConcentration(info.getMonPotency());
-                        deploy.setCoMetallicity(info.getVolume() * info.getMonPotency() / 100000);
+                        deploy.setCoMetallicity(info.getVolume() * info.getMonPotency() / 1000);
                     } else if (info.getNi() == 1) {
                         deploy.setNiConcentration(info.getMonPotency());
-                        deploy.setNiMetallicity(info.getVolume() * info.getMonPotency() / 100000);
+                        deploy.setNiMetallicity(info.getVolume() * info.getMonPotency() / 1000);
                     }
                     monocrystalDeployMapper.insertSelective(deploy);
                 }
@@ -612,15 +612,15 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
                     deploy.setVolumes(info.getVolume());
                     if (info.getMn() == 1) {
                         deploy.setMnConcentration(info.getMnPotency());
-                        deploy.setMnMetallicity(info.getVolume() * info.getMnPotency() / 100000);
+                        deploy.setMnMetallicity(info.getVolume() * info.getMnPotency() / 1000);
                     }
                     if (info.getCo() == 1) {
                         deploy.setCoConcentration(info.getCoPotency());
-                        deploy.setCoMetallicity(info.getVolume() * info.getCoPotency() / 100000);
+                        deploy.setCoMetallicity(info.getVolume() * info.getCoPotency() / 1000);
                     }
                     if (info.getNi() == 1) {
                         deploy.setNiConcentration(info.getNiPotency());
-                        deploy.setNiMetallicity(info.getVolume() * info.getNiPotency() / 100000);
+                        deploy.setNiMetallicity(info.getVolume() * info.getNiPotency() / 1000);
                     }
                     saltMixtureDeployMapper.insertSelective(deploy);
                 }
@@ -634,20 +634,20 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
                     compound.setProcessCode(ProcessEnum.COMPOUND.getProcessId());
                     compound.setVolumes(info.getVolume());
                     compound.setSolidContainingContent(info.getSolidContent());
-                    //Float weight = info.getVolume() * info.getSolidContent() / 100000;
+                    //Float weight = info.getVolume() * info.getSolidContent() / 1000;
                     Float weight = info.getWeight();
                     compound.setWeight(weight);
                     if (info.getMn() == 1) {
                         compound.setMnConcentration(info.getMnPotency());
-                        compound.setMnMetallicity(weight * info.getMnPotency());
+                        compound.setMnMetallicity(weight * info.getMnPotency() / 100);
                     }
                     if (info.getCo() == 1) {
                         compound.setCoConcentration(info.getCoPotency());
-                        compound.setCoMetallicity(weight * info.getCoPotency());
+                        compound.setCoMetallicity(weight * info.getCoPotency()/ 100);
                     }
                     if (info.getNi() == 1) {
                         compound.setNiConcentration(info.getNiPotency());
-                        compound.setNiMetallicity(weight * info.getNiPotency());
+                        compound.setNiMetallicity(weight * info.getNiPotency()/ 100);
                     }
                     compoundMapper.insertSelective(compound);
                 }
@@ -664,15 +664,15 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
                         ageing.setWeight(0f);
                         if (info.getMn() == 1) {
                             ageing.setMnConcentration(info.getMnPotency());
-                            ageing.setMnMetallicity(ageing.getVolumes() * info.getMnPotency() / 100000);
+                            ageing.setMnMetallicity(ageing.getVolumes() * info.getMnPotency() / 1000);
                         }
                         if (info.getCo() == 1) {
                             ageing.setCoConcentration(info.getCoPotency());
-                            ageing.setCoMetallicity(ageing.getVolumes() * info.getCoPotency() / 100000);
+                            ageing.setCoMetallicity(ageing.getVolumes() * info.getCoPotency() / 1000);
                         }
                         if (info.getNi() == 1) {
                             ageing.setNiConcentration(info.getNiPotency());
-                            ageing.setNiMetallicity(ageing.getVolumes() * info.getNiPotency() / 100000);
+                            ageing.setNiMetallicity(ageing.getVolumes() * info.getNiPotency() / 1000);
                         }
                     } else {
                         /**
@@ -684,15 +684,15 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
                         ageing.setVolumes(0f);
                         if (info.getMn() == 1) {
                             ageing.setMnConcentration(info.getMnPotency());
-                            ageing.setMnMetallicity(ageing.getWeight() * info.getMnPotency());
+                            ageing.setMnMetallicity(ageing.getWeight() * info.getMnPotency()/ 100);
                         }
                         if (info.getCo() == 1) {
                             ageing.setCoConcentration(info.getCoPotency());
-                            ageing.setCoMetallicity(ageing.getWeight() * info.getCoPotency());
+                            ageing.setCoMetallicity(ageing.getWeight() * info.getCoPotency()/ 100);
                         }
                         if (info.getNi() == 1) {
                             ageing.setNiConcentration(info.getNiPotency());
-                            ageing.setNiMetallicity(ageing.getWeight() * info.getNiPotency());
+                            ageing.setNiMetallicity(ageing.getWeight() * info.getNiPotency()/ 100);
                         }
                     }
                     ageing.setSolidContainingContent(info.getSolidContent());
@@ -709,15 +709,15 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
                     drying.setWeight(info.getWeight());
                     if (info.getMn() == 1) {
                         drying.setMnConcentration(info.getMnPotency());
-                        drying.setMnMetallicity(info.getWeight() * info.getMnPotency());
+                        drying.setMnMetallicity(info.getWeight() * info.getMnPotency()/ 100);
                     }
                     if (info.getCo() == 1) {
                         drying.setCoConcentration(info.getCoPotency());
-                        drying.setCoMetallicity(info.getWeight() * info.getCoPotency());
+                        drying.setCoMetallicity(info.getWeight() * info.getCoPotency()/ 100);
                     }
                     if (info.getNi() == 1) {
                         drying.setNiConcentration(info.getNiPotency());
-                        drying.setNiMetallicity(info.getWeight() * info.getNiPotency());
+                        drying.setNiMetallicity(info.getWeight() * info.getNiPotency()/ 100);
                     }
                     dryingMapper.insertSelective(drying);
                 }
@@ -732,15 +732,15 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
                     others.setWeight(info.getWeight());
                     if (info.getMn() == 1) {
                         others.setMnConcentration(info.getMnPotency());
-                        others.setMnMetallicity(info.getWeight() * info.getMnPotency());
+                        others.setMnMetallicity(info.getWeight() * info.getMnPotency()/ 100);
                     }
                     if (info.getCo() == 1) {
                         others.setCoConcentration(info.getCoPotency());
-                        others.setCoMetallicity(info.getWeight() * info.getCoPotency());
+                        others.setCoMetallicity(info.getWeight() * info.getCoPotency()/ 100);
                     }
                     if (info.getNi() == 1) {
                         others.setNiConcentration(info.getNiPotency());
-                        others.setNiMetallicity(info.getWeight() * info.getNiPotency());
+                        others.setNiMetallicity(info.getWeight() * info.getNiPotency()/ 100);
                     }
                     othersMapper.insertSelective(others);
                 }
@@ -793,30 +793,30 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
                     example8.clear();
                     example8.createCriteria();
                     if (info.getMn() == 1) {
-                        mnValue += (info.getVolume() * info.getMonPotency() / 100000);
+                        mnValue += (info.getVolume() * info.getMonPotency() / 1000);
                         for (int k = 0; k < materialLineWeights.size(); k++) {
                             example8.clear();
                             example8.createCriteria().andLineCodeEqualTo(materialLineWeights.get(k).getLineCode()).andStatisticCodeEqualTo(stasticId);
                             GoodsInProcessStatisticByLineDetail detail1 = lineDetailMapper.selectByExample(example8).get(0);
-                            detail1.setMnValue(detail1.getMnValue() + (info.getVolume() * info.getMonPotency() / 100000) * materialLineWeights.get(k).getWeightValue());
+                            detail1.setMnValue(detail1.getMnValue() + (info.getVolume() * info.getMonPotency() / 1000) * materialLineWeights.get(k).getWeightValue());
                             lineDetailMapper.updateByExampleSelective(detail1, example8);
                         }//找到所有该物料的产线，产线下的金属量值进行累计计算
                     } else if (info.getCo() == 1) {
-                        coValue += (info.getVolume() * info.getMonPotency() / 100000);
+                        coValue += (info.getVolume() * info.getMonPotency() / 1000);
                         for (int k = 0; k < materialLineWeights.size(); k++) {
                             example8.clear();
                             example8.createCriteria().andLineCodeEqualTo(materialLineWeights.get(k).getLineCode()).andStatisticCodeEqualTo(stasticId);
                             GoodsInProcessStatisticByLineDetail detail1 = lineDetailMapper.selectByExample(example8).get(0);
-                            detail1.setCoValue(detail1.getCoValue() + (info.getVolume() * info.getMonPotency() / 100000) * materialLineWeights.get(k).getWeightValue());
+                            detail1.setCoValue(detail1.getCoValue() + (info.getVolume() * info.getMonPotency() / 1000) * materialLineWeights.get(k).getWeightValue());
                             lineDetailMapper.updateByExampleSelective(detail1, example8);
                         }//找到所有该物料的产线，产线下的金属量值进行累计计算
                     } else if (info.getNi() == 1) {
-                        niValue += (info.getVolume() * info.getMonPotency() / 100000);
+                        niValue += (info.getVolume() * info.getMonPotency() / 1000);
                         for (int k = 0; k < materialLineWeights.size(); k++) {
                             example8.clear();
                             example8.createCriteria().andLineCodeEqualTo(materialLineWeights.get(k).getLineCode()).andStatisticCodeEqualTo(stasticId);
                             GoodsInProcessStatisticByLineDetail detail1 = lineDetailMapper.selectByExample(example8).get(0);
-                            detail1.setNiValue(detail1.getMnValue() + (info.getVolume() * info.getMonPotency() / 100000) * materialLineWeights.get(k).getWeightValue());
+                            detail1.setNiValue(detail1.getMnValue() + (info.getVolume() * info.getMonPotency() / 1000) * materialLineWeights.get(k).getWeightValue());
                             lineDetailMapper.updateByExampleSelective(detail1, example8);
                         }//找到所有该物料的产线，产线下的金属量值进行累计计算
                     }
@@ -834,22 +834,22 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
                     example8.clear();
                     example8.createCriteria();
                     if (info.getMn() == 1) {
-                        mnValue += (info.getVolume() * info.getMnPotency() / 100000);
+                        mnValue += (info.getVolume() * info.getMnPotency() / 1000);
                     }
                     if (info.getCo() == 1) {
-                        coValue += (info.getVolume() * info.getCoPotency() / 100000);
+                        coValue += (info.getVolume() * info.getCoPotency() / 1000);
                     }
                     if (info.getNi() == 1) {
-                        niValue += (info.getVolume() * info.getNiPotency() / 100000);
+                        niValue += (info.getVolume() * info.getNiPotency() / 1000);
                     }
                     total += info.getVolume();//混合盐存放的是体积
                     for (int k = 0; k < materialLineWeights.size(); k++) {
                         example8.clear();
                         example8.createCriteria().andLineCodeEqualTo(materialLineWeights.get(k).getLineCode()).andStatisticCodeEqualTo(stasticId);
                         GoodsInProcessStatisticByLineDetail detail1 = lineDetailMapper.selectByExample(example8).get(0);
-                        detail1.setMnValue(detail1.getMnValue() + (info.getVolume() * info.getMnPotency() / 100000) * materialLineWeights.get(k).getWeightValue());
-                        detail1.setNiValue(detail1.getNiValue() + (info.getVolume() * info.getNiPotency() / 100000) * materialLineWeights.get(k).getWeightValue());
-                        detail1.setCoValue(detail1.getCoValue() + (info.getVolume() * info.getCoPotency() / 100000) * materialLineWeights.get(k).getWeightValue());
+                        detail1.setMnValue(detail1.getMnValue() + (info.getVolume() * info.getMnPotency() / 1000) * materialLineWeights.get(k).getWeightValue());
+                        detail1.setNiValue(detail1.getNiValue() + (info.getVolume() * info.getNiPotency() / 1000) * materialLineWeights.get(k).getWeightValue());
+                        detail1.setCoValue(detail1.getCoValue() + (info.getVolume() * info.getCoPotency() / 1000) * materialLineWeights.get(k).getWeightValue());
                         lineDetailMapper.updateByExampleSelective(detail1, example8);
                     }//找到所有该物料的产线，产线下的金属量值进行累计计算
                 }
@@ -865,22 +865,22 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
                     example8.clear();
                     example8.createCriteria();
                     if (info.getMn() == 1) {
-                        mnValue += (info.getVolume() * info.getMnPotency() / 100000);
+                        mnValue += (info.getVolume() * info.getMnPotency() / 1000);
                     }
                     if (info.getCo() == 1) {
-                        coValue += (info.getVolume() * info.getCoPotency() / 100000);
+                        coValue += (info.getVolume() * info.getCoPotency() / 1000);
                     }
                     if (info.getNi() == 1) {
-                        niValue += (info.getVolume() * info.getNiPotency() / 100000);
+                        niValue += (info.getVolume() * info.getNiPotency() / 1000);
                     }
-                    total += (info.getVolume() * info.getSolidContent() / 100000);//合成存放的是重量
+                    total += (info.getVolume() * info.getSolidContent() / 1000);//合成存放的是重量
                     for (int k = 0; k < materialLineWeights.size(); k++) {
                         example8.clear();
                         example8.createCriteria().andLineCodeEqualTo(materialLineWeights.get(k).getLineCode()).andStatisticCodeEqualTo(stasticId);
                         GoodsInProcessStatisticByLineDetail detail1 = lineDetailMapper.selectByExample(example8).get(0);
-                        detail1.setMnValue(detail1.getMnValue() + (info.getVolume() * info.getMnPotency() / 100000) * materialLineWeights.get(k).getWeightValue());
-                        detail1.setNiValue(detail1.getNiValue() + (info.getVolume() * info.getNiPotency() / 100000) * materialLineWeights.get(k).getWeightValue());
-                        detail1.setCoValue(detail1.getCoValue() + (info.getVolume() * info.getCoPotency() / 100000) * materialLineWeights.get(k).getWeightValue());
+                        detail1.setMnValue(detail1.getMnValue() + (info.getVolume() * info.getMnPotency() / 1000) * materialLineWeights.get(k).getWeightValue());
+                        detail1.setNiValue(detail1.getNiValue() + (info.getVolume() * info.getNiPotency() / 1000) * materialLineWeights.get(k).getWeightValue());
+                        detail1.setCoValue(detail1.getCoValue() + (info.getVolume() * info.getCoPotency() / 1000) * materialLineWeights.get(k).getWeightValue());
                         lineDetailMapper.updateByExampleSelective(detail1, example8);
                     }//找到所有该物料的产线，产线下的金属量值进行累计计算
                 }
@@ -897,22 +897,22 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
                     example8.createCriteria();
                     if (info.getValueType() == 0) {//体积
                         if (info.getMn() == 1) {
-                            mnValue += (info.getWeiOrVol() * info.getMnPotency() / 100000);
+                            mnValue += (info.getWeiOrVol() * info.getMnPotency() / 1000);
                         }
                         if (info.getCo() == 1) {
-                            coValue += (info.getWeiOrVol() * info.getCoPotency() / 100000);
+                            coValue += (info.getWeiOrVol() * info.getCoPotency() / 1000);
                         }
                         if (info.getNi() == 1) {
-                            niValue += (info.getWeiOrVol() * info.getNiPotency() / 100000);
+                            niValue += (info.getWeiOrVol() * info.getNiPotency() / 1000);
                         }
-                        total += (info.getWeiOrVol() * info.getSolidContent() / 100000);//陈化存放的是重量
+                        total += (info.getWeiOrVol() * info.getSolidContent() / 1000);//陈化存放的是重量
                         for (int k = 0; k < materialLineWeights.size(); k++) {
                             example8.clear();
                             example8.createCriteria().andLineCodeEqualTo(materialLineWeights.get(k).getLineCode()).andStatisticCodeEqualTo(stasticId);
                             GoodsInProcessStatisticByLineDetail detail1 = lineDetailMapper.selectByExample(example8).get(0);
-                            detail1.setMnValue(detail1.getMnValue() + info.getWeiOrVol() * info.getMnPotency() / 100000 * materialLineWeights.get(k).getWeightValue());
-                            detail1.setNiValue(detail1.getNiValue() + info.getWeiOrVol() * info.getNiPotency() / 100000 * materialLineWeights.get(k).getWeightValue());
-                            detail1.setCoValue(detail1.getCoValue() + info.getWeiOrVol() * info.getCoPotency() / 100000 * materialLineWeights.get(k).getWeightValue());
+                            detail1.setMnValue(detail1.getMnValue() + info.getWeiOrVol() * info.getMnPotency() / 1000 * materialLineWeights.get(k).getWeightValue());
+                            detail1.setNiValue(detail1.getNiValue() + info.getWeiOrVol() * info.getNiPotency() / 1000 * materialLineWeights.get(k).getWeightValue());
+                            detail1.setCoValue(detail1.getCoValue() + info.getWeiOrVol() * info.getCoPotency() / 1000 * materialLineWeights.get(k).getWeightValue());
                             lineDetailMapper.updateByExampleSelective(detail1, example8);
                         }//找到所有该物料的产线，产线下的金属量值进行累计计算
                     } else {
@@ -922,13 +922,13 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
                          * Mn金属量（t）=重量（t）*Mn浓度（%）
                          */
                         if (info.getMn() == 1) {
-                            mnValue += (info.getWeiOrVol() * info.getMnPotency());
+                            mnValue += (info.getWeiOrVol() * info.getMnPotency() /100);
                         }
                         if (info.getCo() == 1) {
-                            coValue += (info.getWeiOrVol() * info.getCoPotency());
+                            coValue += (info.getWeiOrVol() * info.getCoPotency()/100);
                         }
                         if (info.getNi() == 1) {
-                            niValue += (info.getWeiOrVol() * info.getNiPotency());
+                            niValue += (info.getWeiOrVol() * info.getNiPotency()/100);
                         }
                         total += (info.getWeiOrVol());//合成存放的是重量
                         for (int k = 0; k < materialLineWeights.size(); k++) {
@@ -959,13 +959,13 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
                      * Mn金属量（t）=重量（t）*Mn浓度（%）
                      */
                     if (info.getMn() == 1) {
-                        mnValue += (info.getWeight() * info.getMnPotency());
+                        mnValue += (info.getWeight() * info.getMnPotency()/100);
                     }
                     if (info.getCo() == 1) {
-                        coValue += (info.getWeight() * info.getCoPotency());
+                        coValue += (info.getWeight() * info.getCoPotency()/100);
                     }
                     if (info.getNi() == 1) {
-                        niValue += (info.getWeight() * info.getNiPotency());
+                        niValue += (info.getWeight() * info.getNiPotency()/100);
                     }
                     total += (info.getWeight());//烘干存放的是重量
                     for (int k = 0; k < materialLineWeights.size(); k++) {
@@ -995,13 +995,13 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
                      * Mn金属量（t）=重量（t）*Mn浓度（%）
                      */
                     if (info.getMn() == 1) {
-                        mnValue += (info.getWeight() * info.getMnPotency());
+                        mnValue += (info.getWeight() * info.getMnPotency()/100);
                     }
                     if (info.getCo() == 1) {
-                        coValue += (info.getWeight() * info.getCoPotency());
+                        coValue += (info.getWeight() * info.getCoPotency()/100);
                     }
                     if (info.getNi() == 1) {
-                        niValue += (info.getWeight() * info.getNiPotency());
+                        niValue += (info.getWeight() * info.getNiPotency()/100);
                     }
                     total += (info.getWeight());//其他存放的是重量
                     for (int k = 0; k < materialLineWeights.size(); k++) {
