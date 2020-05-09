@@ -358,8 +358,11 @@ public class FireMageCheckManageServiceImp implements FireMageCheckManageService
         List<Map<String, Object>> datas = new ArrayList<>();
         for (int i = 0; i < batches.size(); i++) {
             Map<String, Object> data = new HashMap<>();
+            if(batches.get(i).endsWith("-DBL"))
+                continue;
             data.put("批号", batches.get(i));
             FireMageDetectInfo info = infoMapper.getByBatch(batches.get(i));
+            FireMageDetectInfo info2 = infoMapper.getByBatch(batches.get(i)+"-DBL");
             String detectaInfo = "";
             for (int l = 1; l < head.size(); l++)
                 data.put(head.get(l), "");
@@ -380,11 +383,18 @@ public class FireMageCheckManageServiceImp implements FireMageCheckManageService
             FireMageBatchItemsValues itemsValues = itemsValuesMapper.getByBatchCode(info.getCode());
             List<String> codes = Arrays.asList(itemsValues.getItemCodes().split(","));
             List<String> names = Arrays.asList(itemsValues.getItemNames().split(","));
+            List<String> values = Arrays.asList(itemsValues.getItemValues().split(","));
+            if(info2 != null) {
+                FireMageBatchItemsValues itemsValues2 = itemsValuesMapper.getByBatchCode(info2.getCode());
+                codes.addAll(Arrays.asList(itemsValues2.getItemCodes().split(",")));
+                names.addAll(Arrays.asList(itemsValues2.getItemNames().split(",")));
+                values.addAll(Arrays.asList(itemsValues2.getItemValues().split(",")));
+            }
             //名称加上单位 2020 4 28
             for(int l=0;l<names.size();l++){
                 names.set(l,names.get(l)+"-"+itemsMapper.selectByPrimaryKey(Long.valueOf(codes.get(l))));
             }
-            List<String> values = Arrays.asList(itemsValues.getItemValues().split(","));
+
             for (int l = 0; l < names.size(); l++) {
                 for (int k = 1; k < head.size(); k++) {
                     if (head.get(k).contains(names.get(l)) && data.get(head.get(k)).equals("")) {
@@ -396,7 +406,6 @@ public class FireMageCheckManageServiceImp implements FireMageCheckManageService
             }
             datas.add(data);
         }
-
         return AddressEnum.EXCEL_FIRE_MAGE.getPath() + ExportUtil.fireMgaeExport(datas, AddressEnum.getCurrentPath(AddressEnum.EXCEL_FIRE_MAGE.getCode()),items);
     }
 
