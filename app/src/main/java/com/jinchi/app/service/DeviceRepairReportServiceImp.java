@@ -246,7 +246,7 @@ public class DeviceRepairReportServiceImp implements DeviceRepairReportService {
         if (repairPostDTO.getCondition() != null) {
             sql += " and (device_name like '%" + repairPostDTO.getCondition() + "%' or fixedassets_code like '%" + repairPostDTO.getCondition() + "%')";
         }
-        sql += " order by device_name";
+        sql += " order by device_name,fixedassets_code,code";
         sql += " limit " + size * (page - 1) + "," + size;
         List<DeviceDocumentMain> deviceDocumentMains = deviceDocumentMainMapper.selectByConditions(sql);
         for (int i = 0; i < deviceDocumentMains.size(); i++) {

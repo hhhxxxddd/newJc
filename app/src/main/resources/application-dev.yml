@@ -64,3 +64,10 @@ spring:
       max-request-size: 10MB
 app:
   url: http://localhost:8080
+
+logging:
+  level:
+    root: warn
+    com.jinchi.app.mapper: trace
+  pattern:
+    console: '%p%m%n'
