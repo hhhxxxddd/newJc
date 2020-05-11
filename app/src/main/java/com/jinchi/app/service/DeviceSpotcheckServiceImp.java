@@ -672,16 +672,7 @@ public class DeviceSpotcheckServiceImp implements DeviceSpotcheckService {
                 dtoList.add(dto1);
             }
         }
-        dtoList.sort((x, y) -> {
-            SimpleDateFormat dateFormat = new SimpleDateFormat("yyyyMMdd");
-            int a = Integer.parseInt(dateFormat.format(x.getFinishTime()));
-            int b = Integer.parseInt(dateFormat.format(y.getFinishTime()));
-            if (a == b) {
-                return y.getErrorNum() - x.getErrorNum();
-            } else {
-                return b - a;
-            }
-        });
+        dtoList.sort((x, y) -> y.getFinishTime().compareTo(x.getFinishTime()));
         int size = dto.getSize() == null ? 5 : dto.getSize();
         int page = dto.getPage() == null ? 1 : dto.getPage();
         Page pageInfo = new Page(size, page, dtoList);
