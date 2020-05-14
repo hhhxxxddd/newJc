@@ -462,7 +462,7 @@ public class FireMageCheckManageServiceImp implements FireMageCheckManageService
             LocalDateTime dateTime = ComUtil.dateToLocalDateTime(now);
             Date startDate = ComUtil.localDateTimeToDate(dateTime.withHour(0).withMinute(0).withSecond(0));
             Date endDate = ComUtil.localDateTimeToDate(dateTime.withHour(23).withMinute(59).withSecond(39));
-            String sql = "select * from fire_mage_detect_info where check_in_time >= '" + start + "' and check_in_time <= '" + end + "' and flag = 1  order by code desc limit " + (page - 1) * size + "," + size;
+            String sql = "select * from fire_mage_detect_info where batch not like '%-DBL' and check_in_time >= '" + start + "' and check_in_time <= '" + end + "' and flag = 1  order by code desc limit " + (page - 1) * size + "," + size;
             FireMageDetectInfoExample example = new FireMageDetectInfoExample();
             example.createCriteria().andCheckInTimeBetween(startDate, endDate).andFlagEqualTo(new Integer(1).byteValue());
             infos = infoMapper.selectByTime(sql);
@@ -483,6 +483,7 @@ public class FireMageCheckManageServiceImp implements FireMageCheckManageService
 
         for(int i=0;i<infos.size();i++){
             FireMageDetectInfo info = infos.get(i);
+            FireMageDetectInfo info2 = infoMapper.getByBatch(info.getBatch()+"-DBL");
             FireMageDetectInfoDTO infoDTO = new FireMageDetectInfoDTO();
             infoDTO.setHead(info);
             if("0".equals(""+info.getDetectStatus())){
@@ -496,6 +497,10 @@ public class FireMageCheckManageServiceImp implements FireMageCheckManageService
             }
             FireMageBatchItemsValues itemsValues = itemsValuesMapper.getByBatchCode(info.getCode());
             List<String> names = Arrays.asList(itemsValues.getItemNames().split(","));
+            if(info2 != null){
+                FireMageBatchItemsValues itemsValues2 = itemsValuesMapper.getByBatchCode(info2.getCode());
+                names.addAll(Arrays.asList(itemsValues2.getItemNames().split(",")));
+            }
             infoDTO.setItemsSpace(listToString(names));
             ans.add(infoDTO);
         }
