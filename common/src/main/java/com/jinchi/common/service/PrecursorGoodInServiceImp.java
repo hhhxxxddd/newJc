@@ -1365,7 +1365,7 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
         for (int i = 0; i < heads.size(); i++) {
             GoodsInProcessStatisticByProcessDetailExample example1 = new GoodsInProcessStatisticByProcessDetailExample();
             example1.clear();
-            example1.createCriteria().andStatisticCodeEqualTo(heads.get(0).getCode()).andProcessCodeEqualTo(processId);
+            example1.createCriteria().andStatisticCodeEqualTo(heads.get(i).getCode()).andProcessCodeEqualTo(processId);
             List<GoodsInProcessStatisticByProcessDetail> details = statisticByProcessDetailMapper.selectByExample(example1);
             if (details.size() != 0) {
                 GoodsInProcessStatisticByProcessDetail detail = details.get(0);
@@ -1398,7 +1398,7 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
         for (int i = 0; i < heads.size(); i++) {
             GoodsInProcessStatisticByLineDetailExample example1 = new GoodsInProcessStatisticByLineDetailExample();
             example1.clear();
-            example1.createCriteria().andStatisticCodeEqualTo(heads.get(0).getCode()).andLineCodeEqualTo(lineId);
+            example1.createCriteria().andStatisticCodeEqualTo(heads.get(i).getCode()).andLineCodeEqualTo(lineId);
             List<GoodsInProcessStatisticByLineDetail> details = lineDetailMapper.selectByExample(example1);
             if (details.size() != 0) {
                 GoodsInProcessStatisticByLineDetail detail = details.get(0);
