@@ -139,7 +139,7 @@ public class MaterialDeliveryStatisticServiceImp implements MaterialDeliveryStat
             return map;
         } else {
             for (GoodsInProcessStatisticHead head1 : list1) {
-                if (!head1.getStartTime().equals(head.getStartTime()) || !head1.getStartTime().equals(head.getStartTime())) {
+                if (!head1.getStartTime().equals(head.getStartTime()) || !head1.getEndTime().equals(head.getEndTime())) {
                     Map<String, Object> map = new HashMap<>();
                     map.put("code", -2);
                     map.put("message", "存在不一致的统计周期，本期开始时间为: " + ComUtil.dateToString(head1.getStartTime(), format) + "本期结束时间为: " + ComUtil.dateToString(head1.getEndTime(), format));
@@ -147,7 +147,7 @@ public class MaterialDeliveryStatisticServiceImp implements MaterialDeliveryStat
                 }
             }
             for (ProductStorageStatisticHead head2 : list2) {
-                if (!head2.getStartTime().equals(head.getStartTime()) || !head2.getStartTime().equals(head.getStartTime())) {
+                if (!head2.getStartTime().equals(head.getStartTime()) || !head2.getEndTime().equals(head.getEndTime())) {
                     Map<String, Object> map = new HashMap<>();
                     map.put("code", -2);
                     map.put("message", "存在不一致的统计周期，本期开始时间为: " + ComUtil.dateToString(head2.getStartTime(), format) + "本期结束时间为: " + ComUtil.dateToString(head2.getEndTime(), format));
@@ -155,7 +155,7 @@ public class MaterialDeliveryStatisticServiceImp implements MaterialDeliveryStat
                 }
             }
             for (AuxiliaryMaterialsStatisticHead head3 : list) {
-                if (!head3.getStartTime().equals(head.getStartTime()) || !head3.getStartTime().equals(head.getStartTime())) {
+                if (!head3.getStartTime().equals(head.getStartTime()) || !head3.getEndTime().equals(head.getEndTime())) {
                     Map<String, Object> map = new HashMap<>();
                     map.put("code", -2);
                     map.put("message", "存在不一致的统计周期，本期开始时间为: " + ComUtil.dateToString(head3.getStartTime(), format) + "本期结束时间为: " + ComUtil.dateToString(head3.getEndTime(), format));
