@@ -111,4 +111,4 @@ public class DeviceRepairReportController {
 
     }
 }
-//http://47.107.237.60:3389/jc/app/repairReport/commit
+//http://125.94.71.249/jc/app/repairReport/commit

@@ -13,9 +13,9 @@ spring:
     driver-class-name: com.mysql.cj.jdbc.Driver
     type: com.alibaba.druid.pool.DruidDataSource
     platform: mysql
-    url: jdbc:mysql://47.107.237.60:3306/jc_repo_db?userUnicode=true&characterEncoding=UTF8&useSSL=false&useAffectedRows=true&useLegacyDatetimeCode=false&serverTimezone=CTT
+    url: jdbc:mysql://125.94.71.249:3306/jc_repo_db?userUnicode=true&characterEncoding=UTF8&useSSL=false&useAffectedRows=true&useLegacyDatetimeCode=false&serverTimezone=CTT
     username: root
-    password: Znjs_2019
+    password: 123456
   application:
     name: REPOAPI-SERVICE
 
