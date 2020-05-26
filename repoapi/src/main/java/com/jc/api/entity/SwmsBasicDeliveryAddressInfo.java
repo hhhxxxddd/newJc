@@ -35,5 +35,8 @@ public class SwmsBasicDeliveryAddressInfo  extends BasePo implements Serializabl
     @ApiModelProperty(value = "出库点名称")
     private String deliveryAddressName;
 
+    @ApiModelProperty(value = "出库类型")
+    private boolean type;
+
 
 }

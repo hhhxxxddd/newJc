@@ -254,6 +254,14 @@ public class SwmsBasicMaterialInfoService implements ISwmsBasicMaterialInfoServi
         return swmsBasicMaterialInfoMapper.selectList(queryWrapper);
     }
 
+    @Override
+    public List getByTypeBySubtype(Integer type, Integer subType) {
+        QueryWrapper<SwmsBasicMaterialInfo> byTypeBySubType = new QueryWrapper<>();
+        byTypeBySubType.eq(type != null,"material_type_id",type)
+                .eq(subType != null,"sub_type_id",subType);
+        return swmsBasicMaterialInfoMapper.selectList(byTypeBySubType);
+    }
+
     private void updateSup(String matId, String[] ids) {
         Map<String, Object> map = new HashMap<>();
         map.put("mat_id", matId);

@@ -71,4 +71,10 @@ public class SwmsBasicDeliveryAddressInfoController {
     public Result batchDelete(@RequestParam Set<String> ids){
         return Result.success(swmsBasicDeliveryAddressInfoService.batchDelete(ids));
     }
+
+    @ApiOperation("根据出库类型查询出库点信息")
+    @GetMapping("getByType")
+    public Result getByType(@RequestParam Integer type){
+        return Result.success(swmsBasicDeliveryAddressInfoService.getByType(type));
+    }
 }

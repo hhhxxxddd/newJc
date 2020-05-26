@@ -71,4 +71,12 @@ public interface ISwmsBasicMaterialInfoService {
      * @return
      */
     List getByType(Integer type);
+
+    /**
+     * 根据大类小类查询
+     * @param type
+     * @param subType
+     * @return
+     */
+    List getByTypeBySubtype(Integer type,Integer subType);
 }

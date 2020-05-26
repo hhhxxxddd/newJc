@@ -218,10 +218,10 @@ public class FireMageOutService implements IFireMageOutService {
     }
 
     @Override
-    public OutQueryVo getDataByMatid(Integer matId) {
+    public OutQueryVo getDataByMatid(Integer matId,Integer supplierCode) {
         OutQueryVo ans = new OutQueryVo();
         QueryWrapper<SwmsStockInLedgers> queryWrapper = new QueryWrapper<>();
-        queryWrapper.eq("material_name_code",matId).eq("material_status",0);
+        queryWrapper.eq("material_name_code",matId).eq("material_status",0).eq(supplierCode!=null,"material_supplier_code",supplierCode);
         ans.setDetails(ledgersMapper.selectList(queryWrapper));
         return ans;
     }

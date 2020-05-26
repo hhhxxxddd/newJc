@@ -92,4 +92,11 @@ public class SwmsBasicMaterialInfoController {
     public Result getByType(@RequestParam Integer type){
         return Result.success(iSwmsBasicMaterialInfoService.getByType(type));
     }
+
+    @ApiOperation(value = "根据物料大类，物料小类查询")
+    @GetMapping(value = "getByTypeBySubtype")
+    public Result getByTypeBySubtype(@RequestParam(required = false,defaultValue = "") Integer type,
+                                     @RequestParam(required = false,defaultValue = "") Integer SubType){
+        return Result.success(iSwmsBasicMaterialInfoService.getByTypeBySubtype(type,SubType));
+    }
 }

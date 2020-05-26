@@ -143,4 +143,11 @@ public class SwmsBasicDeliveryAddressInfoService implements ISwmsBasicDeliveryAd
             throw new DataAssociationException("删除失败,数据正在被使用");
         }
     }
+
+    @Override
+    public List getByType(Integer type) {
+        QueryWrapper<SwmsBasicDeliveryAddressInfo> byType = new QueryWrapper<>();
+        byType.eq("type",type);
+        return swmsBasicDeliveryAddressInfoMapper.selectList(byType);
+    }
 }

@@ -68,4 +68,12 @@ public interface ISwmsBasicDeliveryAddressInfoService {
      java.lang.Boolean
      **/
     Boolean batchDelete(Set<String> ids);
+
+
+    /**
+     * 根据type获取出库点
+     * @param type
+     * @return
+     */
+    List getByType(Integer type);
 }
