@@ -67,6 +67,8 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
     ProductionInstrumentAddressMapper instrumentAddressMapper;
     @Autowired
     AuxiliaryMaterialsStatisticHeadMapper auxiliaryHeadMapper;
+    @Autowired
+    ProcessParametersHcDetailMapper hcDetailMapper;
 
     @Override
     public List getAll(String startTime, String endTime, Integer periodId, Byte flag) {
@@ -1559,6 +1561,36 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
             ans.add(temp);
         }
         return new Page(ans, 1, 10);
+    }
+
+    @Override
+    public List getByLineByProcess(Integer lineCode, Integer processCode, Long paramId) {
+        List<BasicInfoPrecursorMaterialDetailsDTO> ans = new ArrayList<>();
+
+        BasicInfoPrecursorMaterialDetailsExample example = new BasicInfoPrecursorMaterialDetailsExample();
+        example.createCriteria().andProcessCodeEqualTo(processCode);
+        List<BasicInfoPrecursorMaterialDetails> details = basicInfoPrecursorMaterialDetailsMapper.selectByExample(example);
+
+        for (int j = 0; j < details.size(); j++) {
+            BasicInfoPrecursorMaterialDetailsDTO detailsDTO = new BasicInfoPrecursorMaterialDetailsDTO(details.get(j));
+            ans.add(detailsDTO);
+        }
+
+        ProcessParametersHcDetail detail = hcDetailMapper.selectByPrimaryKey(paramId);
+
+        for(int i=0;i<ans.size();i++){
+            BasicInfoPrecursorMaterialDetailsDTO temp = ans.get(i);
+            BasicInfoPrecursorMaterialLineWeightExample example1 = new BasicInfoPrecursorMaterialLineWeightExample();
+            example1.createCriteria().andMaterialCodeEqualTo(temp.getCode()).andLineCodeEqualTo(lineCode);
+
+            if(lineWeightMapper.countByExample(example1) == 1){
+                temp.setNiPotency(detail.getNi());
+                temp.setCoPotency(detail.getCo());
+                temp.setMnPotency(detail.getMn());
+                //temp.setSolidContent(detail.getSolidContainingContentStandard().floatValue());
+            }
+        }
+        return ans;
     }
 }
 

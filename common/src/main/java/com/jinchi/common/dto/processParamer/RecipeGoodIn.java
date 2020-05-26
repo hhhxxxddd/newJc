@@ -5,6 +5,8 @@ import com.jinchi.common.domain.ProcessParametersListHead;
 public class RecipeGoodIn {
     ProcessParametersListHead head;
 
+    Long paramId;
+
     Float Ni;
 
     Float Co;
@@ -81,5 +83,13 @@ public class RecipeGoodIn {
 
     public void setProduct(String product) {
         this.product = product;
+    }
+
+    public Long getParamId() {
+        return paramId;
+    }
+
+    public void setParamId(Long paramId) {
+        this.paramId = paramId;
     }
 }

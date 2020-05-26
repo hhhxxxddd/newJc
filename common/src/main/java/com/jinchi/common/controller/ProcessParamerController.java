@@ -74,6 +74,12 @@ public class ProcessParamerController {
         return ResultUtil.success(processParamerService.compoundRecipeList(condition));
     }
 
+    @GetMapping(value = "getProcessParam")
+    @ApiOperation(value = "获取工艺参数数据")
+    public Result getProcessParam(){
+        return ResultUtil.success(processParamerService.getProcessParam());
+    }
+
 
     @GetMapping(value = "detailByBatch")
     @ApiOperation(value= "根据批号获取工艺参数详情")

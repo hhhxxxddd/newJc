@@ -28,4 +28,6 @@ public interface ProcessParamerService {
     ProcessParamerMainDTO detailByBatch(Integer batchId);
 
     void publish(Long id);
+
+    List getProcessParam();
 }

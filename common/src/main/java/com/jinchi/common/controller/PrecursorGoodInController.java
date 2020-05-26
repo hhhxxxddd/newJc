@@ -142,4 +142,12 @@ public class PrecursorGoodInController {
         return ResultUtil.success(goodInService.defaultPage());
     }
 
+
+    @GetMapping(value = "getByLineByProcess")
+    @ApiOperation(value = "根据产线，工序，工艺参数获取数据")
+    public Result getByLineByProcess(@RequestParam Integer lineCode,
+                                     @RequestParam Integer processCode,
+                                     @RequestParam Long paramId){
+        return ResultUtil.success(goodInService.getByLineByProcess(lineCode,processCode,paramId));
+    }
 }

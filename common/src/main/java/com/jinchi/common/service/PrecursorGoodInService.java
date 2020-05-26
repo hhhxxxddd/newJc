@@ -43,4 +43,6 @@ public interface PrecursorGoodInService {
     List getVolumeWeight(Integer processId);
 
     Page defaultPage();
+
+    List getByLineByProcess(Integer lineCode,Integer processCode,Long paramId);
 }

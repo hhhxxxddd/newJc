@@ -1543,6 +1543,186 @@ public class ProcessParametersHcDetailExample {
             addCriterion("comment not between", value1, value2, "comment");
             return (Criteria) this;
         }
+
+        public Criteria andNiIsNull() {
+            addCriterion("ni is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andNiIsNotNull() {
+            addCriterion("ni is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andNiEqualTo(Float value) {
+            addCriterion("ni =", value, "ni");
+            return (Criteria) this;
+        }
+
+        public Criteria andNiNotEqualTo(Float value) {
+            addCriterion("ni <>", value, "ni");
+            return (Criteria) this;
+        }
+
+        public Criteria andNiGreaterThan(Float value) {
+            addCriterion("ni >", value, "ni");
+            return (Criteria) this;
+        }
+
+        public Criteria andNiGreaterThanOrEqualTo(Float value) {
+            addCriterion("ni >=", value, "ni");
+            return (Criteria) this;
+        }
+
+        public Criteria andNiLessThan(Float value) {
+            addCriterion("ni <", value, "ni");
+            return (Criteria) this;
+        }
+
+        public Criteria andNiLessThanOrEqualTo(Float value) {
+            addCriterion("ni <=", value, "ni");
+            return (Criteria) this;
+        }
+
+        public Criteria andNiIn(List<Float> values) {
+            addCriterion("ni in", values, "ni");
+            return (Criteria) this;
+        }
+
+        public Criteria andNiNotIn(List<Float> values) {
+            addCriterion("ni not in", values, "ni");
+            return (Criteria) this;
+        }
+
+        public Criteria andNiBetween(Float value1, Float value2) {
+            addCriterion("ni between", value1, value2, "ni");
+            return (Criteria) this;
+        }
+
+        public Criteria andNiNotBetween(Float value1, Float value2) {
+            addCriterion("ni not between", value1, value2, "ni");
+            return (Criteria) this;
+        }
+
+        public Criteria andCoIsNull() {
+            addCriterion("co is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCoIsNotNull() {
+            addCriterion("co is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andCoEqualTo(Float value) {
+            addCriterion("co =", value, "co");
+            return (Criteria) this;
+        }
+
+        public Criteria andCoNotEqualTo(Float value) {
+            addCriterion("co <>", value, "co");
+            return (Criteria) this;
+        }
+
+        public Criteria andCoGreaterThan(Float value) {
+            addCriterion("co >", value, "co");
+            return (Criteria) this;
+        }
+
+        public Criteria andCoGreaterThanOrEqualTo(Float value) {
+            addCriterion("co >=", value, "co");
+            return (Criteria) this;
+        }
+
+        public Criteria andCoLessThan(Float value) {
+            addCriterion("co <", value, "co");
+            return (Criteria) this;
+        }
+
+        public Criteria andCoLessThanOrEqualTo(Float value) {
+            addCriterion("co <=", value, "co");
+            return (Criteria) this;
+        }
+
+        public Criteria andCoIn(List<Float> values) {
+            addCriterion("co in", values, "co");
+            return (Criteria) this;
+        }
+
+        public Criteria andCoNotIn(List<Float> values) {
+            addCriterion("co not in", values, "co");
+            return (Criteria) this;
+        }
+
+        public Criteria andCoBetween(Float value1, Float value2) {
+            addCriterion("co between", value1, value2, "co");
+            return (Criteria) this;
+        }
+
+        public Criteria andCoNotBetween(Float value1, Float value2) {
+            addCriterion("co not between", value1, value2, "co");
+            return (Criteria) this;
+        }
+
+        public Criteria andMnIsNull() {
+            addCriterion("mn is null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMnIsNotNull() {
+            addCriterion("mn is not null");
+            return (Criteria) this;
+        }
+
+        public Criteria andMnEqualTo(Float value) {
+            addCriterion("mn =", value, "mn");
+            return (Criteria) this;
+        }
+
+        public Criteria andMnNotEqualTo(Float value) {
+            addCriterion("mn <>", value, "mn");
+            return (Criteria) this;
+        }
+
+        public Criteria andMnGreaterThan(Float value) {
+            addCriterion("mn >", value, "mn");
+            return (Criteria) this;
+        }
+
+        public Criteria andMnGreaterThanOrEqualTo(Float value) {
+            addCriterion("mn >=", value, "mn");
+            return (Criteria) this;
+        }
+
+        public Criteria andMnLessThan(Float value) {
+            addCriterion("mn <", value, "mn");
+            return (Criteria) this;
+        }
+
+        public Criteria andMnLessThanOrEqualTo(Float value) {
+            addCriterion("mn <=", value, "mn");
+            return (Criteria) this;
+        }
+
+        public Criteria andMnIn(List<Float> values) {
+            addCriterion("mn in", values, "mn");
+            return (Criteria) this;
+        }
+
+        public Criteria andMnNotIn(List<Float> values) {
+            addCriterion("mn not in", values, "mn");
+            return (Criteria) this;
+        }
+
+        public Criteria andMnBetween(Float value1, Float value2) {
+            addCriterion("mn between", value1, value2, "mn");
+            return (Criteria) this;
+        }
+
+        public Criteria andMnNotBetween(Float value1, Float value2) {
+            addCriterion("mn not between", value1, value2, "mn");
+            return (Criteria) this;
+        }
     }
 
     /**

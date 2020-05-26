@@ -71,7 +71,7 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
 
     private void save(ProcessParamerMainDTO processParamerMainDTO) {
         ProcessParametersListHead head = processParamerMainDTO.getHead();
-        if(head.getCode() != null){
+        if (head.getCode() != null) {
             delete(head.getCode());
             head.setCode(null);
         }
@@ -104,7 +104,7 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
 
             //异常处理
             List<ProcessParametersHcExceptionDispose> hcExceptionDisposes = hc.getExceptionDisposes();
-            for(int i=0;i<hcExceptionDisposes.size();i++){
+            for (int i = 0; i < hcExceptionDisposes.size(); i++) {
                 hcExceptionDisposes.get(i).setProcessCode(id);
                 hcExceptionDisposeMapper.insertSelective(hcExceptionDisposes.get(i));
             }
@@ -112,7 +112,7 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
             //中间品检验
             Zjp zjp = hc.getZjp();
             List<ProcessParametersHcIntermediateGoodsStd> hcIntermediateGoodsStds = zjp.getMediate();
-            for(int i=0;i<hcIntermediateGoodsStds.size();i++){
+            for (int i = 0; i < hcIntermediateGoodsStds.size(); i++) {
                 hcIntermediateGoodsStds.get(i).setProcessCode(id);
                 hcIntermediateGoodsStdMapper.insertSelective(hcIntermediateGoodsStds.get(i));
             }
@@ -138,7 +138,7 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
             detail.setProductionCode(processParamerMainDTO.getProAndLine().getProductClass());
             jqjhDetailMapper.insertSelective(detail);
 
-            for(int i=0;i<processParamerMainDTO.getProAndLine().getLines().size();i++){
+            for (int i = 0; i < processParamerMainDTO.getProAndLine().getLines().size(); i++) {
                 ProcessParametersLineSelect select = new ProcessParametersLineSelect();
                 select.setLineCode(processParamerMainDTO.getProAndLine().getLines().get(i));
                 select.setProcessCode(id);
@@ -159,7 +159,7 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
                 xdDevicesMapper.insertSelective(devices.get(i));
             }
 
-            for(int i=0;i<processParamerMainDTO.getProAndLine().getLines().size();i++){
+            for (int i = 0; i < processParamerMainDTO.getProAndLine().getLines().size(); i++) {
                 ProcessParametersLineSelect select = new ProcessParametersLineSelect();
                 select.setLineCode(processParamerMainDTO.getProAndLine().getLines().get(i));
                 select.setProcessCode(id);
@@ -173,14 +173,14 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
         ProcessParametersListHead head = processParamerMainDTO.getHead();
         head.setStatusFlag(new Integer(1).byteValue());
 
-        Integer commbatchId = send2audit(head,processParamerMainDTO.getIsUrgent(),processParamerMainDTO.getAuditId());
+        Integer commbatchId = send2audit(head, processParamerMainDTO.getIsUrgent(), processParamerMainDTO.getAuditId());
         //审核挂钩
         head.setApprovalProcessCode(commbatchId);
         headMapper.updateByPrimaryKeySelective(head);
     }
 
     @Override
-    public void delete(Long id){
+    public void delete(Long id) {
         ProcessParametersXdDevicesExample example = new ProcessParametersXdDevicesExample();
         example.createCriteria().andProcessCodeEqualTo(id);
         xdDevicesMapper.deleteByExample(example);
@@ -216,7 +216,7 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
         ProcessParametersHcDetailExample example4 = new ProcessParametersHcDetailExample();
         example4.createCriteria().andProcessCodeEqualTo(id);
         List<ProcessParametersHcDetail> details = hcDetailMapper.selectByExample(example4);
-        for(int i=0;i<details.size();i++){
+        for (int i = 0; i < details.size(); i++) {
             ProcessParametersLineSelectHcExample example9 = new ProcessParametersLineSelectHcExample();
             example9.createCriteria().andHcDetailCodeEqualTo(details.get(i).getCode());
             lineSelectHcMapper.deleteByExample(example9);
@@ -238,13 +238,13 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
         ProductionBatchRuleDetailExample detailExample = new ProductionBatchRuleDetailExample();
         detailExample.createCriteria().andCodeEqualTo(head.getProcessCode());
         List<ProductionBatchRuleDetail> batchRuleDetails = ruleDetailMapper.selectByExample(detailExample);
-        ans.setProcessName(batchRuleDetails.size()==0?null:batchRuleDetails.get(0).getRuleValue());
+        ans.setProcessName(batchRuleDetails.size() == 0 ? null : batchRuleDetails.get(0).getRuleValue());
 
         Ch ch = new Ch();
         ProcessParametersXdDetailExample example = new ProcessParametersXdDetailExample();
         example.createCriteria().andProcessCodeEqualTo(id);
         List<ProcessParametersXdDetail> xdDetails = xdDetailMapper.selectByExample(example);
-        ch.setDetail(xdDetails.size()==0?null:xdDetails.get(0));
+        ch.setDetail(xdDetails.size() == 0 ? null : xdDetails.get(0));
         ProcessParametersXdDevicesExample example1 = new ProcessParametersXdDevicesExample();
         example1.createCriteria().andProcessCodeEqualTo(id);
         ch.setDevices(xdDevicesMapper.selectByExample(example1));
@@ -257,7 +257,7 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
         gy.setDetails(hcDetailMapper.selectByExample(example2));
 
         List<ProAndLine> proAndLines = new ArrayList<>();
-        for(int i=0;i<gy.getDetails().size();i++){
+        for (int i = 0; i < gy.getDetails().size(); i++) {
             ProAndLine line = new ProAndLine();
             List<Integer> lines = new ArrayList<>();
             List<String> lineNames = new ArrayList<>();
@@ -266,12 +266,12 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
             example3.createCriteria().andCodeEqualTo(productClass);
             List<ProductionBatchRuleDetail> ruleDetails = ruleDetailMapper.selectByExample(example3);
             line.setProductClass(productClass);
-            line.setProductClassName(ruleDetails.size()==0?null:ruleDetails.get(0).getRuleValue());
+            line.setProductClassName(ruleDetails.size() == 0 ? null : ruleDetails.get(0).getRuleValue());
 
             ProcessParametersLineSelectHcExample example4 = new ProcessParametersLineSelectHcExample();
             example4.createCriteria().andHcDetailCodeEqualTo(gy.getDetails().get(i).getCode());
             List<ProcessParametersLineSelectHc> hcs = lineSelectHcMapper.selectByExample(example4);
-            for(int l=0;l<hcs.size();l++){
+            for (int l = 0; l < hcs.size(); l++) {
                 lines.add(hcs.get(l).getLineCode());
                 lineNames.add(productionLineMapper.selectByPrimaryKey(hcs.get(l).getLineCode()).getName());
             }
@@ -294,8 +294,8 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
         commentsExample.createCriteria().andProcessCodeEqualTo(id);
         List<ProcessParametersHcComments> comments = hcCommentsMapper.selectByExample(commentsExample);
 
-        gy.setMemo(comments.size()==0?null:comments.get(0).getParametersComment());
-        zjp.setMemo(comments.size()==0?null:comments.get(0).getIntermediateGoodsComment());
+        gy.setMemo(comments.size() == 0 ? null : comments.get(0).getParametersComment());
+        zjp.setMemo(comments.size() == 0 ? null : comments.get(0).getIntermediateGoodsComment());
         hc.setGy(gy);
         hc.setZjp(zjp);
         hc.setExceptionDisposes(exceptionDisposes);
@@ -305,7 +305,7 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
         ProcessParametersJqjhDetailExample example4 = new ProcessParametersJqjhDetailExample();
         example4.createCriteria().andProcessCodeEqualTo(id);
         List<ProcessParametersJqjhDetail> jqjhDetails = jqjhDetailMapper.selectByExample(example4);
-        zy.setDetail(jqjhDetails.size()==0?null:jqjhDetails.get(0));
+        zy.setDetail(jqjhDetails.size() == 0 ? null : jqjhDetails.get(0));
 
         ProcessParametersJqjhPrincipalComponentExample example5 = new ProcessParametersJqjhPrincipalComponentExample();
         example5.createCriteria().andProcessCodeEqualTo(id);
@@ -314,21 +314,21 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
 
         //制液的proAndLine
         ProAndLine line = new ProAndLine();
-        if(head.getProcessCode() == new Integer(48).shortValue()){
+        if (head.getProcessCode() == new Integer(48).shortValue()) {
             ProcessParametersJqjhDetail detail = zy.getDetail();
             ProductionBatchRuleDetailExample example6 = new ProductionBatchRuleDetailExample();
             example6.createCriteria().andCodeEqualTo(detail.getProductionCode());
             List<ProductionBatchRuleDetail> details = ruleDetailMapper.selectByExample(example6);
-            line.setProductClass(details.size()==0?null:details.get(0).getCode());
-            line.setProductClassName(details.size()==0?null:details.get(0).getRuleValue());
-        //陈化的proAndLine
-        }else if(head.getProcessCode() == new Integer(50).shortValue()){
+            line.setProductClass(details.size() == 0 ? null : details.get(0).getCode());
+            line.setProductClassName(details.size() == 0 ? null : details.get(0).getRuleValue());
+            //陈化的proAndLine
+        } else if (head.getProcessCode() == new Integer(50).shortValue()) {
             ProcessParametersXdDetail detail = ch.getDetail();
             ProductionBatchRuleDetailExample example6 = new ProductionBatchRuleDetailExample();
             example6.createCriteria().andCodeEqualTo(detail.getProductionCode());
             List<ProductionBatchRuleDetail> details = ruleDetailMapper.selectByExample(example6);
-            line.setProductClass(details.size()==0?null:details.get(0).getCode());
-            line.setProductClassName(details.size()==0?null:details.get(0).getRuleValue());
+            line.setProductClass(details.size() == 0 ? null : details.get(0).getCode());
+            line.setProductClassName(details.size() == 0 ? null : details.get(0).getRuleValue());
         }
 
         List<Integer> lines = new ArrayList<>();
@@ -336,7 +336,7 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
         ProcessParametersLineSelectExample example7 = new ProcessParametersLineSelectExample();
         example7.createCriteria().andProcessCodeEqualTo(id);
         List<ProcessParametersLineSelect> selects = lineSelectMapper.selectByExample(example7);
-        for(int i=0;i<selects.size();i++){
+        for (int i = 0; i < selects.size(); i++) {
             lines.add(selects.get(i).getLineCode());
             lineNames.add(productionLineMapper.selectByPrimaryKey(selects.get(i).getLineCode()).getName());
         }
@@ -344,7 +344,7 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
         line.setLines(lines);
         ans.setProAndLine(line);
 
-        if(head.getApprovalProcessCode() != null){
+        if (head.getApprovalProcessCode() != null) {
             DataTaskRecord dataTaskRecord = dataTaskRecordMapper.findByDataBatchNumberId(head.getApprovalProcessCode());
             CommonBatchNumber commonBatchNumber = commonBatchNumberMapper.byId(dataTaskRecord.getTaskBatchNumberId());
             ans.setAuditName(commonBatchNumber.getDescription());
@@ -352,7 +352,7 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
         return ans;
     }
 
-    public  Integer send2audit(ProcessParametersListHead head,Integer isUrgent,Integer auditId){
+    public Integer send2audit(ProcessParametersListHead head, Integer isUrgent, Integer auditId) {
         String batch = NumberGenerator.batchNumberGenerator(PROCESS_PARAMETER.typeCode());
         CommonBatchNumber commonBatchNumber =
                 CommonBatchFactory.initialize()
@@ -363,7 +363,7 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
                         .setDataType(PROCESS_PARAMETER.typeCode());
         commonBatchNumberMapper.insert(commonBatchNumber);
         //流程
-        dataTaskRecordService.send2audit(commonBatchNumber.getId(),auditId,isUrgent);
+        dataTaskRecordService.send2audit(commonBatchNumber.getId(), auditId, isUrgent);
         return commonBatchNumber.getId();
     }
 
@@ -371,14 +371,14 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
     public Page page(String condition, Integer status, Integer page, Integer size) {
         String sql = "select p.* from process_parameters_list_head as p,basic_info_dept as d,production_batch_rule_detail as b";
         sql += " where p.plant_code = d.code and p.process_code = b.code and p.status_flag = " + status;
-        sql += " and (d.name like '" + condition +"%' or b.rule_desc like '" + condition + "%')";
+        sql += " and (d.name like '" + condition + "%' or b.rule_desc like '" + condition + "%')";
         sql += " order by p.code desc";
-        sql += " limit " + (page-1)*size + "," + size;
+        sql += " limit " + (page - 1) * size + "," + size;
         List<ProcessParametersListHead> heads = headMapper.selectBycondition(sql);
-        sql = sql.replaceAll("p.\\*","count(p.code)");
+        sql = sql.replaceAll("p.\\*", "count(p.code)");
         Integer total = headMapper.countBycondition(sql);
         List<ProcessParamerPage> ans = new ArrayList<>();
-        for(int i=0;i<heads.size();i++){
+        for (int i = 0; i < heads.size(); i++) {
             ProcessParamerPage processParamerPage = new ProcessParamerPage();
             processParamerPage.setHead(heads.get(i));
             processParamerPage.setDeptName(deptManageService.getDeptById(heads.get(i).getPlantCode()).getName());
@@ -388,20 +388,20 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
             processParamerPage.setProcessName(ruleDetailMapper.selectByExample(example).get(0).getRuleValue());
             ans.add(processParamerPage);
         }
-        Page pageInfo = new Page(ans,1,size);
+        Page pageInfo = new Page(ans, 1, size);
         pageInfo.setPage(page);
         pageInfo.setTotal(total);
         return pageInfo;
     }
 
     @Override
-    public Page mixRecipe(String condition,Integer page,Integer size) {
-        return new Page(mixRecipeList(condition),page,size);
+    public Page mixRecipe(String condition, Integer page, Integer size) {
+        return new Page(mixRecipeList(condition), page, size);
     }
 
     @Override
-    public Page compoundRecipe(String condition,Integer page,Integer size) {
-        return new Page(compoundRecipeList(condition),page,size);
+    public Page compoundRecipe(String condition, Integer page, Integer size) {
+        return new Page(compoundRecipeList(condition), page, size);
     }
 
     @Override
@@ -409,14 +409,14 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
         ProcessParametersListHeadExample example = new ProcessParametersListHeadExample();
         example.createCriteria().andApprovalProcessCodeEqualTo(batchId);
         List<ProcessParametersListHead> heads = headMapper.selectByExample(example);
-        if(heads.size() == 0)
+        if (heads.size() == 0)
             return null;
         return detail(heads.get(0).getCode());
     }
 
     @Override
     public void deleteByIds(Long[] ids) {
-        for(Long id:ids)
+        for (Long id : ids)
             delete(id);
     }
 
@@ -434,14 +434,14 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
         List<ProcessParametersJqjhPrincipalComponent> components = jqjhPrincipalComponentMapper.selectByExample(example);
 
         List<Long> ids = new ArrayList<>();
-        for(int i=0;i<components.size();i++){
-            if(!ids.contains(components.get(i).getProcessCode())){
+        for (int i = 0; i < components.size(); i++) {
+            if (!ids.contains(components.get(i).getProcessCode())) {
                 ids.add(components.get(i).getProcessCode());
             }
         }
 
         List<RecipeGoodIn> ans = new ArrayList<>();
-        for(int i=0;i<ids.size();i++){
+        for (int i = 0; i < ids.size(); i++) {
             RecipeGoodIn recipeGoodIn = new RecipeGoodIn();
             recipeGoodIn.setHead(headMapper.selectByPrimaryKey(ids.get(i)));
             ProcessParametersJqjhDetailExample example1 = new ProcessParametersJqjhDetailExample();
@@ -456,7 +456,7 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
             String product = ruleDetailMapper.selectByExample(example2).get(0).getRuleValue();
             recipeGoodIn.setProduct(product);
 
-            if(product.contains(condition)) {
+            if (product.contains(condition)) {
                 ProcessParametersJqjhPrincipalComponentExample example3 = new ProcessParametersJqjhPrincipalComponentExample();
                 example3.createCriteria().andProcessCodeEqualTo(ids.get(i));
                 List<ProcessParametersJqjhPrincipalComponent> components1 = jqjhPrincipalComponentMapper.selectByExample(example3);
@@ -481,20 +481,20 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
         List<ProcessParametersListHead> heads = headMapper.selectByExample(headExample);
 
         List<ProcessParametersHcDetail> details = new ArrayList<>();
-        for(int i=0;i<heads.size();i++){
+        for (int i = 0; i < heads.size(); i++) {
             ProcessParametersHcDetailExample example = new ProcessParametersHcDetailExample();
             example.createCriteria().andProcessCodeEqualTo(heads.get(i).getCode());
             details.addAll(hcDetailMapper.selectByExample(example));
         }
 
         List<RecipeGoodIn> ans = new ArrayList<>();
-        for(int i=0;i<details.size();i++){
+        for (int i = 0; i < details.size(); i++) {
             RecipeGoodIn recipeGoodIn = new RecipeGoodIn();
             ProductionBatchRuleDetailExample example1 = new ProductionBatchRuleDetailExample();
             example1.createCriteria().andCodeEqualTo(details.get(0).getProductionCode());
             String product = ruleDetailMapper.selectByExample(example1).get(0).getRuleValue();
             recipeGoodIn.setProduct(product);
-            if(product.contains(condition)){
+            if (product.contains(condition)) {
                 recipeGoodIn.setHead(headMapper.selectByPrimaryKey(details.get(i).getProcessCode()));
                 recipeGoodIn.setProcessName("合成");
                 recipeGoodIn.setDeptName(deptManageService.getDeptById(recipeGoodIn.getHead().getPlantCode()).getName());
@@ -502,7 +502,40 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
                 ans.add(recipeGoodIn);
             }
         }
-        return  ans;
+        return ans;
+    }
+
+    @Override
+    public List getProcessParam() {
+        ProcessParametersListHeadExample headExample = new ProcessParametersListHeadExample();
+        headExample.createCriteria().andStatusFlagEqualTo(new Integer(5).byteValue()).andProcessNameEqualTo("合成");
+        List<ProcessParametersListHead> heads = headMapper.selectByExample(headExample);
+
+        List<ProcessParametersHcDetail> details = new ArrayList<>();
+        for (int i = 0; i < heads.size(); i++) {
+            ProcessParametersHcDetailExample example = new ProcessParametersHcDetailExample();
+            example.createCriteria().andProcessCodeEqualTo(heads.get(i).getCode());
+            details.addAll(hcDetailMapper.selectByExample(example));
+        }
+
+        List<RecipeGoodIn> ans = new ArrayList<>();
+        for (int i = 0; i < details.size(); i++) {
+            RecipeGoodIn recipeGoodIn = new RecipeGoodIn();
+            ProductionBatchRuleDetailExample example1 = new ProductionBatchRuleDetailExample();
+            example1.createCriteria().andCodeEqualTo(details.get(0).getProductionCode());
+            String product = ruleDetailMapper.selectByExample(example1).get(0).getRuleValue();
+            recipeGoodIn.setProduct(product);
+            recipeGoodIn.setHead(headMapper.selectByPrimaryKey(details.get(i).getProcessCode()));
+            recipeGoodIn.setProcessName("合成");
+            recipeGoodIn.setDeptName(deptManageService.getDeptById(recipeGoodIn.getHead().getPlantCode()).getName());
+            recipeGoodIn.setSolidContent(details.get(i).getSolidContainingContentStandard().floatValue());
+            recipeGoodIn.setNi(details.get(i).getNi());
+            recipeGoodIn.setCo(details.get(i).getCo());
+            recipeGoodIn.setMn(details.get(i).getMn());
+            recipeGoodIn.setParamId(details.get(i).getCode());
+            ans.add(recipeGoodIn);
+        }
+        return ans;
     }
 }
 
