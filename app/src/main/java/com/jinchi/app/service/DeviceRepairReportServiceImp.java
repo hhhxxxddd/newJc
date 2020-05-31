@@ -100,6 +100,11 @@ public class DeviceRepairReportServiceImp implements DeviceRepairReportService {
             data.setFaultComment(total.get(l).getFaultContent());
             data.setRepairStatus(total.get(l).getRepairStatus());
             //ata.setFixedassets(total.get(l).getFinishTime().toString());
+            //在已接单页面，将详情中的“保修人员、接单人员” 也要显示到列表页
+            if (repairPostDTO.getStatus() == 2) {
+                data.setReportPeople(authUserService.findById(total.get(l).getReportPeople()).getName());
+                data.setReceivePeople(authUserService.findById(total.get(l).getReceivePeople()).getName());
+            }
             ans.add(data);
         }
         dto.setApply(numApply);
