@@ -288,8 +288,8 @@ public class DeviceRepairServiceImp implements DeviceRepairService {
             temp.put("报修人",map.get("报修人"));
             temp.put("报修时间",map.get("报修时间"));
             temp.put("紧急程度",map.get("紧急程度"));
-            temp.put("故障原因",map.get("故障原因"));
             temp.put("故障描述",map.get("故障描述"));
+            temp.put("故障原因",map.get("故障原因"));
             temp.put("维修配件",map.get("维修配件"));
             temp.put("接单人",map.get("接单人"));
             temp.put("接单时间",map.get("接单时间"));
