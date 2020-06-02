@@ -6,7 +6,7 @@ primary:
       platform: mysql
       url: jdbc:mysql://125.94.71.249:3306/jc_integration_db?userUnicode=true&characterEncoding=UTF8&useSSL=false&useAffectedRows=true&useLegacyDatetimeCode=false&serverTimezone=CTT
       username: root
-      password: 123456
+      password: jinchi123456
       druid:
         test-on-borrow: true
         validationQuery: SELECT 1
@@ -30,7 +30,7 @@ secondary:
      platform: mysql
      url: jdbc:mysql://125.94.71.249:3306/jc_auth_db?userUnicode=true&characterEncoding=UTF8&useSSL=false&useAffectedRows=true&useLegacyDatetimeCode=false&serverTimezone=CTT
      username: root
-     password: 123456
+     password: jinchi123456
      druid:
        test-on-borrow: true
        validationQuery: SELECT 1
