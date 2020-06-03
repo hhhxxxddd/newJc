@@ -301,4 +301,8 @@
   <select id="selectByCondition" resultType="com.jinchi.common.domain.DeviceMaintenancePlansHead">
     ${sql}
   </select>
+
+    <select id="count" resultType="INTEGER">
+        ${sql}
+    </select>
 </mapper>

@@ -169,7 +169,29 @@ public class DeviceMaintenancePlanServiceImp implements DeviceMaintenancePlanSer
 
     @Override
     public Page getByPage(Integer deptId, Integer statusId, String condition, Integer page, Integer size) {
-        Page<DeviceMaintenancePlansHeadDTO> pageInfo  = new Page<>(getAllByCondition(deptId,statusId,condition),page,size);
+        List<DeviceMaintenancePlansHeadDTO> deviceMaintenancePlansHeadDTOS = new ArrayList<>();
+        String sql = "select * from device_maintenance_plans_head where (dept_code = " + deptId + ")";
+        if(statusId!=-1)
+            sql += " and (eff_flag = " + statusId + ")";
+        if(!condition.equals(""))
+            sql += " and (device_name like '" + condition + "%' or fixedassets_code like '" + condition + "%')";
+        sql += " limit " + (page-1)*size + "," + size;
+        List<DeviceMaintenancePlansHead> deviceMaintenancePlansHeads = deviceMaintenancePlansHeadMapper.selectByCondition(sql);
+        for(int i=0;i<deviceMaintenancePlansHeads.size();i++){
+            deviceMaintenancePlansHeadDTOS.add(new DeviceMaintenancePlansHeadDTO());
+            deviceMaintenancePlansHeadDTOS.get(i).setDeviceMaintenancePlansHead(deviceMaintenancePlansHeads.get(i));
+            DeviceMaintenanceRecordHeadExample example = new DeviceMaintenanceRecordHeadExample();
+            example.createCriteria().andPlanCodeEqualTo(deviceMaintenancePlansHeads.get(i).getCode());
+            deviceMaintenancePlansHeadDTOS.get(i).setDetailNum(deviceMaintenanceRecordHeadMapper.countByExample(example));
+            deviceMaintenancePlansHeadDTOS.get(i).setSetPeopleName(authUserService.findById(deviceMaintenancePlansHeads.get(i).getSetPeople()).getName());
+        }
+        String countSql = sql.replaceAll("select \\*","select count(*)");
+        int pos = countSql.indexOf("limit");
+        countSql = countSql.substring(0,pos);
+        Integer count = deviceMaintenancePlansHeadMapper.count(countSql);
+        Page<DeviceMaintenancePlansHeadDTO> pageInfo  = new Page<>(deviceMaintenancePlansHeadDTOS,1,size);
+        pageInfo.setPage(page);
+        pageInfo.setTotal(count);
         return pageInfo;
     }
 

@@ -84,4 +84,6 @@ public interface DeviceMaintenancePlansHeadMapper {
     int updateByExample(@Param("record") DeviceMaintenancePlansHead record, @Param("example") DeviceMaintenancePlansHeadExample example);
 
     List<DeviceMaintenancePlansHead> selectByCondition(@Param("sql") String sql);
+
+    Integer count(@Param("sql") String sql);
 }
