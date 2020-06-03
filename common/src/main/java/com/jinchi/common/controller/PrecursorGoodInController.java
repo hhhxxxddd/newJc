@@ -147,7 +147,7 @@ public class PrecursorGoodInController {
     }
 
 
-    @GetMapping(value = "getByLineByProcess")
+    @PostMapping(value = "getByLineByProcess")
     @ApiOperation(value = "根据产线，工序，工艺参数获取数据")
     public Result getByLineByProcess(@RequestParam Integer lineCode,
                                      @RequestParam Integer processCode,
