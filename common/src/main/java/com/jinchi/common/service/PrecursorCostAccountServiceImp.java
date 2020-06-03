@@ -155,7 +155,7 @@ public class PrecursorCostAccountServiceImp implements PrecursorCostAccountServi
                 GoodsInProcessStatisticHeadExample headExample = new GoodsInProcessStatisticHeadExample();
                 headExample.createCriteria().andPeriodCodeEqualTo(periodCode).andFlagEqualTo((byte) 1).andLineNameEqualTo(periodNum).andStartTimeGreaterThanOrEqualTo(firstDate);
                 List<GoodsInProcessStatisticHead> list = headMapper1.selectByExample(headExample);
-                if (list.size() > 0) {
+                if (list.size() >= 0) {
                     GoodsInProcessStatisticHead goodsHead = list1.get(0);
                     //生成成本核算统计头表
                     CostAccountingStatisticHead head = new CostAccountingStatisticHead();
@@ -170,7 +170,7 @@ public class PrecursorCostAccountServiceImp implements PrecursorCostAccountServi
                     //在制品本期统计编码
                     Long goodsStatCode = list1.get(0).getCode();
                     //在制品上期统计编码
-                    Long goodsLastStatCode = list.get(0).getCode();
+                    Long goodsLastStatCode = list.size() == 0 ? 0 : list.get(0).getCode();
                     //成品入库统计编码
                     Long productStatCode = list3.get(0).getCode();
 

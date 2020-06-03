@@ -30,7 +30,27 @@ public class RepairPageData {
 
     Integer repairStatus;
 
-    @JsonFormat(shape= JsonFormat.Shape.STRING)
+    String reportPeople;
+
+    String receivePeople;
+
+    public String getReportPeople() {
+        return reportPeople;
+    }
+
+    public void setReportPeople(String reportPeople) {
+        this.reportPeople = reportPeople;
+    }
+
+    public String getReceivePeople() {
+        return receivePeople;
+    }
+
+    public void setReceivePeople(String receivePeople) {
+        this.receivePeople = receivePeople;
+    }
+
+    @JsonFormat(shape = JsonFormat.Shape.STRING)
     public Integer getRepairStatus() {
         return repairStatus;
     }
