@@ -1564,17 +1564,8 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
     }
 
     @Override
-    public List getByLineByProcess(Integer lineCode, Integer processCode, Long paramId) {
+    public List getByLineByProcess(Integer lineCode, Integer processCode, Long paramId,List<BasicInfoPrecursorMaterialDetailsDTO> mats) {
         List<BasicInfoPrecursorMaterialDetailsDTO> ans = new ArrayList<>();
-
-        BasicInfoPrecursorMaterialDetailsExample example = new BasicInfoPrecursorMaterialDetailsExample();
-        example.createCriteria().andProcessCodeEqualTo(processCode);
-        List<BasicInfoPrecursorMaterialDetails> details = basicInfoPrecursorMaterialDetailsMapper.selectByExample(example);
-
-        for (int j = 0; j < details.size(); j++) {
-            BasicInfoPrecursorMaterialDetailsDTO detailsDTO = new BasicInfoPrecursorMaterialDetailsDTO(details.get(j));
-            ans.add(detailsDTO);
-        }
 
         ProcessParametersHcDetail detail = hcDetailMapper.selectByPrimaryKey(paramId);
 

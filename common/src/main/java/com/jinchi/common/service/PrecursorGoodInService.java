@@ -1,9 +1,7 @@
 package com.jinchi.common.service;
 
-import com.jinchi.common.dto.GoodInStatisticDetailDTO;
-import com.jinchi.common.dto.GoodInStatisticTotalDTO;
-import com.jinchi.common.dto.GoodInTableDTO;
-import com.jinchi.common.dto.Page;
+import com.jinchi.common.domain.BasicInfoPrecursorMaterialDetails;
+import com.jinchi.common.dto.*;
 
 import java.util.List;
 import java.util.Map;
@@ -44,5 +42,5 @@ public interface PrecursorGoodInService {
 
     Page defaultPage();
 
-    List getByLineByProcess(Integer lineCode,Integer processCode,Long paramId);
+    List getByLineByProcess(Integer lineCode, Integer processCode, Long paramId, List<BasicInfoPrecursorMaterialDetailsDTO> mats);
 }

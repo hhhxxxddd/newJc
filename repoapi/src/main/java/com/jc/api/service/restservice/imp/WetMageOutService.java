@@ -46,9 +46,9 @@ public class WetMageOutService implements IWetMageOutService {
     public Boolean sendAudit(List<AuditDTO> mats, Integer deptCode, Integer lineCode,
                              Integer outPoint, Integer outType, Integer isUrgent,
                              Integer auditId,Integer userId,String batch) {
-        if(!iCommonService.validateBatch(batch)){
+        /*if(!iCommonService.validateBatch(batch)){
             return false;
-        }
+        }*/
         String common = iCommonService.send2audit(userId,isUrgent,auditId,2);
         if(common == null)
             return false;
@@ -60,7 +60,7 @@ public class WetMageOutService implements IWetMageOutService {
                 .setStockOutRecordHeadCode(s[0])
                 .setDeptCode(deptCode)
                 .setSfLineCode(lineCode)
-                .setBatchCode(batch)//尚未做到逗号分隔
+                .setBatchCode(" no batch")//尚未做到逗号分隔
                 .setDeliveryTypeCode(outType)
                 .setDeliveryAddressCode(outPoint)
                 //.setMaterialTypeId(materialInfo.getMaterialTypeId())
