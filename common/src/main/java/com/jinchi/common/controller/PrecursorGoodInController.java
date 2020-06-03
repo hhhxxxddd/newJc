@@ -1,5 +1,7 @@
 package com.jinchi.common.controller;
 
+import com.jinchi.common.domain.BasicInfoPrecursorMaterialDetails;
+import com.jinchi.common.dto.BasicInfoPrecursorMaterialDetailsDTO;
 import com.jinchi.common.dto.GoodInTableDTO;
 import com.jinchi.common.dto.Result;
 import com.jinchi.common.service.PrecursorGoodInService;
@@ -9,6 +11,8 @@ import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/goodIn")
@@ -143,11 +147,12 @@ public class PrecursorGoodInController {
     }
 
 
-    @GetMapping(value = "getByLineByProcess")
+    @PostMapping(value = "getByLineByProcess")
     @ApiOperation(value = "根据产线，工序，工艺参数获取数据")
     public Result getByLineByProcess(@RequestParam Integer lineCode,
                                      @RequestParam Integer processCode,
-                                     @RequestParam Long paramId){
-        return ResultUtil.success(goodInService.getByLineByProcess(lineCode,processCode,paramId));
+                                     @RequestParam Long paramId,
+                                     @RequestBody List<BasicInfoPrecursorMaterialDetailsDTO> mats){
+        return ResultUtil.success(goodInService.getByLineByProcess(lineCode,processCode,paramId,mats));
     }
 }

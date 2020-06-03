@@ -32,7 +32,7 @@ public interface TraceabilityBeforeDisassemblyMapper {
      * @mbggenerated
      */
     @Delete({
-        "delete from traceabilitybeforedisassembly",
+        "delete from traceability_before_disassembly",
         "where id = #{id,jdbcType=BIGINT}"
     })
     int deleteByPrimaryKey(Long id);
@@ -44,7 +44,7 @@ public interface TraceabilityBeforeDisassemblyMapper {
      * @mbggenerated
      */
     @Insert({
-        "insert into traceabilitybeforedisassembly (BatteryPackTraceCode, ModuleTraceCode, ",
+        "insert into traceability_before_disassembly (BatteryPackTraceCode, ModuleTraceCode, ",
         "SingleTraceCode)",
         "values (#{batterypacktracecode,jdbcType=VARCHAR}, #{moduletracecode,jdbcType=VARCHAR}, ",
         "#{singletracecode,jdbcType=VARCHAR})"
@@ -77,7 +77,7 @@ public interface TraceabilityBeforeDisassemblyMapper {
     @Select({
         "select",
         "id, BatteryPackTraceCode, ModuleTraceCode, SingleTraceCode",
-        "from traceabilitybeforedisassembly",
+        "from traceability_before_disassembly",
         "where id = #{id,jdbcType=BIGINT}"
     })
     @ResultMap("BaseResultMap")
@@ -114,7 +114,7 @@ public interface TraceabilityBeforeDisassemblyMapper {
      * @mbggenerated
      */
     @Update({
-        "update traceabilitybeforedisassembly",
+        "update traceability_before_disassembly",
         "set BatteryPackTraceCode = #{batterypacktracecode,jdbcType=VARCHAR},",
           "ModuleTraceCode = #{moduletracecode,jdbcType=VARCHAR},",
           "SingleTraceCode = #{singletracecode,jdbcType=VARCHAR}",
