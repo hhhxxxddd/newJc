@@ -15,5 +15,5 @@ import com.jc.api.entity.SwmsStockInOutReports;
  */
 public interface ISwmsStockInOutReportsService extends IService<SwmsStockInOutReports> {
 
-    IPage<SwmsStockInOutReports> selectByPage(Page page, Integer typeId, Integer subTypeId, String batch);
+    IPage<SwmsStockInOutReports> selectByPage(Page page, Integer typeId, Integer subTypeId, Integer materialCode, Integer supplierCode, String batch);
 }
