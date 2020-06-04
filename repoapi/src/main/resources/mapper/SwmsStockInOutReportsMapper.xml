@@ -21,7 +21,12 @@
             <if test="subTypeId != null">
                 and a.material_sub_type_id = #{subTypeId}
             </if>
-
+            <if test="materialCode != null">
+                and a.material_name_code = #{materialCode}
+            </if>
+            <if test="supplierCode != null">
+                and a.material_supplier_code = #{supplierCode}
+            </if>
             <if test="batch != null and batch != ''">
                 and a.material_batch like #{batch}"%"
             </if>

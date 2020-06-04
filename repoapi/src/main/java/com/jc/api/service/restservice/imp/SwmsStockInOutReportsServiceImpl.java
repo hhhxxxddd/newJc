@@ -24,7 +24,7 @@ public class SwmsStockInOutReportsServiceImpl extends ServiceImpl<SwmsStockInOut
     SwmsStockInOutReportsMapper inOutReportsMapper;
 
     @Override
-    public IPage<SwmsStockInOutReports> selectByPage(Page page, Integer typeId, Integer subTypeId, String batch) {
-        return inOutReportsMapper.selectPageVo(page, typeId, subTypeId, batch);
+    public IPage<SwmsStockInOutReports> selectByPage(Page page, Integer typeId, Integer subTypeId, Integer materialCode, Integer supplierCode, String batch) {
+        return inOutReportsMapper.selectPageVo(page, typeId, subTypeId, materialCode, supplierCode, batch);
     }
 }

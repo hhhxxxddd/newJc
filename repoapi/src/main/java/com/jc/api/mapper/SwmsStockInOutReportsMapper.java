@@ -23,5 +23,7 @@ public interface SwmsStockInOutReportsMapper extends BaseMapper<SwmsStockInOutRe
     IPage<SwmsStockInOutReports> selectPageVo(Page page,
                                               @Param(value = "typeId") Integer typeId,
                                               @Param(value = "subTypeId") Integer subTypeId,
+                                              @Param(value = "materialCode") Integer materialCode,
+                                              @Param(value = "supplierCode") Integer supplierCode,
                                               @Param(value = "batch") String batch);
 }

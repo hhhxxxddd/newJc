@@ -32,7 +32,7 @@ public interface ProcessTraceabilityMapper {
      * @mbggenerated
      */
     @Delete({
-        "delete from processtraceability",
+        "delete from process_traceability",
         "where id = #{id,jdbcType=BIGINT}"
     })
     int deleteByPrimaryKey(Long id);
@@ -44,7 +44,7 @@ public interface ProcessTraceabilityMapper {
      * @mbggenerated
      */
     @Insert({
-        "insert into processtraceability (SingleTraceCode, Quality, ",
+        "insert into process_traceability (SingleTraceCode, Quality, ",
         "PositiveAndNegativePowderBatchNumber, ",
         "SolutionBatchNumber)",
         "values (#{singletracecode,jdbcType=VARCHAR}, #{quality,jdbcType=VARCHAR}, ",
@@ -79,7 +79,7 @@ public interface ProcessTraceabilityMapper {
     @Select({
         "select",
         "id, SingleTraceCode, Quality, PositiveAndNegativePowderBatchNumber, SolutionBatchNumber",
-        "from processtraceability",
+        "from process_traceability",
         "where id = #{id,jdbcType=BIGINT}"
     })
     @ResultMap("BaseResultMap")
@@ -116,7 +116,7 @@ public interface ProcessTraceabilityMapper {
      * @mbggenerated
      */
     @Update({
-        "update processtraceability",
+        "update process_traceability",
         "set SingleTraceCode = #{singletracecode,jdbcType=VARCHAR},",
           "Quality = #{quality,jdbcType=VARCHAR},",
           "PositiveAndNegativePowderBatchNumber = #{positiveandnegativepowderbatchnumber,jdbcType=VARCHAR},",

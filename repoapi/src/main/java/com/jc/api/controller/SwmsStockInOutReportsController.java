@@ -32,8 +32,10 @@ public class SwmsStockInOutReportsController {
     @PostMapping(value = "/pages")
     public Result queryPagesIn(@RequestBody Page page, @RequestParam(required = false) Integer typeId,
                                @RequestParam(required = false) Integer subTypeId,
+                               @RequestParam(required = false) Integer materialCode,
+                               @RequestParam(required = false) Integer supplierCode,
                                @RequestParam(required = false) String batch) {
-        return Result.success(inOutReportsService.selectByPage(page, typeId, subTypeId, batch));
+        return Result.success(inOutReportsService.selectByPage(page, typeId, subTypeId, materialCode, supplierCode, batch));
     }
 }
 
