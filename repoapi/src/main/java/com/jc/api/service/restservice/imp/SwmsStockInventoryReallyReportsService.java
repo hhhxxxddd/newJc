@@ -67,9 +67,9 @@ public class SwmsStockInventoryReallyReportsService implements ISwmsStockInvento
     }
 
     @Override
-    public List<SwmsStockInLedgers> getByBatch(String materialBatch) {
+    public List<SwmsStockInLedgers> getByBatch(Integer materialCode) {
         QueryWrapper<SwmsStockInLedgers> byBatch = new QueryWrapper<>();
-        byBatch.eq("material_batch", materialBatch).ne("material_status", 2);
+        byBatch.eq("material_name_code", materialCode).ne("material_status", 2);
         return swmsStockInLedgersMapper.selectList(byBatch);
     }
 }
