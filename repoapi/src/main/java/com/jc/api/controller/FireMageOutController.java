@@ -34,8 +34,11 @@ public class FireMageOutController {
     @PostMapping(value = "/queryDown")
     @ApiOperation(value= "查询下方的表格")
     @ApiResponses(@ApiResponse(code = 200, message = "处理成功", response = Result.class))
-    public Result queryDown(@RequestParam Integer matId,@RequestParam(required = false,defaultValue = "") Integer suppierCode){
-        return Result.success(service.getDataByMatid(matId,suppierCode));
+    public Result queryDown(@RequestParam Integer matId,
+                            @RequestParam(required = false,defaultValue = "") Integer supplierCode
+            ,@RequestParam(required = false,defaultValue = "") Integer type
+            ,@RequestParam(required = false,defaultValue = "") Integer subType){
+        return Result.success(service.getDataByMatid(type,subType,matId,supplierCode));
     }
 
     @PostMapping(value = "page")
