@@ -42,8 +42,8 @@ public class SwmsStockInventoryReallyReportsController {
     @ApiOperation(value = "详情", notes = "详情")
     @ApiResponses(@ApiResponse(code = 200, message = "处理成功", response = Result.class))
     @PostMapping(value = "/details")
-    public Result getDetails(@RequestParam String materialBatch) {
-        return Result.success(reallyReportsService.getByBatch(materialBatch));
+    public Result getDetails(@RequestParam Integer materialCode) {
+        return Result.success(reallyReportsService.getByBatch(materialCode));
     }
 }
 

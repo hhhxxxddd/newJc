@@ -25,5 +25,5 @@ public interface ISwmsStockInventoryReallyReportsService {
 
     IPage<SwmsStockInventoryReallyReports> selectByPage(Page page, Integer typeId, Integer subTypeId, Integer materialNameCode, Integer supplierId);
 
-    List<SwmsStockInLedgers> getByBatch(String materialBatch);
+    List<SwmsStockInLedgers> getByBatch(Integer materialCode);
 }
