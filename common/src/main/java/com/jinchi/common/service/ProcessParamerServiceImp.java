@@ -71,7 +71,8 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
 
     private void save(ProcessParamerMainDTO processParamerMainDTO) {
         ProcessParametersListHead head = processParamerMainDTO.getHead();
-        if (head.getCode() != null) {
+        ProcessParametersListHead cal = headMapper.selectByPrimaryKey(head.getCode());
+        if (head.getCode() != null || cal == null) {
             delete(head.getCode());
             head.setCode(null);
         }
