@@ -98,10 +98,12 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
 
             //工艺参数的产线的绑定
             for (int l = 0; l < lines.size(); l++) {
-                ProcessParametersLineSelectHc selectHc = new ProcessParametersLineSelectHc();
-                selectHc.setHcDetailCode(detailIds.get(l));
-                selectHc.setLineCode(lines.get(l).getLines().get(l));
-                lineSelectHcMapper.insertSelective(selectHc);
+                for(int k = 0;k < lines.get(l).getLines().size();k++) {
+                    ProcessParametersLineSelectHc selectHc = new ProcessParametersLineSelectHc();
+                    selectHc.setHcDetailCode(detailIds.get(l));
+                    selectHc.setLineCode(lines.get(l).getLines().get(k));
+                    lineSelectHcMapper.insertSelective(selectHc);
+                }
             }
 
             //异常处理

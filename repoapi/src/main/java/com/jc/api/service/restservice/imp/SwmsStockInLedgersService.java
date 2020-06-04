@@ -179,7 +179,7 @@ public class SwmsStockInLedgersService implements ISwmsStockInLedgersService {
                 .setWeight(stockInLedgers.getWeight())
                 .setOutCounts(0) //问题
                 .setOutDay(new Date()) //问题
-                .setOutWeight(0f); //问题 2020.3.38 入库为什么也要加出库的信息。
+                .setOutWeight(0f); //问题 2020.3.28 入库为什么也要加出库的信息。
         Boolean dayInsert = inLedgersDayReportsMapper.insert(inLedgersDayReports) > 0;
         //每天由新松接口写入入库、出库流水后，进行解析时，修改本表数据；
         //物料按供应商统计计算。

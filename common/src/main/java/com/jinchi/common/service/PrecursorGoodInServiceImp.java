@@ -1578,7 +1578,7 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
                 temp.setNiPotency(detail.getNi());
                 temp.setCoPotency(detail.getCo());
                 temp.setMnPotency(detail.getMn());
-                //temp.setSolidContent(detail.getSolidContainingContentStandard().floatValue());
+                temp.setSolidContent(detail.getSolidContainingContentStandard().floatValue());
             }
         }
         return ans;
