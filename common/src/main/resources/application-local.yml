@@ -75,7 +75,7 @@ spring:
     #        max-idle: 8
     timeout: 1200
     pool:
-      max-active: 8
+      max-active: 8pa
       max-idle: 8
       max-wait: -1
 enable:
