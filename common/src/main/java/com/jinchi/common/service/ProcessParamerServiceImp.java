@@ -87,19 +87,21 @@ public class ProcessParamerServiceImp implements ProcessParamerService {
             Gy gy = hc.getGy();
             List<ProAndLine> lines = gy.getProAndLines();
             List<ProcessParametersHcDetail> details = gy.getDetails();
-            for (int i = 0; i < lines.size(); i++) {
+            List<Long> detailIds = new ArrayList<>();
+            for (int i = 0; i < details.size(); i++) {
                 ProcessParametersHcDetail detail = details.get(i);
                 detail.setProcessCode(id);
                 detail.setProductionCode(lines.get(i).getProductClass());
                 hcDetailMapper.insertSelective(detail);
-                Long detailId = detail.getCode();
-                //工艺参数的产线的绑定
-                for (int l = 0; l < lines.get(i).getLines().size(); l++) {
-                    ProcessParametersLineSelectHc selectHc = new ProcessParametersLineSelectHc();
-                    selectHc.setHcDetailCode(detailId);
-                    selectHc.setLineCode(lines.get(i).getLines().get(l));
-                    lineSelectHcMapper.insertSelective(selectHc);
-                }
+                detailIds.add(detail.getCode());
+            }
+
+            //工艺参数的产线的绑定
+            for (int l = 0; l < lines.size(); l++) {
+                ProcessParametersLineSelectHc selectHc = new ProcessParametersLineSelectHc();
+                selectHc.setHcDetailCode(detailIds.get(l));
+                selectHc.setLineCode(lines.get(l).getLines().get(l));
+                lineSelectHcMapper.insertSelective(selectHc);
             }
 
             //异常处理
