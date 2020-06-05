@@ -393,12 +393,14 @@ public class SampleDeliveringRecordServiceImp implements SampleDeliveringRecordS
         Assert.isTrue(sampleDeliveringRecord.getType().equals(repoBaseSerialNumber.getMaterialClass()), "物料类型不是所选的原料类型");
         */
 
-        Assert.notNull(serialNumberId, "请选择物料");
+        if(sampleDeliveringRecord.getType() != 3) {
+            Assert.notNull(serialNumberId, "请选择物料");
 
-        QualityBaseDetectItem detectItem = detectItemMapper.selectByPrimaryKey(serialNumberId.longValue());
+            QualityBaseDetectItem detectItem = detectItemMapper.selectByPrimaryKey(serialNumberId.longValue());
 
-        Assert.notNull(detectItem, "不存在此基础编号信息id:" + serialNumberId);
-        //朱工
+            Assert.notNull(detectItem, "不存在此基础编号信息id:" + serialNumberId);
+            //朱工
+        }
 
         /**
          * 设置环节
