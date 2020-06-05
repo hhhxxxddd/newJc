@@ -1517,7 +1517,7 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
             example1.createCriteria().andMaterialCodeEqualTo(details.get(i).getCode());
             List<BasicInfoPrecursorMaterialPlcMap> plcMaps = plcMapMapper.selectByExample(example1);
             if (plcMaps.size() == 0) {
-                map.put("value", -2);//没有这个地址
+                map.put("value", -2);//没有这个地址erial
                 map.put("address", "No address");
             } else {
                 Integer plcId = plcMaps.get(0).getPlcCode();
@@ -1578,7 +1578,7 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
                 temp.setNiPotency(detail.getNi());
                 temp.setCoPotency(detail.getCo());
                 temp.setMnPotency(detail.getMn());
-                //temp.setSolidContent(detail.getSolidContainingContentStandard().floatValue());
+                temp.setSolidContent(detail.getSolidContainingContentStandard().floatValue());
             }
         }
         return ans;

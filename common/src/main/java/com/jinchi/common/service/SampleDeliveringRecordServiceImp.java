@@ -62,6 +62,8 @@ public class SampleDeliveringRecordServiceImp implements SampleDeliveringRecordS
     RedisTemplate redisTemplate;
     @Autowired
     QualityBaseDetectItemMapper detectItemMapper;
+    @Autowired
+    TechniqueProductNewStandardRecordMapper newStandardRecordMapper;
 
     /**
      * 新增样品送检
@@ -342,6 +344,8 @@ public class SampleDeliveringRecordServiceImp implements SampleDeliveringRecordS
 
         sampleDeliveringRecordMapper.update(sampleDeliveringRecord);
 
+        redisTemplate.delete("sample_de_re_"+sampleDeliveringRecord.getId());
+
         returnMessage = String.format("已生成批号为%s的%s数据",commonBatchNumber.getBatchNumber(),description);
         return returnMessage;
 
@@ -393,12 +397,22 @@ public class SampleDeliveringRecordServiceImp implements SampleDeliveringRecordS
         Assert.isTrue(sampleDeliveringRecord.getType().equals(repoBaseSerialNumber.getMaterialClass()), "物料类型不是所选的原料类型");
         */
 
-        Assert.notNull(serialNumberId, "请选择物料");
+        if(sampleDeliveringRecord.getType() != QualitySampleTypeEnum.SAMPLE_ENDPRODUCT.get()) {
+            Assert.notNull(serialNumberId, "请选择物料");
 
-        QualityBaseDetectItem detectItem = detectItemMapper.selectByPrimaryKey(serialNumberId.longValue());
+            QualityBaseDetectItem detectItem = detectItemMapper.selectByPrimaryKey(serialNumberId.longValue());
 
-        Assert.notNull(detectItem, "不存在此基础编号信息id:" + serialNumberId);
-        //朱工
+            Assert.notNull(detectItem, "不存在此基础编号信息id:" + serialNumberId);
+            //朱工
+        }else{
+            Assert.notNull(serialNumberId, "请选择标准");
+
+            TechniqueProductNewStandardRecordExample example = new TechniqueProductNewStandardRecordExample();
+            example.createCriteria().andIdEqualTo(serialNumberId);
+            List newStandardRecords = newStandardRecordMapper.selectByExample(example);
+
+            Assert.notEmpty(newStandardRecords, "不存在此基信息i标准:" + serialNumberId);
+        }
 
         /**
          * 设置环节
