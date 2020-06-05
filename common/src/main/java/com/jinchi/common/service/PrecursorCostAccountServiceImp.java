@@ -323,13 +323,13 @@ public class PrecursorCostAccountServiceImp implements PrecursorCostAccountServi
                         totals.setIntermediateProductsVariation((float) 0);
                         totalsMapper.insertSelective(totals);
                     }
+//
+//                    CostAccountingStatisticHeadExample example0 = new CostAccountingStatisticHeadExample();
+//                    example0.createCriteria().andPeriodCodeEqualTo(periodCode).andStartTimeBetween(startDate, endDate);
+//                    List<CostAccountingStatisticHead> statisticHeads = costHeadMapper.selectByExample(example);
 
-                    CostAccountingStatisticHeadExample example0 = new CostAccountingStatisticHeadExample();
-                    example0.createCriteria().andPeriodCodeEqualTo(periodCode).andStartTimeBetween(startDate, endDate);
-                    List<CostAccountingStatisticHead> statisticHeads = costHeadMapper.selectByExample(example);
-
-                    Long statHeadCode = statisticHeads.get(0).getCode();
-                    CostAccountingStatisticHead costAccountingStatisticHead = heads.get(0);
+                    Long statHeadCode = head.getCode();
+                    CostAccountingStatisticHead costAccountingStatisticHead = head;
 
                     if (lineCode == 0) {
                         CostAccountingStatisticTotalsExample totalsExample = new CostAccountingStatisticTotalsExample();
