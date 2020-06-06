@@ -397,7 +397,7 @@ public class SampleDeliveringRecordServiceImp implements SampleDeliveringRecordS
         Assert.isTrue(sampleDeliveringRecord.getType().equals(repoBaseSerialNumber.getMaterialClass()), "物料类型不是所选的原料类型");
         */
 
-        if(sampleDeliveringRecord.getType() != QualitySampleTypeEnum.SAMPLE_ENDPRODUCT.get()) {
+        if(sampleDeliveringRecord.getType() != QualitySampleTypeEnum.SAMPLE_ENDPRODUCT.get() || sampleDeliveringRecord.getType() != QualitySampleTypeEnum.SAMPLE_RAWMATERIAL.get() ) {
             Assert.notNull(serialNumberId, "请选择物料");
 
             QualityBaseDetectItem detectItem = detectItemMapper.selectByPrimaryKey(serialNumberId.longValue());
