@@ -43,4 +43,7 @@ public interface PrecursorGoodInService {
     Page defaultPage();
 
     List getByLineByProcess(Integer lineCode, Integer processCode, Long paramId, List<BasicInfoPrecursorMaterialDetailsDTO> mats);
+
+    List MixGetByLineByProcess(Integer lineCode, Integer processCode, Float ni,Float co,Float mn, List<BasicInfoPrecursorMaterialDetailsDTO> mats);
+
 }

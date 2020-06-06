@@ -23,13 +23,13 @@ public class PrecursorGoodInController {
     PrecursorGoodInService goodInService;
 
     @GetMapping(value = "page")
-    @ApiOperation(value= "分页查询")
-    public Result page(@RequestParam(required = false,defaultValue = "") String startTime,
-                       @RequestParam(required = false,defaultValue = "") String endTime,
+    @ApiOperation(value = "分页查询")
+    public Result page(@RequestParam(required = false, defaultValue = "") String startTime,
+                       @RequestParam(required = false, defaultValue = "") String endTime,
                        @RequestParam(required = false) Integer periodId,
-                       @RequestParam(required = false,defaultValue = "1") Integer page,
-                       @RequestParam(required = false,defaultValue = "10") Integer size){
-        return ResultUtil.success(goodInService.page(startTime,endTime,periodId,page,size));
+                       @RequestParam(required = false, defaultValue = "1") Integer page,
+                       @RequestParam(required = false, defaultValue = "10") Integer size) {
+        return ResultUtil.success(goodInService.page(startTime, endTime, periodId, page, size));
     }
 
     @GetMapping(value = "addComfirm")
@@ -37,25 +37,25 @@ public class PrecursorGoodInController {
     public Result addComfirm(@RequestParam Integer periodId,
                              @RequestParam Integer lineName,
                              @RequestParam String startTime,
-                             @RequestParam String endTime){
-        return ResultUtil.success(goodInService.addComfirm(periodId,lineName,startTime,endTime));
+                             @RequestParam String endTime) {
+        return ResultUtil.success(goodInService.addComfirm(periodId, lineName, startTime, endTime));
     }
 
     @PostMapping(value = "/afterComfirm")
     @ApiOperation(value = "新增确认后")
-    public Result afterComfirm(){
+    public Result afterComfirm() {
         return ResultUtil.success(goodInService.getTables(null));
     }
 
     @GetMapping(value = "commitDetail")
     @ApiOperation(value = "待提交详情")
-    public Result commitDetail(@RequestParam(required = false)Long stasticId){
+    public Result commitDetail(@RequestParam(required = false) Long stasticId) {
         return ResultUtil.success(goodInService.getTables(stasticId));
     }
 
     @GetMapping(value = "/getLastPotencyByProcessId")
     @ApiOperation(value = "根据工序id获取上期浓度")
-    public Result getLastMonPotency(@RequestParam Integer processId){
+    public Result getLastMonPotency(@RequestParam Integer processId) {
         return ResultUtil.success(goodInService.getLastPotency(processId));
     }
 
@@ -63,38 +63,38 @@ public class PrecursorGoodInController {
     @ApiOperation(value = "保存/提交")
     public Result saveOrCommit(@RequestParam Long statisticId,
                                @ApiParam(value = "保存：0，提交：1") @RequestParam Integer flag,
-                               @RequestBody GoodInTableDTO goodInTableDTO){
-        return ResultUtil.success(goodInService.saveOrCommit(statisticId,flag,goodInTableDTO));
+                               @RequestBody GoodInTableDTO goodInTableDTO) {
+        return ResultUtil.success(goodInService.saveOrCommit(statisticId, flag, goodInTableDTO));
     }
 
     @GetMapping(value = "statisticPage")
     @ApiOperation(value = "已统计分页查询")
-    public Result statisticPage(@RequestParam(required = false,defaultValue = "") String startTime,
-                                @RequestParam(required = false,defaultValue = "") String endTime,
+    public Result statisticPage(@RequestParam(required = false, defaultValue = "") String startTime,
+                                @RequestParam(required = false, defaultValue = "") String endTime,
                                 @RequestParam Integer periodId,
-                                @RequestParam(required = false,defaultValue = "1") Integer page,
-                                @RequestParam(required = false,defaultValue = "10") Integer size){
-        return ResultUtil.success(goodInService.statisticPage(startTime,endTime,periodId,page,size));
+                                @RequestParam(required = false, defaultValue = "1") Integer page,
+                                @RequestParam(required = false, defaultValue = "10") Integer size) {
+        return ResultUtil.success(goodInService.statisticPage(startTime, endTime, periodId, page, size));
     }
 
     @GetMapping(value = "statisticDetail")
     @ApiOperation(value = "已统计详情")
-    public Result statisticdeDetail(@RequestParam Long processDetailId){
+    public Result statisticdeDetail(@RequestParam Long processDetailId) {
         return ResultUtil.success(goodInService.statisticDetail(processDetailId));
     }
 
     @GetMapping(value = "analysisProcess")
     @ApiOperation(value = "统计分析-按工序统计")
     public Result analysisProcess(@RequestParam Integer periodId,
-                                  @RequestParam String startTime){
-        return ResultUtil.success(goodInService.analysisProcess(periodId,startTime));
+                                  @RequestParam String startTime) {
+        return ResultUtil.success(goodInService.analysisProcess(periodId, startTime));
     }
 
     @GetMapping(value = "analysisLine")
     @ApiOperation(value = "统计分析-按产线统计")
     public Result analysisLine(@RequestParam Integer periodId,
-                                  @RequestParam String startTime){
-        return ResultUtil.success(goodInService.analysisLine(periodId,startTime));
+                               @RequestParam String startTime) {
+        return ResultUtil.success(goodInService.analysisLine(periodId, startTime));
     }
 
     @GetMapping(value = "processCompare")
@@ -102,22 +102,22 @@ public class PrecursorGoodInController {
     public Result processCompare(@RequestParam Integer periodId,
                                  @RequestParam Integer processId,
                                  @RequestParam String startTime,
-                                 @RequestParam String endTime){
-        return ResultUtil.success(goodInService.processCompare(periodId,processId,startTime,endTime));
+                                 @RequestParam String endTime) {
+        return ResultUtil.success(goodInService.processCompare(periodId, processId, startTime, endTime));
     }
 
     @GetMapping(value = "lineCompare")
     @ApiOperation(value = "统计分析-产线对比")
     public Result lineCompare(@RequestParam Integer periodId,
-                                 @RequestParam Integer lineId,
-                                 @RequestParam String startTime,
-                                 @RequestParam String endTime){
-        return ResultUtil.success(goodInService.lineCompare(periodId,lineId,startTime,endTime));
+                              @RequestParam Integer lineId,
+                              @RequestParam String startTime,
+                              @RequestParam String endTime) {
+        return ResultUtil.success(goodInService.lineCompare(periodId, lineId, startTime, endTime));
     }
 
     @GetMapping(value = "getLineNameByPeriod")
     @ApiOperation(value = "根据周期类型id获取期数")
-    public Result getLineNameByPeriod(@RequestParam Integer periodId){
+    public Result getLineNameByPeriod(@RequestParam Integer periodId) {
         return ResultUtil.success(goodInService.getLineNameByPeriod(periodId));
     }
 
@@ -129,20 +129,20 @@ public class PrecursorGoodInController {
 
     @DeleteMapping
     @ApiOperation(value = "删除")
-    public Result delete(@RequestParam Long stasticId){
+    public Result delete(@RequestParam Long stasticId) {
         goodInService.delete(stasticId);
         return ResultUtil.success();
     }
 
     @GetMapping(value = "getVolumeWeight")
     @ApiOperation(value = "获取体积/重量值")
-    public Result getVolumeWeight(@RequestParam Integer processId){
+    public Result getVolumeWeight(@RequestParam Integer processId) {
         return ResultUtil.success(goodInService.getVolumeWeight(processId));
     }
 
-    @GetMapping(value  = "defaultPage")
+    @GetMapping(value = "defaultPage")
     @ApiOperation(value = "已统计默认")
-    public Result defaultPage(){
+    public Result defaultPage() {
         return ResultUtil.success(goodInService.defaultPage());
     }
 
@@ -152,7 +152,18 @@ public class PrecursorGoodInController {
     public Result getByLineByProcess(@RequestParam Integer lineCode,
                                      @RequestParam Integer processCode,
                                      @RequestParam Long paramId,
-                                     @RequestBody List<BasicInfoPrecursorMaterialDetailsDTO> mats){
-        return ResultUtil.success(goodInService.getByLineByProcess(lineCode,processCode,paramId,mats));
+                                     @RequestBody List<BasicInfoPrecursorMaterialDetailsDTO> mats) {
+        return ResultUtil.success(goodInService.getByLineByProcess(lineCode, processCode, paramId, mats));
+    }
+
+    @PostMapping(value = "mixGetByLineByProcess")
+    @ApiOperation(value = "混合盐-根据产线，工序，工艺参数获取数据")
+    public Result mixGetByLineByProcess(@RequestParam Integer lineCode,
+                                        @RequestParam Integer processCode,
+                                        @RequestParam Float ni,
+                                        @RequestParam Float co,
+                                        @RequestParam Float mn,
+                                        @RequestBody List<BasicInfoPrecursorMaterialDetailsDTO> mats) {
+        return ResultUtil.success(goodInService.MixGetByLineByProcess(lineCode, processCode, ni,co,mn,mats));
     }
 }

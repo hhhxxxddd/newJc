@@ -1583,5 +1583,25 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
         }
         return ans;
     }
+
+    @Override
+    public List MixGetByLineByProcess(Integer lineCode, Integer processCode, Float ni,Float co,Float mn, List<BasicInfoPrecursorMaterialDetailsDTO> mats) {
+        List<BasicInfoPrecursorMaterialDetailsDTO> ans = mats;
+
+
+        for(int i=0;i<ans.size();i++){
+            BasicInfoPrecursorMaterialDetailsDTO temp = ans.get(i);
+            BasicInfoPrecursorMaterialLineWeightExample example1 = new BasicInfoPrecursorMaterialLineWeightExample();
+            example1.createCriteria().andMaterialCodeEqualTo(temp.getCode()).andLineCodeEqualTo(lineCode);
+
+            if(lineWeightMapper.countByExample(example1) == 1){
+                temp.setNiPotency(ni);
+                temp.setCoPotency(co);
+                temp.setMnPotency(mn);
+                //temp.setSolidContent(detail.getSolidContainingContentStandard().floatValue());
+            }
+        }
+        return ans;
+    }
 }
 
