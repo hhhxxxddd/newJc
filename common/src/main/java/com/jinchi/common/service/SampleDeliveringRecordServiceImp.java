@@ -14,6 +14,7 @@ import com.jinchi.common.mapper.*;
 import com.jinchi.common.model.factorypattern.CommonBatchFactory;
 import com.jinchi.common.utils.NumberGenerator;
 import com.jinchi.common.utils.TestItemUtil;
+import com.sun.org.apache.bcel.internal.generic.NEW;
 import io.jsonwebtoken.lang.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -163,6 +164,7 @@ public class SampleDeliveringRecordServiceImp implements SampleDeliveringRecordS
         SampleDeliveringRecord newValue = this.convert2Data(sampleDeliveringRecordDTO);
 
         sampleDeliveringRecordMapper.update(newValue);
+        redisTemplate.delete("sample_de_re_"+newValue.getId());
 
         return sampleDeliveringRecordDTO;
     }
@@ -292,6 +294,7 @@ public class SampleDeliveringRecordServiceImp implements SampleDeliveringRecordS
             Assert.isTrue(!handleComment.isEmpty(), "拒绝请填写理由");
             sampleDeliveringRecord.setHandleComment(handleComment);
             sampleDeliveringRecordMapper.update(sampleDeliveringRecord);
+            redisTemplate.delete("sample_de_re_"+sampleDeliveringRecord.getId());
             return returnMessage;
         }
 
