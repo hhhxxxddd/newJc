@@ -158,6 +158,7 @@ public class SampleDeliveringRecordServiceImp implements SampleDeliveringRecordS
 
         Assert.isTrue(oldValue.getAcceptStatus().equals(BatchStatusEnum.SAVE.status()), "非保存数据不可编辑");
 
+        oldValue.setAcceptStatus(sampleDeliveringRecord.getAcceptStatus());
         //将DTO转换成类
         SampleDeliveringRecord newValue = this.convert2Data(sampleDeliveringRecordDTO);
 
@@ -397,7 +398,7 @@ public class SampleDeliveringRecordServiceImp implements SampleDeliveringRecordS
         Assert.isTrue(sampleDeliveringRecord.getType().equals(repoBaseSerialNumber.getMaterialClass()), "物料类型不是所选的原料类型");
         */
 
-        if(sampleDeliveringRecord.getType() != QualitySampleTypeEnum.SAMPLE_ENDPRODUCT.get() || sampleDeliveringRecord.getType() != QualitySampleTypeEnum.SAMPLE_RAWMATERIAL.get() ) {
+        if(sampleDeliveringRecord.getType() == QualitySampleTypeEnum.SAMPLE_INTERMEDIATE.get()) {
             Assert.notNull(serialNumberId, "请选择物料");
 
             QualityBaseDetectItem detectItem = detectItemMapper.selectByPrimaryKey(serialNumberId.longValue());
