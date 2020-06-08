@@ -74,7 +74,7 @@
         </if>
         <if test="pageBean!=null">
             <if test="pageBean.sortField!=null and pageBean.sortType!=null">
-                order by qtrr.${pageBean.sortField} qtrr.${pageBean.sortType}
+                order by qtrr.${pageBean.sortField} ${pageBean.sortType}
             </if>
             LIMIT #{pageBean.startIndex}, #{pageBean.pageSize}
         </if>

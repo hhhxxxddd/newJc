@@ -62,7 +62,7 @@
                 memo=#{memo},
             </if>
             <if test="isPublished!=null">
-                is_published=#{isPublished}
+                is_published=#{isPublished},
             </if>
             <if test="passTime!=null">
                 pass_time=#{passTime}

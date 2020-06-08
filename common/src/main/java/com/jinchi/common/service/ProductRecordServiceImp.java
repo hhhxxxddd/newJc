@@ -53,6 +53,8 @@ public class ProductRecordServiceImp implements ProductRecordService {
     private QualityCommonBatchNumberExtraMapper extraMapper;
     @Autowired
     private TechniqueProductNewStandardRecordMapper newStandardRecordMapper;
+    @Autowired
+    private TechniqueBaseProductMaterialMapper materialMapper;
 
     @Override
     public int hashCode() {
@@ -190,7 +192,6 @@ public class ProductRecordServiceImp implements ProductRecordService {
         example1.createCriteria().andIdEqualTo(serialNumberId);
         List<TechniqueProductNewStandardRecord> newStandardRecords = newStandardRecordMapper.selectByExample(example1);
 
-
         //TechniqueProductStandardRecord lastedStandard = techniqueProductStandardRecordMapper.lastedStandard(serialNumberId);
         Map<Integer, String> standardMap = new HashMap<>();
 
@@ -201,6 +202,14 @@ public class ProductRecordServiceImp implements ProductRecordService {
         if (0 != newStandardRecords.size()) {
             List<TechniqueProductTestItemStandard> standardResults = techniqueProductTestItemStandardMapper.findByRecordId(newStandardRecords.get(0).getId());
             standardResults.stream().forEach(e -> standardMap.put(e.getTestItemId(), e.getValue()));
+
+            //成品
+            TechniqueBaseProductMaterialExample example2 = new TechniqueBaseProductMaterialExample();
+            example2.createCriteria().andIdEqualTo(newStandardRecords.get(0).getProductMaterialId());
+            List<TechniqueBaseProductMaterial> materials = materialMapper.selectByExample(example2);
+            if(materials.size() > 0){
+                productReportHeadDTO.setMatName(materials.get(0).getName());
+            }
         }
 
         List<TestResultDTO> testResultDTOS = new ArrayList<>();
