@@ -4,6 +4,7 @@ import com.fasterxml.jackson.annotation.JsonFormat;
 import com.jinchi.common.domain.RepoBaseSerialNumber;
 import com.jinchi.common.domain.TestReportRecord;
 import io.swagger.annotations.ApiModelProperty;
+import io.swagger.annotations.ApiOperation;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotNull;
@@ -55,6 +56,15 @@ public class ProductReportHeadDTO {
 
     @ApiModelProperty("更多信息")
     private TestReportRecord testReportRecord;
+
+    @ApiModelProperty("物料编码")
+    private String batch;
+
+    @ApiModelProperty("物料名称")
+    private String matName;
+
+    @ApiModelProperty("择优人名称")
+    private String ratePersonName;
 
     public Integer getBatchNumberId() {
         return batchNumberId;
@@ -164,6 +174,30 @@ public class ProductReportHeadDTO {
         return this;
     }
 
+    public String getBatch() {
+        return batch;
+    }
+
+    public void setBatch(String batch) {
+        this.batch = batch;
+    }
+
+    public String getMatName() {
+        return matName;
+    }
+
+    public void setMatName(String matName) {
+        this.matName = matName;
+    }
+
+    public String getRatePersonName() {
+        return ratePersonName;
+    }
+
+    public void setRatePersonName(String ratePersonName) {
+        this.ratePersonName = ratePersonName;
+    }
+
     @Override
     public String toString() {
         return "ProductReportHeadDTO{" +
@@ -179,6 +213,8 @@ public class ProductReportHeadDTO {
                 ", status=" + status +
                 ", testResultDTOList=" + testResultDTOList +
                 ", testReportRecord=" + testReportRecord +
+                ", batch='" + batch + '\'' +
+                ", matName='" + matName + '\'' +
                 '}';
     }
 }

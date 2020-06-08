@@ -49,6 +49,10 @@ public class ProductRecordServiceImp implements ProductRecordService {
     private TestItemResultRecordMapper testItemResultRecordMapper;
     @Autowired
     private TechniqueProductTestItemStandardMapper techniqueProductTestItemStandardMapper;
+    @Autowired
+    private QualityCommonBatchNumberExtraMapper extraMapper;
+    @Autowired
+    private TechniqueProductNewStandardRecordMapper newStandardRecordMapper;
 
     @Override
     public int hashCode() {
@@ -81,6 +85,11 @@ public class ProductRecordServiceImp implements ProductRecordService {
 
         for (SampleDeliveringRecord sampleDeliveringRecord : sampleDeliveringRecords) {
             ProductReportHeadDTO productReportHeadDTO = new ProductReportHeadDTO();
+
+            //获取批号
+            QualityCommonBatchNumberExtraExample example = new QualityCommonBatchNumberExtraExample();
+            example.createCriteria().andCommonBatchIdEqualTo(sampleDeliveringRecord.getId());
+            List<QualityCommonBatchNumberExtra> list = extraMapper.selectByExample(example);
 
             /**
              * 样品送检能拿到的部分
@@ -123,6 +132,9 @@ public class ProductRecordServiceImp implements ProductRecordService {
                     .setTestItemString(testItemString.toString())
                     .setIsPublished(commonBatchNumber.getIsPublished())
                     .setStatus(commonBatchNumber.getStatus());
+            if(list.size() > 0){
+                productReportHeadDTO.setBatch(list.get(0).getBatch());
+            }
 
             productReportHeadDTOS.add(productReportHeadDTO);
         }
@@ -155,6 +167,15 @@ public class ProductRecordServiceImp implements ProductRecordService {
         Integer sampleDeliveringRecordId = testReportRecord.getSampleDeliveringRecordId();
         SampleDeliveringRecord sampleDeliveringRecord = sampleDeliveringRecordMapper.getById(sampleDeliveringRecordId);
 
+        //获取批号
+        QualityCommonBatchNumberExtraExample example = new QualityCommonBatchNumberExtraExample();
+        example.createCriteria().andCommonBatchIdEqualTo(sampleDeliveringRecord.getId());
+        List<QualityCommonBatchNumberExtra> list = extraMapper.selectByExample(example);
+
+        if(list.size() > 0){
+            productReportHeadDTO.setBatch(list.get(0).getBatch());
+        }
+
         Integer serialNumberId = sampleDeliveringRecord.getSerialNumberId();
         RepoBaseSerialNumber serialNumber = repoBaseSerialNumberMapper.findById(serialNumberId);
         productReportHeadDTO.setRepoBaseSerialNumber(serialNumber)
@@ -164,11 +185,21 @@ public class ProductRecordServiceImp implements ProductRecordService {
         //设置详情和标准
         List<TestItemResultRecord> results = testItemResultRecordMapper.getByTestReportId(testReportRecordId);
 
-        TechniqueProductStandardRecord lastedStandard = techniqueProductStandardRecordMapper.lastedStandard(serialNumberId);
+        //成品标准
+        TechniqueProductNewStandardRecordExample example1 = new TechniqueProductNewStandardRecordExample();
+        example1.createCriteria().andIdEqualTo(serialNumberId);
+        List<TechniqueProductNewStandardRecord> newStandardRecords = newStandardRecordMapper.selectByExample(example1);
+
+
+        //TechniqueProductStandardRecord lastedStandard = techniqueProductStandardRecordMapper.lastedStandard(serialNumberId);
         Map<Integer, String> standardMap = new HashMap<>();
 
-        if (null != lastedStandard) {
+        /*if (null != lastedStandard) {
             List<TechniqueProductTestItemStandard> standardResults = techniqueProductTestItemStandardMapper.findByRecordId(lastedStandard.getId());
+            standardResults.stream().forEach(e -> standardMap.put(e.getTestItemId(), e.getValue()));
+        }*/
+        if (0 != newStandardRecords.size()) {
+            List<TechniqueProductTestItemStandard> standardResults = techniqueProductTestItemStandardMapper.findByRecordId(newStandardRecords.get(0).getId());
             standardResults.stream().forEach(e -> standardMap.put(e.getTestItemId(), e.getValue()));
         }
 
@@ -190,6 +221,9 @@ public class ProductRecordServiceImp implements ProductRecordService {
         AuthUserDTO user = authUserMapper.byId(testReportRecord.getJudger());
         String tester = user==null?"":user.getName();
         productReportHeadDTO.setTester(tester);
+        AuthUserDTO ratePerson = authUserMapper.byId(testReportRecord.getRatePersonId());
+        String ratePersonName = ratePerson==null?"":ratePerson.getName();
+        productReportHeadDTO.setRatePersonName(ratePersonName);
         return productReportHeadDTO;
     }
 
