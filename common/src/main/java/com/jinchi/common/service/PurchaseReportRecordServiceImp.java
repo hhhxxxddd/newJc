@@ -56,6 +56,12 @@ public class PurchaseReportRecordServiceImp implements PurchaseReportRecordServi
     private TechniqueBaseRawManufacturerMapper techniqueBaseRawManufacturerMapper;
     @Autowired
     private TechniqueRawStandardRecordService techniqueRawStandardRecordService;
+    @Autowired
+    private TechniqueProductNewStandardRecordMapper newStandardRecordMapper;
+    @Autowired
+    private TechniqueBaseProductMaterialMapper materialMapper;
+    @Autowired
+    private QualityCommonBatchNumberExtraMapper extraMapper;
 
     /**
      * 查询所有-分页 进货检验报告单 生成页面
@@ -112,12 +118,18 @@ public class PurchaseReportRecordServiceImp implements PurchaseReportRecordServi
                     .setDeliveringDate(sampleDeliveringRecord.getSampleDeliveringDate())
                     .setExceptionHandle(sampleDeliveringRecord.getExceptionComment())
                     //编号
-                    .setSerialNumber(repoBaseSerialNumberMapper.findById(sampleDeliveringRecord.getSerialNumberId()).getSerialNumber())
+                    //.setSerialNumber(repoBaseSerialNumberMapper.findById(sampleDeliveringRecord.getSerialNumberId()).getSerialNumber())
                     //工厂名称
                     .setManufacturerName(deliveryFactoryMapper.findById(sampleDeliveringRecord.getDeliveryFactoryId()).getName())
                     //送样人名称
                     .setDeliverName(deliverName);
 
+            QualityCommonBatchNumberExtraExample example = new QualityCommonBatchNumberExtraExample();
+            example.createCriteria().andCommonBatchIdEqualTo(sampleDeliveringRecord.getId());
+            List<QualityCommonBatchNumberExtra> extras = extraMapper.selectByExample(example);
+            if(extras.size() > 0){
+                rawDTO.setSerialNumber(extras.get(0).getBatch());
+            }
             purchaseRawDTOS.add(rawDTO);
 
         }
