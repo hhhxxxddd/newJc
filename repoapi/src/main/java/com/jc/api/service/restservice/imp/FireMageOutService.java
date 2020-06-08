@@ -210,7 +210,10 @@ public class FireMageOutService implements IFireMageOutService {
         if(reports.size() != 0){
             Integer mat = reports.get(0).getMaterialNameCode();
             QueryWrapper<SwmsStockInLedgers> queryWrapper = new QueryWrapper<>();
-            queryWrapper.eq("material_name_code",mat).eq("material_status",0);
+            queryWrapper.eq(type != null ,"material_type_id",type).
+                    eq(subType != null,"material_sub_type_id",subType).
+                    eq("material_name_code",mat).eq("material_status",0).
+                    eq(supplierId != null,"material_supplier_code",supplierId);
             list = ledgersMapper.selectList(queryWrapper);
         }
         ans.setDetails(list);

@@ -65,6 +65,8 @@ public class SampleDeliveringRecordServiceImp implements SampleDeliveringRecordS
     QualityBaseDetectItemMapper detectItemMapper;
     @Autowired
     TechniqueProductNewStandardRecordMapper newStandardRecordMapper;
+    @Autowired
+    TechniqueRawStandardRecordMapper rawStandardRecordMapper;
 
     /**
      * 新增样品送检
@@ -408,7 +410,16 @@ public class SampleDeliveringRecordServiceImp implements SampleDeliveringRecordS
 
             Assert.notNull(detectItem, "不存在此基础编号信息id:" + serialNumberId);
             //朱工
-        }else{
+        }
+        if(sampleDeliveringRecord.getType() == QualitySampleTypeEnum.SAMPLE_RAWMATERIAL.get()){
+            Assert.notNull(serialNumberId, "请选择标准");
+
+            TechniqueRawStandardRecord record = rawStandardRecordMapper.findById(serialNumberId);
+
+            Assert.notNull(record, "不存在此基信息i标准:" + serialNumberId);
+
+        }
+        if(sampleDeliveringRecord.getType() == QualitySampleTypeEnum.SAMPLE_ENDPRODUCT.get()){
             Assert.notNull(serialNumberId, "请选择标准");
 
             TechniqueProductNewStandardRecordExample example = new TechniqueProductNewStandardRecordExample();
