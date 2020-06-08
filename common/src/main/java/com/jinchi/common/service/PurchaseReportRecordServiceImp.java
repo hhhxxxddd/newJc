@@ -130,6 +130,7 @@ public class PurchaseReportRecordServiceImp implements PurchaseReportRecordServi
             if(extras.size() > 0){
                 rawDTO.setSerialNumber(extras.get(0).getBatch());
             }
+            rawDTO.setStatus(commonBatchNumberMapper.byId(testReportRecord.getBatchNumberId()).getStatus());
             purchaseRawDTOS.add(rawDTO);
 
         }

@@ -40,6 +40,9 @@ public class PurchaseRawDTO {
     @ApiModelProperty("是否生成")
     private Integer isGenerate;
 
+    @ApiModelProperty("状态")
+    private Integer status;
+
     public Integer getBatchNumberId() {
         return batchNumberId;
     }
@@ -123,6 +126,16 @@ public class PurchaseRawDTO {
                 ", testItemString='" + testItemString + '\'' +
                 ", exceptionHandle='" + exceptionHandle + '\'' +
                 ", isGenerate=" + isGenerate +
+                ", status=" + status +
                 '}';
     }
+
+    public Integer getStatus() {
+        return status;
+    }
+
+    public void setStatus(Integer status) {
+        this.status = status;
+    }
+
 }
