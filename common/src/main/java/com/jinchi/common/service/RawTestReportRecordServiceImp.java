@@ -14,7 +14,6 @@ import com.jinchi.common.dto.TestDTO;
 import com.jinchi.common.mapper.*;
 import com.jinchi.common.utils.ComUtil;
 import com.jinchi.common.utils.TestItemUtil;
-import com.sun.javafx.binding.StringFormatter;
 import io.jsonwebtoken.lang.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -129,7 +128,6 @@ public class RawTestReportRecordServiceImp implements RawTestReportRecordService
             testDTO.setUnit(testItem == null ? "" : testItem.getUnit());
             String value = techniqueRawTestItemStandardMapper.getValueByStandardIdByTestItemsId(standardId, testItem.getId());
             testDTO.setValue(value);
-            System.out.println(testDTOS.size());
             testDTOS.add(testDTO);
         }
 
