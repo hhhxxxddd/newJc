@@ -3,6 +3,7 @@ package com.jinchi.app.service;
 import com.jinchi.app.domain.*;
 import com.jinchi.app.dto.*;
 import com.jinchi.app.mapper.*;
+import com.jinchi.app.utils.CommonBatchUtil;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -31,6 +32,8 @@ public class ChemicalServiceImp implements ChemicalService {
     TaskHandlingRecordMapper taskHandlingRecordMapper;
     @Autowired
     QualityBaseDetectItemMapper detectItemMapper;
+    @Autowired
+    private CommonBatchUtil commonBatchUtil;
 
     @Override
     public List getAll(Integer userId, String condition) {
@@ -80,9 +83,14 @@ public class ChemicalServiceImp implements ChemicalService {
     public ChemicalAppDTO detail(Integer id) {
         TestReportRecord record = testReportRecordMapper.getById(id);
         SampleDeliveringRecord sampleDeliveringRecord = sampleDeliveringRecordMapper.getById(record.getSampleDeliveringRecordId());
+
+        Integer lastId = commonBatchUtil.lastId(record.getBatchNumberId());
+
+        TestReportRecord lastReport = testReportRecordMapper.getByBatchNumberId(lastId);
+        List<TestItemResultRecord> resultRecords = testItemResultRecordMapper.getByTestReportId(lastReport.getId());
+
         ChemicalAppDTO ans = new ChemicalAppDTO();
         List<TestItemsDTO> testItemsDTOS = new ArrayList<>();
-        List<TestItemResultRecord> resultRecords = testItemResultRecordMapper.getByTestReportId(id);
         for(int i=0;i<resultRecords.size();i++){
             TestItemsDTO itemsDTO = new TestItemsDTO();
             itemsDTO.setId(resultRecords.get(i).getId());
