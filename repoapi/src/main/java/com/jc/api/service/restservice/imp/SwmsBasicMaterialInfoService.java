@@ -104,7 +104,6 @@ public class SwmsBasicMaterialInfoService implements ISwmsBasicMaterialInfoServi
      */
     @Override
     public Boolean add(SwmsBasicMaterialInfo entity, String[] supIds) {
-        entity.setAutoFlag(false);
         SwmsBasicMaterialInfo mat = addVerify(entity);
         swmsBasicMaterialInfoMapper.insert(mat);
         for (int i = 0; i < supIds.length; i++) {
@@ -130,7 +129,7 @@ public class SwmsBasicMaterialInfoService implements ISwmsBasicMaterialInfoServi
         if (oldValue != null) {
             return oldValue;
         }
-        entity.setAutoFlag(true);
+        entity.setAutoFlag(false);//false 表示自动
         entity.setCoFlag(false);
         entity.setMnFlag(false);
         entity.setNhFlag(false);
