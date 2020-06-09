@@ -139,7 +139,7 @@ public class RawTestReportRecordServiceImp implements RawTestReportRecordService
         rawTestReportDTO.setTestDTOS(testDTOS);
         rawTestReportDTO.setSampleDeliveringRecord(sampleDeliveringRecord);
         rawTestReportDTO.setMaterialName(material.getName());
-        //rawTestReportDTO.setSerialNumber(repoBaseSerialNumber.getSerialNumber());
+        /*rawTestReportDTO.setSerialNumber(repoBaseSerialNumber.getSerialNumber());*/
         rawTestReportDTO.setTestReportRecord(testReportRecord);
         rawTestReportDTO.setCommonBatchNumber(commonBatchNumber);
         if (commonBatchNumber.getStatus() == BatchStatusEnum.SAVE.status()) {
