@@ -21,7 +21,7 @@
     <!-- 更新 -->
     <update id="update" parameterType="TestItemResultRecord">
         UPDATE quality_test_item_result_record
-        set test_result = #{testResult}
+        set test_result = #{testResult} ,is_valid = #{isValid} ,is_audit = #{isAudit}
         where id = #{id}
     </update>
 
