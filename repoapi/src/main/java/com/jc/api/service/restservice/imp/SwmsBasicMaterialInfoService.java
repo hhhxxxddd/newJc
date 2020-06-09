@@ -104,6 +104,7 @@ public class SwmsBasicMaterialInfoService implements ISwmsBasicMaterialInfoServi
      */
     @Override
     public Boolean add(SwmsBasicMaterialInfo entity, String[] supIds) {
+        entity.setAutoFlag(true); //true 表示手动新增
         SwmsBasicMaterialInfo mat = addVerify(entity);
         swmsBasicMaterialInfoMapper.insert(mat);
         for (int i = 0; i < supIds.length; i++) {
@@ -129,7 +130,7 @@ public class SwmsBasicMaterialInfoService implements ISwmsBasicMaterialInfoServi
         if (oldValue != null) {
             return oldValue;
         }
-        entity.setAutoFlag(false);//false 表示自动
+        entity.setAutoFlag(false); // false 表示自动新增
         entity.setCoFlag(false);
         entity.setMnFlag(false);
         entity.setNhFlag(false);
@@ -157,6 +158,7 @@ public class SwmsBasicMaterialInfoService implements ISwmsBasicMaterialInfoServi
     @Override
     public Boolean update(SwmsBasicMaterialInfo entity, String[] supIds) {
         SwmsBasicMaterialInfo mat = updateVerify(entity);
+        mat.setAutoFlag(true);
         swmsBasicMaterialInfoMapper.updateById(mat);
         updateSup(mat.getId(), supIds);
         return true;
