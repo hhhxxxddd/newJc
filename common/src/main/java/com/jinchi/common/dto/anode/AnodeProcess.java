@@ -8,6 +8,7 @@ public class AnodeProcess {
 
     private String periodName;
 
+    //工序下的物料信息
     private List<AnodeMaterial> materials;
 
     /*private List<AnodeMaterial> others;

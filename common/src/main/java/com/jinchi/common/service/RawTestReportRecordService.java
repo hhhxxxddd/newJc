@@ -33,5 +33,5 @@ public interface RawTestReportRecordService {
     /**
      * 详情（根据批号id查）
      */
-    RawTestReportDTO Details(Integer id);
+    RawTestReportDTO details(Integer id);
 }

@@ -28,7 +28,7 @@ public class SampleDeliveringRecord implements Serializable {
     @NotNull(message = "送检人id不能为空")
     private Integer delivererId; //NN F
 
-    @ApiModelProperty("编号")
+    @ApiModelProperty("编号")//中间品的受检物料id，原材料和成品的标准id
     private Integer serialNumberId; //NN F
 
     @ApiModelProperty("送检工厂")

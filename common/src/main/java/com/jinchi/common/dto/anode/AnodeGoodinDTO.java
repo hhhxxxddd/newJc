@@ -9,6 +9,7 @@ import java.util.List;
 
 public class AnodeGoodinDTO {
 
+    //头表
     private AnodeGoodsInProcessStatisticHead head;
 
     private BasicInfoAnodeProductionLine line;
@@ -17,6 +18,7 @@ public class AnodeGoodinDTO {
 
     private String periodName;
 
+    //各个工序下的详情
     private List<AnodeProcess> processes;
 
     public AnodeGoodsInProcessStatisticHead getHead() {

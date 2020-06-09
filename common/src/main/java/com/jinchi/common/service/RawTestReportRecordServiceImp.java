@@ -126,7 +126,7 @@ public class RawTestReportRecordServiceImp implements RawTestReportRecordService
             testDTO.setName(testItemName);
             testDTO.setTestItemResultRecord(record);
             testDTO.setUnit(testItem == null ? "" : testItem.getUnit());
-            String value = techniqueRawTestItemStandardMapper.getValueByStandardIdByTestItemsId(standardId, testItem.getId());
+            String value = techniqueRawTestItemStandardMapper.getValueByStandardIdByTestItemsId(sampleDeliveringRecord.getSerialNumberId(), testItem.getId());
             testDTO.setValue(value);
             testDTOS.add(testDTO);
         }
@@ -239,7 +239,7 @@ public class RawTestReportRecordServiceImp implements RawTestReportRecordService
      * 详情（根据批号id查）
      */
     @Override
-    public RawTestReportDTO Details(Integer id) {
+    public RawTestReportDTO details(Integer id) {
         RawTestReportDTO rawTestReportDTO = new RawTestReportDTO();
         List<TestDTO> testDTOS = new ArrayList<>();
 
@@ -254,7 +254,7 @@ public class RawTestReportRecordServiceImp implements RawTestReportRecordService
 
         if (null == sampleDeliveringRecord || sampleDeliveringRecord.getType() != QualitySampleTypeEnum.SAMPLE_RAWMATERIAL.get() || sampleDeliveringRecord.getAcceptStatus() != QualitySampleStatusEnum.SAMPLE_ACCEPTED.get())
             return null;
-        RepoBaseSerialNumber repoBaseSerialNumber = repoBaseSerialNumberMapper.findById(sampleDeliveringRecord.getSerialNumberId());
+        //RepoBaseSerialNumber repoBaseSerialNumber = repoBaseSerialNumberMapper.findById(sampleDeliveringRecord.getSerialNumberId());
         AuthUserDTO authUserDTO = authUserMapper.byId(testReportRecord.getJudger());
 
         List<TestItemResultRecord> testItemResultRecords = testItemResultRecordMapper.getByTestReportId(testReportRecord.getId());
@@ -267,11 +267,16 @@ public class RawTestReportRecordServiceImp implements RawTestReportRecordService
             testDTOS.add(testDTO);
         }
 
+        TechniqueRawStandardRecord rawStandardRecord = rawStandardRecordMapper.findById(sampleDeliveringRecord.getSerialNumberId());
+        TechniqueBaseRawMaterial material = rawMaterialMapper.getById(rawStandardRecord.getRawMaterialId());
+        Assert.notNull(material, String.format("不存在id为%s原材料",rawStandardRecord.getRawMaterialId()));
+
+        rawTestReportDTO.setMaterialName(material.getName());
+
         rawTestReportDTO
                 .setTestDTOS(testDTOS)
                 .setSampleDeliveringRecord(sampleDeliveringRecord)
-                .setMaterialName(repoBaseSerialNumber.getMaterialName())
-                .setSerialNumber(repoBaseSerialNumber.getSerialNumber())
+                //.setSerialNumber(repoBaseSerialNumber.getSerialNumber())
                 .setTestReportRecord(testReportRecord)
                 .setCommonBatchNumber(commonBatchNumber);
 

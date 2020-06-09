@@ -53,7 +53,7 @@ public class RawTestReportController {
     @GetMapping(value = "detailsByBatchNumberId")
     @ApiOperation(value = "根据批号id查看详情")
     public Result<RawTestReportDTO> findDetails(@ApiParam(name = "id", value = "批号主键") @RequestParam Integer id) {
-        return ResultUtil.success(rawTestReportRecordService.Details(id));
+        return ResultUtil.success(rawTestReportRecordService.details(id));
     }
 
 }
