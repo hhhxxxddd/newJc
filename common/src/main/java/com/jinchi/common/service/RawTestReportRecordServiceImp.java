@@ -129,6 +129,7 @@ public class RawTestReportRecordServiceImp implements RawTestReportRecordService
             testDTO.setUnit(testItem == null ? "" : testItem.getUnit());
             String value = techniqueRawTestItemStandardMapper.getValueByStandardIdByTestItemsId(standardId, testItem.getId());
             testDTO.setValue(value);
+            System.out.println(testDTOS.size());
             testDTOS.add(testDTO);
         }
 
