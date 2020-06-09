@@ -14,6 +14,7 @@ import com.jinchi.common.dto.TestDTO;
 import com.jinchi.common.mapper.*;
 import com.jinchi.common.utils.ComUtil;
 import com.jinchi.common.utils.TestItemUtil;
+import com.sun.javafx.binding.StringFormatter;
 import io.jsonwebtoken.lang.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -52,6 +53,10 @@ public class RawTestReportRecordServiceImp implements RawTestReportRecordService
     private QualitySampleDeliveringRecordRawMapper qualitySampleDeliveringRecordRawMapper;
     @Autowired
     private TechniqueRawTestItemStandardMapper techniqueRawTestItemStandardMapper;
+    @Autowired
+    private TechniqueRawStandardRecordMapper rawStandardRecordMapper;
+    @Autowired
+    private TechniqueBaseRawMaterialMapper rawMaterialMapper;
 
     /**
      * 查询所有原材料检测项目
@@ -103,7 +108,7 @@ public class RawTestReportRecordServiceImp implements RawTestReportRecordService
         SampleDeliveringRecord sampleDeliveringRecord = sampleDeliveringRecordMapper.getById(id);
         if (null == sampleDeliveringRecord || sampleDeliveringRecord.getType() != 1 || sampleDeliveringRecord.getAcceptStatus() != 2)
             return null;
-        RepoBaseSerialNumber repoBaseSerialNumber = repoBaseSerialNumberMapper.findById(sampleDeliveringRecord.getSerialNumberId());
+        //RepoBaseSerialNumber repoBaseSerialNumber = repoBaseSerialNumberMapper.findById(sampleDeliveringRecord.getSerialNumberId());
         TestReportRecord testReportRecord = testReportRecordMapper.getBySampleDeliveringRecordId(sampleDeliveringRecord.getId());
         AuthUserDTO authUserDTO = authUserMapper.byId(testReportRecord.getJudger());
         CommonBatchNumber commonBatchNumber = commonBatchNumberMapper.byId(testReportRecord.getBatchNumberId());
@@ -127,10 +132,14 @@ public class RawTestReportRecordServiceImp implements RawTestReportRecordService
             testDTOS.add(testDTO);
         }
 
+        TechniqueRawStandardRecord rawStandardRecord = rawStandardRecordMapper.findById(sampleDeliveringRecord.getSerialNumberId());
+        TechniqueBaseRawMaterial material = rawMaterialMapper.getById(rawStandardRecord.getRawMaterialId());
+        Assert.notNull(material, String.format("不存在id为%s原材料",rawStandardRecord.getRawMaterialId()));
+
         rawTestReportDTO.setTestDTOS(testDTOS);
         rawTestReportDTO.setSampleDeliveringRecord(sampleDeliveringRecord);
-        rawTestReportDTO.setMaterialName(repoBaseSerialNumber.getMaterialName());
-        rawTestReportDTO.setSerialNumber(repoBaseSerialNumber.getSerialNumber());
+        rawTestReportDTO.setMaterialName(material.getName());
+        //rawTestReportDTO.setSerialNumber(repoBaseSerialNumber.getSerialNumber());
         rawTestReportDTO.setTestReportRecord(testReportRecord);
         rawTestReportDTO.setCommonBatchNumber(commonBatchNumber);
         if (commonBatchNumber.getStatus() == BatchStatusEnum.SAVE.status()) {
