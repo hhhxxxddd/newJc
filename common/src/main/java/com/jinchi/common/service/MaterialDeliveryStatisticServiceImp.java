@@ -64,6 +64,7 @@ public class MaterialDeliveryStatisticServiceImp implements MaterialDeliveryStat
     MaterialDeliveryStatisticByLineTotalsMapper lineTotalsMapper;
     @Autowired
     AuxiliaryMaterialsStatisticHeadMapper auxiliaryHeadMapper;
+
     @Override
     public List getPeriod(Integer periodCode) {
         List<Map<String, Object>> list = new ArrayList<>();
@@ -107,16 +108,26 @@ public class MaterialDeliveryStatisticServiceImp implements MaterialDeliveryStat
 
         //查询在制品统计，成品入库统计,辅料统计的统计头表，比较是否有周期类型相同且期数相同的数据
         GoodsInProcessStatisticHeadExample example1 = new GoodsInProcessStatisticHeadExample();
-        example1.createCriteria().andPeriodCodeEqualTo(head.getPeriodCode()).andLineNameEqualTo(head.getLineName());
+        example1.createCriteria().andPeriodCodeEqualTo(head.getPeriodCode()).andLineNameEqualTo(head.getLineName()).andFlagEqualTo((byte) 1);
         List<GoodsInProcessStatisticHead> list1 = goodsInProcessStatisticHeadMapper.selectByExample(example1);
+        example1.clear();
+        example1.createCriteria().andPeriodCodeEqualTo(head.getPeriodCode()).andLineNameEqualTo(head.getLineName()).andFlagEqualTo((byte) 0);
+        List<GoodsInProcessStatisticHead> list5 = goodsInProcessStatisticHeadMapper.selectByExample(example1);
 
         ProductStorageStatisticHeadExample example2 = new ProductStorageStatisticHeadExample();
-        example2.createCriteria().andPeriodCodeEqualTo(head.getPeriodCode()).andLineNameEqualTo(head.getLineName());
+        example2.createCriteria().andPeriodCodeEqualTo(head.getPeriodCode()).andLineNameEqualTo(head.getLineName()).andFlagEqualTo((byte) 1);
         List<ProductStorageStatisticHead> list2 = productStorageStatisticHeadMapper.selectByExample(example2);
+        example2.clear();
+        example2.createCriteria().andPeriodCodeEqualTo(head.getPeriodCode()).andLineNameEqualTo(head.getLineName()).andFlagEqualTo((byte) 0);
+        List<ProductStorageStatisticHead> list6 = productStorageStatisticHeadMapper.selectByExample(example2);
 
         AuxiliaryMaterialsStatisticHeadExample example = new AuxiliaryMaterialsStatisticHeadExample();
-        example.createCriteria().andPeriodCodeEqualTo(head.getPeriodCode()).andPeriodsEqualTo(head.getLineName());
+        example.createCriteria().andPeriodCodeEqualTo(head.getPeriodCode()).andPeriodsEqualTo(head.getLineName()).andFlagEqualTo(true);
         List<AuxiliaryMaterialsStatisticHead> list = auxiliaryHeadMapper.selectByExample(example);
+        example.clear();
+        example.createCriteria().andPeriodCodeEqualTo(head.getPeriodCode()).andPeriodsEqualTo(head.getLineName()).andFlagEqualTo(false);
+        List<AuxiliaryMaterialsStatisticHead> list7 = auxiliaryHeadMapper.selectByExample(example);
+
 
         MaterialDeliveryStatisticHeadExample example3 = new MaterialDeliveryStatisticHeadExample();
         example3.createCriteria().andPeriodCodeEqualTo(head.getPeriodCode()).andLineNameEqualTo(head.getLineName());
@@ -131,18 +142,43 @@ public class MaterialDeliveryStatisticServiceImp implements MaterialDeliveryStat
         }
 
         String format = "yyyy-MM-dd HH:mm:ss";
+
         if (list1.size() == 0 && list2.size() == 0 && list.size() == 0) {
-            statisticHeadMapper.insertSelective(head);
-            Map<String, Object> map = new HashMap<>();
-            map.put("code", head.getCode());
-            map.put("message", "success");
-            return map;
+            //如果不存在已统计的记录
+            //如果存在待提交的记录
+            if (list5.size() != 0 || list6.size() != 0 || list7.size() != 0) {
+                for (GoodsInProcessStatisticHead head1 : list5) {
+                    if (!head1.getStartTime().equals(head.getStartTime())) {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("code", -2);
+                        map.put("message", "第" + head1.getLineName() + "期在制品管理存在待提交记录，开始时间为: " + ComUtil.dateToString(head1.getStartTime(), format) + "本模块开始时间应与其一致");
+                        return map;
+                    }
+                }
+                for (ProductStorageStatisticHead head2 : list6) {
+                    if (!head2.getStartTime().equals(head.getStartTime())) {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("code", -2);
+                        map.put("message", "第" + head2.getLineName() + "期成品入库存在待提交记录，开始时间为: " + ComUtil.dateToString(head2.getStartTime(), format) + "本模块开始时间应与其一致");
+                        return map;
+                    }
+                }
+                for (AuxiliaryMaterialsStatisticHead head3 : list7) {
+                    if (!head3.getStartTime().equals(head.getStartTime())) {
+                        Map<String, Object> map = new HashMap<>();
+                        map.put("code", -2);
+                        map.put("message", "第" + head3.getPeriods() + "期辅料统计存在待提交记录，开始时间为: " + ComUtil.dateToString(head3.getStartTime(), format) + "本模块开始时间应与其一致");
+                        return map;
+                    }
+                }
+            }
         } else {
+            //如果存在已统计的记录，但是时间信息不一致，就返回相应的提示信息
             for (GoodsInProcessStatisticHead head1 : list1) {
                 if (!head1.getStartTime().equals(head.getStartTime()) || !head1.getEndTime().equals(head.getEndTime())) {
                     Map<String, Object> map = new HashMap<>();
                     map.put("code", -2);
-                    map.put("message", "存在不一致的统计周期，本期开始时间为: " + ComUtil.dateToString(head1.getStartTime(), format) + "本期结束时间为: " + ComUtil.dateToString(head1.getEndTime(), format));
+                    map.put("message", "第" + head1.getLineName() + "期在制品管理已统计，开始时间为: " + ComUtil.dateToString(head1.getStartTime(), format) + "结束时间为: " + ComUtil.dateToString(head1.getEndTime(), format) + "本模块开始时间、结束时间应与其一致");
                     return map;
                 }
             }
@@ -150,7 +186,7 @@ public class MaterialDeliveryStatisticServiceImp implements MaterialDeliveryStat
                 if (!head2.getStartTime().equals(head.getStartTime()) || !head2.getEndTime().equals(head.getEndTime())) {
                     Map<String, Object> map = new HashMap<>();
                     map.put("code", -2);
-                    map.put("message", "存在不一致的统计周期，本期开始时间为: " + ComUtil.dateToString(head2.getStartTime(), format) + "本期结束时间为: " + ComUtil.dateToString(head2.getEndTime(), format));
+                    map.put("message", "第" + head2.getLineName() + "期成品入库已统计，开始时间为: " + ComUtil.dateToString(head2.getStartTime(), format) + "结束时间为: " + ComUtil.dateToString(head2.getEndTime(), format) + "本模块开始时间、结束时间应与其一致");
                     return map;
                 }
             }
@@ -158,16 +194,18 @@ public class MaterialDeliveryStatisticServiceImp implements MaterialDeliveryStat
                 if (!head3.getStartTime().equals(head.getStartTime()) || !head3.getEndTime().equals(head.getEndTime())) {
                     Map<String, Object> map = new HashMap<>();
                     map.put("code", -2);
-                    map.put("message", "存在不一致的统计周期，本期开始时间为: " + ComUtil.dateToString(head3.getStartTime(), format) + "本期结束时间为: " + ComUtil.dateToString(head3.getEndTime(), format));
+                    map.put("message", "第" + head3.getPeriods() + "期辅料统计已统计，开始时间为: " + ComUtil.dateToString(head3.getStartTime(), format) + "结束时间为: " + ComUtil.dateToString(head3.getEndTime(), format) + "本模块开始时间、结束时间应与其一致");
                     return map;
                 }
             }
-            statisticHeadMapper.insertSelective(head);
-            Map<String, Object> map = new HashMap<>();
-            map.put("code", head.getCode());
-            map.put("message", "success");
-            return map;
         }
+
+        //没有上述异常，就直接新增
+        statisticHeadMapper.insertSelective(head);
+        Map<String, Object> map = new HashMap<>();
+        map.put("code", head.getCode());
+        map.put("message", "success");
+        return map;
     }
 
     @Override
