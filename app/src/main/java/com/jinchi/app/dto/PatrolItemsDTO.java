@@ -1,9 +1,8 @@
 package com.jinchi.app.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
-import com.fasterxml.jackson.annotation.JsonInclude;
 
-@JsonInclude(JsonInclude.Include.NON_EMPTY)
+//@JsonInclude(JsonInclude.Include.NON_NULL)
 public class PatrolItemsDTO {
     Long patrolItemsId;
 
