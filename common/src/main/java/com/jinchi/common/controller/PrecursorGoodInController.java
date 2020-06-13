@@ -1,6 +1,6 @@
 package com.jinchi.common.controller;
 
-import com.jinchi.common.domain.BasicInfoPrecursorMaterialDetails;
+import com.jinchi.common.domain.GoodsInProcessStatisticHead;
 import com.jinchi.common.dto.BasicInfoPrecursorMaterialDetailsDTO;
 import com.jinchi.common.dto.GoodInTableDTO;
 import com.jinchi.common.dto.Result;
@@ -39,6 +39,12 @@ public class PrecursorGoodInController {
                              @RequestParam String startTime,
                              @RequestParam String endTime) {
         return ResultUtil.success(goodInService.addComfirm(periodId, lineName, startTime, endTime));
+    }
+
+    @GetMapping(value = "update")
+    @ApiOperation(value = "更新")
+    public Result update(@RequestBody GoodsInProcessStatisticHead head) {
+        return ResultUtil.success(goodInService.update(head));
     }
 
     @PostMapping(value = "/afterComfirm")

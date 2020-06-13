@@ -13,6 +13,8 @@ public interface MaterialDeliveryStatisticService {
 
     Object add(MaterialDeliveryStatisticHead head);//新增统计头表
 
+    MaterialDeliveryStatisticHead update(MaterialDeliveryStatisticHead head);//更新头表
+
     List getStockOutData(String startTime, String endTime);//获取出库数据
 
     MaterialDeliveryStatisticSulfateConcentration getConcentrations(Integer periodCode);//获取上期浓度

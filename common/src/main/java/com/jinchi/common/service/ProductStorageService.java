@@ -11,23 +11,25 @@ import java.util.Map;
 
 public interface ProductStorageService {
 
-    void addUse(Long headId,String productName,Long batchId,Float ni,Float co,Float mn,Float weight);
+    void addUse(Long headId, String productName, Long batchId, Float ni, Float co, Float mn, Float weight);
 
     List getAllBatch();
 
-    Page getInData(Long headId,Integer page,Integer size);
+    Page getInData(Long headId, Integer page, Integer size);
 
     Object addConfirm(ProductStorageStatisticHead head);
 
-    String saveOrCommit(Long id,List<ProductStorageStatisticDataDetails> details,Integer flag);
+    ProductStorageStatisticHead update(ProductStorageStatisticHead head);
+
+    String saveOrCommit(Long id, List<ProductStorageStatisticDataDetails> details, Integer flag);
 
     void delete(Long id);
 
     void deleteByIds(Long[] ids);
 
-    Page pageUmCommit(ProductStorageStatisticHead head,Integer page,Integer size);
+    Page pageUmCommit(ProductStorageStatisticHead head, Integer page, Integer size);
 
-    Page pageCommit(ProductStorageStatisticHead head,Integer page,Integer size);
+    Page pageCommit(ProductStorageStatisticHead head, Integer page, Integer size);
 
     ProductStorageDetailDTO detail(Integer id);
 

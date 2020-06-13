@@ -69,6 +69,8 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
     AuxiliaryMaterialsStatisticHeadMapper auxiliaryHeadMapper;
     @Autowired
     ProcessParametersHcDetailMapper hcDetailMapper;
+    @Autowired
+    PrecursorHeadTableOperationService operationService;
 
     @Override
     public List getAll(String startTime, String endTime, Integer periodId, Byte flag) {
@@ -239,6 +241,12 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
         map.put("code", addGoodIn(start, end, periodId, lineName, period));
         map.put("message", "success");
         return map;
+    }
+
+    @Override
+    public GoodsInProcessStatisticHead update(GoodsInProcessStatisticHead head) {
+        goodsInProcessStatisticHeadMapper.updateByPrimaryKeySelective(head);
+        return head;
     }
 
     public Long addGoodIn(Date start, Date end, Integer periodId, Integer lineName, BasicInfoPrecursorPeriod period) {
@@ -777,6 +785,8 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
 
     private void commit(Long stasticId, GoodInTableDTO goodInTableDTO) {
         save(stasticId, goodInTableDTO);
+
+        operationService.updateAllEndTime(goodInTableDTO.getPeriodId(), goodInTableDTO.getLineName());
 
         List<GoodInProcessDTO> list = goodInTableDTO.getGoodInProcessDTOS();
         Float totalNi = 0f;

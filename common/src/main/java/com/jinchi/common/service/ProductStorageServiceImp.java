@@ -36,6 +36,8 @@ public class ProductStorageServiceImp implements ProductStorageService {
     BasicInfoPrecursorPeriodMapper periodMapper;
     @Autowired
     AuxiliaryMaterialsStatisticHeadMapper auxMapper;
+    @Autowired
+    PrecursorHeadTableOperationService operationService;
 
     @Override
     public void addUse(Long headId, String productName, Long batchId, Float ni, Float co, Float mn, Float weight) {
@@ -83,6 +85,12 @@ public class ProductStorageServiceImp implements ProductStorageService {
         ProductStorageStatisticDataDetailsExample example = new ProductStorageStatisticDataDetailsExample();
         example.createCriteria().andStatisticCodeEqualTo(headId);
         return new Page(dataDetailsMapper.selectByExample(example), page, size);
+    }
+
+    @Override
+    public ProductStorageStatisticHead update(ProductStorageStatisticHead head) {
+        headMapper.updateByPrimaryKeySelective(head);
+        return head;
     }
 
     @Override
@@ -259,6 +267,8 @@ public class ProductStorageServiceImp implements ProductStorageService {
         ProductStorageStatisticHead head = headMapper.selectByPrimaryKey(id);
         head.setFlag(new Integer(1).byteValue());
         headMapper.updateByPrimaryKeySelective(head);
+
+        operationService.updateAllEndTime(head.getPeriodCode(), head.getLineName());
 
         ProductStorageStatisticDataDetailsExample example = new ProductStorageStatisticDataDetailsExample();
         example.createCriteria().andStatisticCodeEqualTo(id);

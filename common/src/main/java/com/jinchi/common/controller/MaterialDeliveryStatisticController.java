@@ -39,7 +39,7 @@ public class MaterialDeliveryStatisticController {
     @GetMapping(value = "statistic")
     @ApiOperation(value = "获取已统计数据")
     public Result getStatistic(@RequestParam(required = false) Integer periodCode, @RequestParam(required = false) String startTime,
-                               @RequestParam(required = false) String endTime, @RequestParam(required = false,defaultValue = "1") Integer page, @RequestParam(required = false,defaultValue = "10") Integer size) {
+                               @RequestParam(required = false) String endTime, @RequestParam(required = false, defaultValue = "1") Integer page, @RequestParam(required = false, defaultValue = "10") Integer size) {
         return ResultUtil.success(statisticService.queryStatistics(startTime, endTime, periodCode, page, size));
     }
 
@@ -47,6 +47,12 @@ public class MaterialDeliveryStatisticController {
     @ApiOperation(value = "新增")
     public Result add(@RequestBody MaterialDeliveryStatisticHead head) {
         return ResultUtil.success(statisticService.add(head));
+    }
+
+    @PostMapping(value = "update")
+    @ApiOperation(value = "更新")
+    public Result update(@RequestBody MaterialDeliveryStatisticHead head) {
+        return ResultUtil.success(statisticService.update(head));
     }
 
     @GetMapping(value = "stockOutData")

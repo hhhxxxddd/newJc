@@ -8,7 +8,6 @@ import com.jinchi.common.utils.ResultUtil;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
 import io.swagger.annotations.ApiParam;
-import io.swagger.models.auth.In;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -24,22 +23,28 @@ public class ProductStorageController {
 
     @GetMapping(value = "getAllBatch")
     @ApiOperation(value = "获取所有批次信息")
-    public Result getAllBatch(){
+    public Result getAllBatch() {
         return ResultUtil.success(storageService.getAllBatch());
     }
 
     @PostMapping(value = "addComfirm")
     @ApiOperation(value = "新增确认")
-    public Result addComfirm(@RequestBody ProductStorageStatisticHead head){
+    public Result addComfirm(@RequestBody ProductStorageStatisticHead head) {
         return ResultUtil.success(storageService.addConfirm(head));
+    }
+
+    @PostMapping(value = "update")
+    @ApiOperation(value = "更新")
+    public Result update(@RequestBody ProductStorageStatisticHead head) {
+        return ResultUtil.success(storageService.update(head));
     }
 
     @PostMapping(value = "saveOrCommit")
     @ApiOperation(value = "保存或提交")
     public Result saveOrCommit(@RequestBody List<ProductStorageStatisticDataDetails> details,
                                @RequestParam Long id,
-                               @ApiParam(value = "0:保存 1:提交") @RequestParam Integer flag){
-        return ResultUtil.success(storageService.saveOrCommit(id,details,flag));
+                               @ApiParam(value = "0:保存 1:提交") @RequestParam Integer flag) {
+        return ResultUtil.success(storageService.saveOrCommit(id, details, flag));
     }
 
     @PostMapping(value = "pageUnCommit")

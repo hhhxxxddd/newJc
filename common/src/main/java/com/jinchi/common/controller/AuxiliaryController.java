@@ -11,8 +11,6 @@ import io.swagger.annotations.ApiParam;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.lang.annotation.Repeatable;
-
 @RestController
 @RequestMapping(value = "auxiliary")
 @Api(tags = "前驱体-辅料统计")
@@ -23,19 +21,25 @@ public class AuxiliaryController {
 
     @PostMapping(value = "addComfirm")
     @ApiOperation(value = "新增确认")
-    public Result  addComfirm(@RequestBody AuxiliaryMaterialsStatisticHead head){
+    public Result addComfirm(@RequestBody AuxiliaryMaterialsStatisticHead head) {
         return ResultUtil.success(auxiliaryService.addComfirm(head));
+    }
+
+    @PostMapping(value = "update")
+    @ApiOperation(value = "更新")
+    public Result update(@RequestBody AuxiliaryMaterialsStatisticHead head) {
+        return ResultUtil.success(auxiliaryService.update(head));
     }
 
     @GetMapping(value = "afterComfirm")
     @ApiOperation(value = "新增头成功之后的表格")
-    public Result afterComfirm(@RequestParam(required = false) Long id){
+    public Result afterComfirm(@RequestParam(required = false) Long id) {
         return ResultUtil.success(auxiliaryService.afterComfirm(id));
     }
 
     @GetMapping(value = "nextPeroidNumber")
     @ApiOperation(value = "获取下一期数")
-    public Result nextPeriodNumber(@RequestParam Integer periodId){
+    public Result nextPeriodNumber(@RequestParam Integer periodId) {
         return ResultUtil.success(auxiliaryService.nextPeroidNumber(periodId));
     }
 

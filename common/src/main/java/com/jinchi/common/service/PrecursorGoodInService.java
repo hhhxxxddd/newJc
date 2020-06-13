@@ -1,6 +1,6 @@
 package com.jinchi.common.service;
 
-import com.jinchi.common.domain.BasicInfoPrecursorMaterialDetails;
+import com.jinchi.common.domain.GoodsInProcessStatisticHead;
 import com.jinchi.common.dto.*;
 
 import java.util.List;
@@ -8,19 +8,21 @@ import java.util.Map;
 
 public interface PrecursorGoodInService {
 
-    List getAll(String startTime,String endTime,Integer periodId, Byte flag);
+    List getAll(String startTime, String endTime, Integer periodId, Byte flag);
 
-    Page page(String startTime,String endTime,Integer periodId,Integer page,Integer size);
+    Page page(String startTime, String endTime, Integer periodId, Integer page, Integer size);
 
     Object addComfirm(Integer periodId, Integer lineName, String startTime, String endTime);
+
+    GoodsInProcessStatisticHead update(GoodsInProcessStatisticHead head);
 
     GoodInTableDTO getTables(Long id);
 
     List getLastPotency(Integer processId);
 
-    String saveOrCommit(Long stasticId, Integer flag,GoodInTableDTO goodInTableDTO);
+    String saveOrCommit(Long stasticId, Integer flag, GoodInTableDTO goodInTableDTO);
 
-    Page statisticPage(String startTime,String endTime,Integer peroidId,Integer page,Integer size);
+    Page statisticPage(String startTime, String endTime, Integer peroidId, Integer page, Integer size);
 
     GoodInStatisticDetailDTO statisticDetail(Long processDetailId);
 

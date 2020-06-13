@@ -56,6 +56,9 @@ public class AuxiliaryServiceImp implements AuxiliaryService {
     @Autowired
     ProductStorageStatisticHeadMapper productMapper;
 
+    @Autowired
+    PrecursorHeadTableOperationService operationService;
+
     @Override
     public Object addComfirm(AuxiliaryMaterialsStatisticHead head) {
         head.setFlag(false);
@@ -162,6 +165,12 @@ public class AuxiliaryServiceImp implements AuxiliaryService {
         map.put("code", head.getCode());
         map.put("message", "success");
         return map;
+    }
+
+    @Override
+    public AuxiliaryMaterialsStatisticHead update(AuxiliaryMaterialsStatisticHead head) {
+        headMapper.updateByPrimaryKeySelective(head);
+        return head;
     }
 
     @Override
@@ -502,6 +511,9 @@ public class AuxiliaryServiceImp implements AuxiliaryService {
 
         Long id = auxiliaryAddDTO.getHead().getCode();
         Integer periods = auxiliaryAddDTO.getHead().getPeriods();
+        Integer periodId = auxiliaryAddDTO.getHead().getPeriodCode();
+
+        operationService.updateAllEndTime(periodId, periods);
 
         //按工序统计+全部统计
         BasicInfoPrecursorProcessTypeExample example = new BasicInfoPrecursorProcessTypeExample();

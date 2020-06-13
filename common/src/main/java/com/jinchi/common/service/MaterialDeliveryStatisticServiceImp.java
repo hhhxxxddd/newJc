@@ -64,6 +64,8 @@ public class MaterialDeliveryStatisticServiceImp implements MaterialDeliveryStat
     MaterialDeliveryStatisticByLineTotalsMapper lineTotalsMapper;
     @Autowired
     AuxiliaryMaterialsStatisticHeadMapper auxiliaryHeadMapper;
+    @Autowired
+    PrecursorHeadTableOperationService operationService;
 
     @Override
     public List getPeriod(Integer periodCode) {
@@ -206,6 +208,12 @@ public class MaterialDeliveryStatisticServiceImp implements MaterialDeliveryStat
         map.put("code", head.getCode());
         map.put("message", "success");
         return map;
+    }
+
+    @Override
+    public MaterialDeliveryStatisticHead update(MaterialDeliveryStatisticHead head) {
+        statisticHeadMapper.updateByPrimaryKeySelective(head);
+        return head;
     }
 
     @Override
@@ -640,6 +648,7 @@ public class MaterialDeliveryStatisticServiceImp implements MaterialDeliveryStat
             statisticHead.setCode(statisticCode);
             statisticHead.setFlag((byte) 1);
             statisticHeadMapper.updateByPrimaryKeySelective(statisticHead);
+            operationService.updateAllEndTime(statisticHead.getPeriodCode(), statisticHead.getLineName());
         }
         MaterialDeliveryStatisticSulfateConcentration sulfateConcentration = new MaterialDeliveryStatisticSulfateConcentration();
         sulfateConcentration.setStatisticCode(statisticCode);

@@ -12,15 +12,17 @@ public interface AuxiliaryService {
 
     Object addComfirm(AuxiliaryMaterialsStatisticHead head);
 
+    AuxiliaryMaterialsStatisticHead update(AuxiliaryMaterialsStatisticHead head);
+
     AuxiliaryAddDTO afterComfirm(Long id);
 
     Map nextPeroidNumber(Integer periodId);
 
-    String saveOrCommit(AuxiliaryAddDTO auxiliaryAddDTO,Integer flag);
+    String saveOrCommit(AuxiliaryAddDTO auxiliaryAddDTO, Integer flag);
 
-    Page getPageUnCommit(AuxiliaryMaterialsStatisticHead head,Integer page,Integer size);
+    Page getPageUnCommit(AuxiliaryMaterialsStatisticHead head, Integer page, Integer size);
 
-    Page getPageCommit(AuxiliaryMaterialsStatisticHead head,Integer page,Integer size);
+    Page getPageCommit(AuxiliaryMaterialsStatisticHead head, Integer page, Integer size);
 
     Map stasticByProcess(AuxiliaryMaterialsStatisticHead head);
 
