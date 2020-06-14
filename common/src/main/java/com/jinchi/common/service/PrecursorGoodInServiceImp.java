@@ -334,6 +334,7 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
             GoodsInProcessStatisticHead head = goodsInProcessStatisticHeadMapper.selectByPrimaryKey(id);
             ans.setEndTime(head.getEndTime());
             ans.setStartTime(head.getStartTime());
+            ans.setPeriodId(head.getPeriodCode());
             ans.setPeriod(basicInfoPrecursorPeriodMapper.selectByPrimaryKey(head.getPeriodCode()).getName());
             ans.setLineName(head.getLineName());
             for (int i = 0; i < processes.size(); i++) {
