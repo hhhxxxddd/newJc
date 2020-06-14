@@ -648,7 +648,7 @@ public class MaterialDeliveryStatisticServiceImp implements MaterialDeliveryStat
             statisticHead.setCode(statisticCode);
             statisticHead.setFlag((byte) 1);
             statisticHeadMapper.updateByPrimaryKeySelective(statisticHead);
-            operationService.updateAllEndTime(statisticHead.getPeriodCode(), statisticHead.getLineName());
+            operationService.updateAllEndTime(commitDTO.getHead().getPeriodCode(), commitDTO.getHead().getLineName());
         }
         MaterialDeliveryStatisticSulfateConcentration sulfateConcentration = new MaterialDeliveryStatisticSulfateConcentration();
         sulfateConcentration.setStatisticCode(statisticCode);
