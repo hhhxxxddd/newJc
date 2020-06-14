@@ -216,6 +216,9 @@ public class ProductStorageServiceImp implements ProductStorageService {
             return "操作成功";
         } else {
             commit(id, details);
+            //将其结束时间更新到其他模块该周期类型、期数的结束时间。
+            ProductStorageStatisticHead head = headMapper.selectByPrimaryKey(id);
+            operationService.updateAllEndTime(head.getPeriodCode(), head.getLineName(), head.getEndTime());
             return "操作成功";
         }
     }
@@ -267,8 +270,6 @@ public class ProductStorageServiceImp implements ProductStorageService {
         ProductStorageStatisticHead head = headMapper.selectByPrimaryKey(id);
         head.setFlag(new Integer(1).byteValue());
         headMapper.updateByPrimaryKeySelective(head);
-
-        operationService.updateAllEndTime(head.getPeriodCode(), head.getLineName());
 
         ProductStorageStatisticDataDetailsExample example = new ProductStorageStatisticDataDetailsExample();
         example.createCriteria().andStatisticCodeEqualTo(id);

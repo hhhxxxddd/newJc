@@ -310,6 +310,9 @@ public class AuxiliaryServiceImp implements AuxiliaryService {
             return "保存成功";
         } else {
             commit(auxiliaryAddDTO);
+            //将其结束时间更新到其他模块该周期类型、期数的结束时间。
+            AuxiliaryMaterialsStatisticHead head = headMapper.selectByPrimaryKey(auxiliaryAddDTO.getHead().getCode());
+            operationService.updateAllEndTime(head.getPeriodCode(), head.getPeriods(), head.getEndTime());
             return "提交成功";
         }
     }
@@ -511,9 +514,6 @@ public class AuxiliaryServiceImp implements AuxiliaryService {
 
         Long id = auxiliaryAddDTO.getHead().getCode();
         Integer periods = auxiliaryAddDTO.getHead().getPeriods();
-        Integer periodId = auxiliaryAddDTO.getHead().getPeriodCode();
-
-        operationService.updateAllEndTime(periodId, periods);
 
         //按工序统计+全部统计
         BasicInfoPrecursorProcessTypeExample example = new BasicInfoPrecursorProcessTypeExample();

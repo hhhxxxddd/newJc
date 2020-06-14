@@ -54,30 +54,30 @@ public class PrecursorHeadTableOperationServiceImp implements PrecursorHeadTable
     }
 
     @Override
-    public void updateAllEndTime(Integer periodId, Integer periods) {
+    public void updateAllEndTime(Integer periodId, Integer periods, Date endTime) {
 
         MaterialDeliveryStatisticHeadExample matExample = new MaterialDeliveryStatisticHeadExample();
         matExample.createCriteria().andPeriodCodeEqualTo(periodId).andLineNameEqualTo(periods);
         MaterialDeliveryStatisticHead matHead = new MaterialDeliveryStatisticHead();
-        matHead.setEndTime(new Date());
+        matHead.setEndTime(endTime);
         matHeadMapper.updateByExampleSelective(matHead, matExample);
 
         GoodsInProcessStatisticHeadExample goodExample = new GoodsInProcessStatisticHeadExample();
         goodExample.createCriteria().andPeriodCodeEqualTo(periodId).andLineNameEqualTo(periods);
         GoodsInProcessStatisticHead goodHead = new GoodsInProcessStatisticHead();
-        goodHead.setEndTime(new Date());
+        goodHead.setEndTime(endTime);
         goodsHeadMapper.updateByExampleSelective(goodHead, goodExample);
 
         ProductStorageStatisticHeadExample psExample = new ProductStorageStatisticHeadExample();
         psExample.createCriteria().andPeriodCodeEqualTo(periodId).andLineNameEqualTo(periods);
         ProductStorageStatisticHead psHead = new ProductStorageStatisticHead();
-        psHead.setEndTime(new Date());
+        psHead.setEndTime(endTime);
         psHeadMapper.updateByExampleSelective(psHead, psExample);
 
         AuxiliaryMaterialsStatisticHeadExample amsExample = new AuxiliaryMaterialsStatisticHeadExample();
         amsExample.createCriteria().andPeriodCodeEqualTo(periodId).andPeriodsEqualTo(periods);
         AuxiliaryMaterialsStatisticHead amsHead = new AuxiliaryMaterialsStatisticHead();
-        amsHead.setEndTime(new Date());
+        amsHead.setEndTime(endTime);
         amsHeadMapper.updateByExampleSelective(amsHead, amsExample);
     }
 }

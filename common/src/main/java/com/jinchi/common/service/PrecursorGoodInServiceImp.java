@@ -592,6 +592,9 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
             ans = "保存成功";
         } else {
             commit(stasticId, goodInTableDTO);
+            //将其结束时间更新到其他模块该周期类型、期数的结束时间。
+            GoodsInProcessStatisticHead head = goodsInProcessStatisticHeadMapper.selectByPrimaryKey(stasticId);
+            operationService.updateAllEndTime(head.getPeriodCode(), head.getLineName(), head.getEndTime());
             ans = "提交成功";
         }
         return ans;
@@ -786,8 +789,6 @@ public class PrecursorGoodInServiceImp implements PrecursorGoodInService {
 
     private void commit(Long stasticId, GoodInTableDTO goodInTableDTO) {
         save(stasticId, goodInTableDTO);
-
-        operationService.updateAllEndTime(goodInTableDTO.getPeriodId(), goodInTableDTO.getLineName());
 
         List<GoodInProcessDTO> list = goodInTableDTO.getGoodInProcessDTOS();
         Float totalNi = 0f;
