@@ -58,6 +58,8 @@ public class DeviceMaintenanceRecordServiceImp implements DeviceMaintenanceRecor
                 deviceMaintenanceRecordHeadDto.setPlanDate(deviceMaintenanceRecordHeads.get(j).getPlanDate());
                 deviceMaintenanceRecordHeadDto.setReceiveDate(deviceMaintenanceRecordHeads.get(j).getReceiveDate());
                 deviceMaintenanceRecordHeadDto.setFinishDate(deviceMaintenanceRecordHeads.get(j).getFinishiDate());
+                String sqlMaintain = "SELECT * FROM `device_maintenance_plans_head` WHERE `code` = '" + deviceMaintenanceRecordHeads.get(j).getPlanCode() + "'";
+                deviceMaintenanceRecordHeadDto.setMaintainFrequency(String.valueOf(deviceMaintenancePlansHeadMapper.selectByCondition(sqlMaintain).get(0).getMaintPeriod()));
                 deviceMaintenanceRecordHeadDtos.add(deviceMaintenanceRecordHeadDto);
             }
         }
@@ -91,6 +93,7 @@ public class DeviceMaintenanceRecordServiceImp implements DeviceMaintenanceRecor
             deviceMaintenanceFormatDto.setPlanCode(deviceMaintenanceGetDtos.get(i).getDeviceMaintenanceRecordHeadDto().getPlanCode());
             deviceMaintenanceFormatDto.setReceiveDate(deviceMaintenanceGetDtos.get(i).getDeviceMaintenanceRecordHeadDto().getReceiveDate());
             deviceMaintenanceFormatDto.setFinishDate(deviceMaintenanceGetDtos.get(i).getDeviceMaintenanceRecordHeadDto().getFinishDate());
+            deviceMaintenanceFormatDto.setMaintainFrequency(deviceMaintenanceGetDtos.get(i).getDeviceMaintenanceRecordHeadDto().getMaintainFrequency());
             deviceMaintenanceFormatDtos.add(deviceMaintenanceFormatDto);
         }
         return deviceMaintenanceFormatDtos;
@@ -169,7 +172,7 @@ public class DeviceMaintenanceRecordServiceImp implements DeviceMaintenanceRecor
                 if (d.getUnits() == 2) {
                     dto.setUnits("套");
                 }
-                if(d.getUnits() == 3){
+                if (d.getUnits() == 3) {
                     dto.setUnits("米");
                 }
             } else {
@@ -219,7 +222,7 @@ public class DeviceMaintenanceRecordServiceImp implements DeviceMaintenanceRecor
                         if (dto.getUnits().equals("套")) {
                             accessory.setUnits(Byte.parseByte("2"));
                         }
-                        if(dto.getUnits().equals("米")){
+                        if (dto.getUnits().equals("米")) {
                             accessory.setUnits(Byte.parseByte("3"));
                         }
                     }

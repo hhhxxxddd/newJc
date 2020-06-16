@@ -14,17 +14,19 @@ import java.util.Date;
 public class DeviceMaintenanceRecordHeadDto {
     private Long code;
     private String planCode;
-//    private String deviceCode;
+    //    private String deviceCode;
     private String fixedassetsCode;
     private String deviceName;
     private String deptCode;
 
+    private String maintainFrequency;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date planDate;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date receiveDate;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -94,5 +96,13 @@ public class DeviceMaintenanceRecordHeadDto {
 
     public void setFinishDate(Date finishDate) {
         this.finishDate = finishDate;
+    }
+
+    public String getMaintainFrequency() {
+        return maintainFrequency;
+    }
+
+    public void setMaintainFrequency(String maintainFrequency) {
+        this.maintainFrequency = maintainFrequency;
     }
 }

@@ -22,12 +22,14 @@ public class DeviceMaintenanceFormatDto {
     private String deptCode;
     private String planCode;
 
+    private String maintainFrequency;
+
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date planDate;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonFormat(pattern = "yyyy-MM-dd",timezone = "GMT+8")
+    @JsonFormat(pattern = "yyyy-MM-dd", timezone = "GMT+8")
     private Date receiveDate;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
@@ -112,6 +114,14 @@ public class DeviceMaintenanceFormatDto {
 
     public void setPlanCode(String planCode) {
         this.planCode = planCode;
+    }
+
+    public String getMaintainFrequency() {
+        return maintainFrequency;
+    }
+
+    public void setMaintainFrequency(String maintainFrequency) {
+        this.maintainFrequency = maintainFrequency;
     }
 
     public DeviceMaintenanceFormatDto() {
