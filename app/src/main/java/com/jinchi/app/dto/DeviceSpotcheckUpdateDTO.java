@@ -15,6 +15,8 @@ import java.util.List;
 @JsonInclude(JsonInclude.Include.NON_EMPTY)
 public class DeviceSpotcheckUpdateDTO {
 
+    private Long recordId;
+
     private Long deviceCode;
 
     private Long planCode;
@@ -98,5 +100,13 @@ public class DeviceSpotcheckUpdateDTO {
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     public void setDeviceCode(Long deviceCode) {
         this.deviceCode = deviceCode;
+    }
+
+    public Long getRecordId() {
+        return recordId;
+    }
+
+    public void setRecordId(Long recordId) {
+        this.recordId = recordId;
     }
 }

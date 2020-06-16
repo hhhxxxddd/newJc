@@ -95,6 +95,16 @@ public class DeviceSpotcheckController {
         }
     }
 
+    @PostMapping(value = "updateForReject")
+    @ApiOperation(value = "驳回记录的更新")
+    public Result updateForReject(@RequestBody DeviceSpotcheckUpdateDTO dto) {
+        if (deviceSpotcheckService.rejectAndEdit(dto) != 0) {
+            return ResultUtil.error("操作失败");
+        } else {
+            return ResultUtil.success("操作成功");
+        }
+    }
+
     @PostMapping(value = "getDataByIdCard")
     @ApiOperation(value = "nfc打卡")
     public Result getDataByIdCard(@RequestBody SpotcheckNFCDTO dto) {
@@ -122,6 +132,16 @@ public class DeviceSpotcheckController {
     @ApiOperation(value = "点检主管确认")
     public Result spotcheckManagerConfirm(@RequestBody IdDto idDto) {
         if (deviceSpotcheckService.managerConfirm(idDto) == 1) {
+            return ResultUtil.success(new IdDto());
+        } else {
+            return ResultUtil.error("操作失败！");
+        }
+    }
+
+    @PostMapping(value = "reject")
+    @ApiOperation(value = "点检主管驳回")
+    public Result spotcheckManagerReject(@RequestBody IdDto idDto) {
+        if (deviceSpotcheckService.managerReject(idDto) == 1) {
             return ResultUtil.success(new IdDto());
         } else {
             return ResultUtil.error("操作失败！");

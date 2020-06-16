@@ -481,6 +481,45 @@ public class DeviceSpotcheckServiceImp implements DeviceSpotcheckService {
     }
 
     @Override
+    public int rejectAndEdit(DeviceSpotcheckUpdateDTO dto) {
+        Long recordId = dto.getRecordId();
+        Integer statusCode = dto.getStatusCode();
+
+        //更新设备状态
+        DeviceDocumentMainExample mainExample = new DeviceDocumentMainExample();
+        mainExample.createCriteria().andCodeEqualTo(dto.getDeviceCode());
+        DeviceDocumentMain deviceDocumentMain = new DeviceDocumentMain();
+        deviceDocumentMain.setStatusCode(statusCode);
+        deviceDocumentMainMapper.updateByExampleSelective(deviceDocumentMain, mainExample);
+
+        //更新点检记录头表
+        DeviceSpotcheckRecordHead head = new DeviceSpotcheckRecordHead();
+        head.setCode(recordId);
+        head.setReceiveTime(new Date());
+        head.setReceivePeople(dto.getUserId());
+        head.setSpotcheckPeople(dto.getUserId());
+        head.setScanIdCode(dto.getScanIdCode());
+        head.setScanTime(dto.getScanTime());
+        head.setSpotcheckComment(dto.getSpotcheckComment());
+        head.setFinishTime(new Date());
+        head.setEditFlag(1);//重新提交，状态变为1 待确认
+        deviceSpotcheckRecordHeadMapper.updateByPrimaryKeySelective(head);
+
+        //点检结果更新到数据库
+        List<SpotcheckItemDetailDTO> itemDTOs = dto.getItemDTOs();
+
+        for (int i = 0; i < itemDTOs.size(); i++) {
+            DeviceSpotcheckRecordDetailsExample example2 = new DeviceSpotcheckRecordDetailsExample();
+            example2.createCriteria().andCodeEqualTo(itemDTOs.get(i).getItemId());
+            DeviceSpotcheckRecordDetails details = new DeviceSpotcheckRecordDetails();
+            details.setMainValues(itemDTOs.get(i).getMainValues());
+            details.setMainContent(itemDTOs.get(i).getMainContent());
+            deviceSpotcheckRecordDetailsMapper.updateByExampleSelective(details, example2);
+        }
+        return 0;
+    }
+
+    @Override
     public List<DeviceSpotcheckRecordHistoryGetDTO> page(DeviceSpotcheckRecordHistoryPostDTO dto) {
         List<DeviceSpotcheckRecordHistoryGetDTO> deviceSpotcheckRecordHistoryGetDTOS = new ArrayList<>();
         int userId = dto.getUserId();
@@ -684,5 +723,19 @@ public class DeviceSpotcheckServiceImp implements DeviceSpotcheckService {
         BasicInfoDeviceStatusExample example = new BasicInfoDeviceStatusExample();
         example.createCriteria();
         return statusMapper.selectByExample(example);
+    }
+
+    @Override
+    public int managerReject(IdDto idDto) {
+        long recordId = idDto.getId();
+
+
+        DeviceSpotcheckRecordHeadExample example = new DeviceSpotcheckRecordHeadExample();
+        example.createCriteria().andCodeEqualTo(recordId);
+        DeviceSpotcheckRecordHead head = new DeviceSpotcheckRecordHead();
+        head.setEditFlag(3);//flag=3 表示驳回状态
+        head.setSpotcheckComment(idDto.getComment());//填写驳回原因
+
+        return deviceSpotcheckRecordHeadMapper.updateByExampleSelective(head, example);
     }
 }

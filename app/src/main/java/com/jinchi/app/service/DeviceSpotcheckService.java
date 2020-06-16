@@ -30,6 +30,8 @@ public interface DeviceSpotcheckService {
 
     int updateByFlag(DeviceSpotcheckUpdateDTO dto);//提交或暂存
 
+    int rejectAndEdit(DeviceSpotcheckUpdateDTO dto);//驳回后重新编辑
+
     SpotcheckNFCResultDTO getDataByNfc(SpotcheckNFCDTO dto);
 
     List<DeviceSpotcheckRecordHistoryGetDTO> page(DeviceSpotcheckRecordHistoryPostDTO dto);
@@ -47,4 +49,6 @@ public interface DeviceSpotcheckService {
     String upload(MultipartFile file) throws IOException;
 
     void cancelLoad(String path);
+
+    int managerReject(IdDto idDto);
 }

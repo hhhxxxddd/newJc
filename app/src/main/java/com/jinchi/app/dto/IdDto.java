@@ -2,7 +2,6 @@ package com.jinchi.app.dto;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import com.fasterxml.jackson.annotation.JsonInclude;
-import com.fasterxml.jackson.annotation.JsonProperty;
 
 /**
  * @author: LiuTaoYi
@@ -13,10 +12,22 @@ import com.fasterxml.jackson.annotation.JsonProperty;
 public class IdDto {
     private Long id;
     private Integer userId;
+
+    private String comment;
+
+    public String getComment() {
+        return comment;
+    }
+
+    public void setComment(String comment) {
+        this.comment = comment;
+    }
+
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     public Integer getUserId() {
         return userId;
     }
+
     @JsonFormat(shape = JsonFormat.Shape.STRING)
     public void setUserId(Integer userId) {
         this.userId = userId;
