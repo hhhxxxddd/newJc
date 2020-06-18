@@ -19,6 +19,7 @@ public interface TechniqueRawItemRecordMapper {
 
     /**
      * 批量新增
+     *
      * @param techniqueRawItemRecords 物料主成分对应表
      */
     void batchInsert(List<TechniqueRawItemRecord> techniqueRawItemRecords);
@@ -27,4 +28,6 @@ public interface TechniqueRawItemRecordMapper {
      * 根据物料id查询
      */
     List<TechniqueRawItemRecord> byRawId(@Param("rawId") Integer rawId);
+
+    void deleteByMaterialId(@Param("rawId") Integer rawId);
 }

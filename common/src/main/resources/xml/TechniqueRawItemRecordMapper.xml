@@ -6,7 +6,7 @@
     <insert id="batchInsert" parameterType="List">
         INSERT INTO jc_integration_db.technique_raw_item_record(raw_material_id, test_item_id)
         VALUES
-        <foreach collection="list"  separator="," index="index" item="item">
+        <foreach collection="list" separator="," index="index" item="item">
             (#{item.rawMaterialId},#{item.testItemId})
         </foreach>
     </insert>
@@ -16,4 +16,11 @@
         SELECT * FROM jc_integration_db.technique_raw_item_record AS trir
         WHERE trir.raw_material_id=#{rawId}
     </select>
+
+    <!--根据物料id删除-->
+    <delete id="deleteByMaterialId" parameterType="Integer">
+        DELETE
+        FROM technique_raw_item_record
+        WHERE raw_material_id = #{rawId}
+    </delete>
 </mapper>

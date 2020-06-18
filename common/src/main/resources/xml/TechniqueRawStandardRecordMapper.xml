@@ -27,6 +27,12 @@
         WHERE trsr.raw_manufacturer_id=#{factoryId} AND trsr.raw_material_id=#{materialId}
     </select>
 
+    <!--根据工厂id查询-->
+    <select id="byFactoryId" resultType="TechniqueRawStandardRecord">
+        SELECT * FROM  jc_integration_db.technique_raw_standard_record as trsr
+        WHERE trsr.raw_manufacturer_id=#{factoryId}
+    </select>
+
     <!--根据id查询-->
     <select id="findById" parameterType="Integer" resultType="TechniqueRawStandardRecord">
         SELECT * FROM  jc_integration_db.technique_raw_standard_record as trsr

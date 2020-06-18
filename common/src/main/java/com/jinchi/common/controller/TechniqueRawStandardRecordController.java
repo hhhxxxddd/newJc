@@ -5,6 +5,7 @@ import com.jinchi.common.domain.TechniqueBaseRawMaterial;
 import com.jinchi.common.domain.TestItem;
 import com.jinchi.common.dto.CommonBatchNumberDTO;
 import com.jinchi.common.dto.Result;
+import com.jinchi.common.dto.technique.TechniqueBaseRawManufacturerDTO;
 import com.jinchi.common.dto.technique.TechniqueRawStandardRecordDTO;
 import com.jinchi.common.service.TechniqueRawStandardRecordService;
 import com.jinchi.common.utils.ResultUtil;
@@ -36,14 +37,40 @@ public class TechniqueRawStandardRecordController {
      */
     @PostMapping(value = "/newRaw")
     @ApiOperation(value = "新增原料")
-    public Result<TechniqueBaseRawMaterial> addRaw( @RequestParam Integer serialNumberId,@RequestParam Integer[] testItemIds){
+    public Result<TechniqueBaseRawMaterial> addRaw(@RequestParam Integer serialNumberId, @RequestParam Integer[] testItemIds) {
         return ResultUtil.success(techniqueRawStandardRecordService.addNewRawMaterial(serialNumberId, Arrays.asList(testItemIds)));
+    }
+
+    @PostMapping(value = "/updateRaw")
+    @ApiOperation(value = "原材料更新名称")
+    public Result<TechniqueBaseRawMaterial> updateRaw(@RequestBody TechniqueBaseRawMaterial rawMaterial) {
+        return ResultUtil.success(techniqueRawStandardRecordService.updateRaw(rawMaterial));
     }
 
     @PostMapping(value = "/addRaw")
     @ApiOperation(value = "新增原料")
-    public Result<TechniqueBaseRawMaterial> addRawExtra( @RequestParam String materialName,@RequestParam Integer[] testItemIds){
-        return ResultUtil.success(techniqueRawStandardRecordService.addRowExtra(materialName,testItemIds));
+    public Result<TechniqueBaseRawMaterial> addRawExtra(@RequestParam String materialName, @RequestParam Integer[] testItemIds) {
+        return ResultUtil.success(techniqueRawStandardRecordService.addRowExtra(materialName, testItemIds));
+    }
+
+    @DeleteMapping(value = "/deleteRaw")
+    @ApiOperation(value = "删除原料")
+    public Result deleteRawExtra(@RequestParam Integer materialId) {
+        int value = techniqueRawStandardRecordService.deleteRawExtra(materialId);
+        if (value == -1) {
+            return ResultUtil.error("存在生产厂家，请先删除该原材料下所有生产厂家");
+        }
+        return ResultUtil.success();
+    }
+
+    @DeleteMapping(value = "/deleteManufacturer")
+    @ApiOperation(value = "删除工厂")
+    public Result deleteManufacturer(@RequestParam Integer manufacturerId) {
+        int value = techniqueRawStandardRecordService.deleteManufacturer(manufacturerId);
+        if (value == -1) {
+            return ResultUtil.error("存在原材料标准，不可删除");
+        }
+        return ResultUtil.success();
     }
 
     /**
@@ -51,8 +78,8 @@ public class TechniqueRawStandardRecordController {
      */
     @PostMapping(value = "/newManufacturer")
     @ApiOperation(value = "新增工厂")
-    public Result<TechniqueBaseRawManufacturer> addManufacturer(@Valid @RequestBody TechniqueBaseRawManufacturer techniqueBaseRawManufacturer){
-        return ResultUtil.success(techniqueRawStandardRecordService.addNewRawManufacturer(techniqueBaseRawManufacturer));
+    public Result<TechniqueBaseRawManufacturer> addManufacturer(@Valid @RequestBody TechniqueBaseRawManufacturerDTO techniqueBaseRawManufacturerDTO) {
+        return ResultUtil.success(techniqueRawStandardRecordService.addNewRawManufacturer(techniqueBaseRawManufacturerDTO));
     }
 
     /**
@@ -73,18 +100,20 @@ public class TechniqueRawStandardRecordController {
      */
     @GetMapping(value = "/manufacturers")
     @ApiOperation(value = "查询所有原料")
-    public Result<List<TechniqueBaseRawManufacturer>> allRawManufacturer(@ApiParam(name = "name",value = "工厂名称") @RequestParam(required = false) String name){
+    public Result<List<TechniqueBaseRawManufacturer>> allRawManufacturer(@ApiParam(name = "name", value = "工厂名称") @RequestParam(required = false) String name) {
         return ResultUtil.success(techniqueRawStandardRecordService.baseRawManufacturerNameLike(name));
     }
 
-
-
-
-
+    @GetMapping(value = "/manufacturerByRawId")
+    @ApiOperation(value = "根据原材料ID查询对应的生产厂家")
+    public Result<List<TechniqueBaseRawManufacturer>> getManufacturersByRawId(@ApiParam(name = "rawMaterialId", value = "原材料id") @RequestParam Integer rawMaterialId) {
+        return ResultUtil.success(techniqueRawStandardRecordService.baseRawManufacturerById(rawMaterialId));
+    }
 
 
     /**
      * 查询所有标准
+     *
      * @param name 人名称模糊
      * @return
      */

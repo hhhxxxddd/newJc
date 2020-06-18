@@ -8,6 +8,7 @@ import com.jinchi.common.dto.AuthUserDTO;
 import com.jinchi.common.dto.CommonBatchNumberDTO;
 import com.jinchi.common.dto.KeyforProRawStandard;
 import com.jinchi.common.dto.RawStandardDTO;
+import com.jinchi.common.dto.technique.TechniqueBaseRawManufacturerDTO;
 import com.jinchi.common.dto.technique.TechniqueRawStandardRecordDTO;
 import com.jinchi.common.dto.technique.TechniqueRawTestItemDTO;
 import com.jinchi.common.mapper.*;
@@ -46,6 +47,8 @@ public class TechniqueRawStandardRecordServiceImp implements TechniqueRawStandar
     private TechniqueRawItemRecordMapper techniqueRawItemRecordMapper;
     @Autowired
     private RepoBaseSerialNumberMapper repoBaseSerialNumberMapper;
+    @Autowired
+    TechniqueBaseRawBindManufacturerMapper rawBindManufacturerMapper;
 
     /**
      * 查询所有原材料
@@ -127,13 +130,78 @@ public class TechniqueRawStandardRecordServiceImp implements TechniqueRawStandar
      * @return
      */
     @Override
-    public TechniqueBaseRawManufacturer addNewRawManufacturer(TechniqueBaseRawManufacturer newValue) {
-        String manufacturer = newValue.getName();
+    public TechniqueBaseRawManufacturer addNewRawManufacturer(TechniqueBaseRawManufacturerDTO newValue) {
+        String manufacturer = newValue.getTechniqueBaseRawManufacturer().getName();
         TechniqueBaseRawManufacturer oldValue = techniqueBaseRawManufacturerMapper.getByName(manufacturer);
-        TechniqueBaseRawManufacturer oldValueByCode = techniqueBaseRawManufacturerMapper.byCode(newValue.getCode());
-        Assert.isTrue(null==oldValue&&null==oldValueByCode, "新增失败,存在名称或代号相同的原材料");
-        techniqueBaseRawManufacturerMapper.insert(newValue);
-        return newValue;
+        TechniqueBaseRawManufacturer oldValueByCode = techniqueBaseRawManufacturerMapper.byCode(newValue.getTechniqueBaseRawManufacturer().getCode());
+        Assert.isTrue(null == oldValue && null == oldValueByCode, "新增失败,存在名称或代号相同的原材料");
+        techniqueBaseRawManufacturerMapper.insert(newValue.getTechniqueBaseRawManufacturer());
+        int manufacturerId = newValue.getTechniqueBaseRawManufacturer().getId();
+
+        //生产厂家与原材料绑定
+        TechniqueBaseRawBindManufacturer rawBindManufacturer = new TechniqueBaseRawBindManufacturer();
+        rawBindManufacturer.setManufacturerId(manufacturerId);
+        rawBindManufacturer.setRawId(newValue.getRawMaterialId());
+        rawBindManufacturerMapper.insertSelective(rawBindManufacturer);
+
+        return newValue.getTechniqueBaseRawManufacturer();
+    }
+
+    @Override
+    public int deleteRawExtra(Integer materialId) {
+
+        TechniqueBaseRawBindManufacturerExample example = new TechniqueBaseRawBindManufacturerExample();
+        example.createCriteria().andRawIdEqualTo(materialId);
+        List<TechniqueBaseRawBindManufacturer> list = rawBindManufacturerMapper.selectByExample(example);
+        if (list.size() > 0) {
+            return -1;
+        }
+
+        //将对应绑定的主成分记录删除
+        techniqueRawItemRecordMapper.deleteByMaterialId(materialId);
+
+        //删除对应的原材料
+        techniqueBaseRawMaterialMapper.deleteById(materialId);
+        return 0;
+    }
+
+    @Override
+    public TechniqueBaseRawMaterial updateRaw(TechniqueBaseRawMaterial rawMaterial) {
+        techniqueBaseRawMaterialMapper.update(rawMaterial);
+        return rawMaterial;
+    }
+
+    @Override
+    public int deleteManufacturer(Integer manufacturerId) {
+        List<TechniqueRawStandardRecord> list = techniqueRawStandardRecordMapper.byFactoryId(manufacturerId);
+        if (list.size() > 0) {
+            return -1;
+        }
+
+        //删除与原材料的绑定记录
+        TechniqueBaseRawBindManufacturerExample example = new TechniqueBaseRawBindManufacturerExample();
+        example.createCriteria().andManufacturerIdEqualTo(manufacturerId);
+        rawBindManufacturerMapper.deleteByExample(example);
+
+        //删除对应的生产厂家
+        techniqueBaseRawManufacturerMapper.deleteById(manufacturerId);
+
+        return 0;
+    }
+
+    @Override
+    public List<TechniqueBaseRawManufacturer> baseRawManufacturerById(Integer rawMaterialId) {
+
+        TechniqueBaseRawBindManufacturerExample example = new TechniqueBaseRawBindManufacturerExample();
+        example.createCriteria().andRawIdEqualTo(rawMaterialId);
+        List<TechniqueBaseRawBindManufacturer> rawBindManufacturers = rawBindManufacturerMapper.selectByExample(example);
+
+        List<TechniqueBaseRawManufacturer> manufacturers = new ArrayList<>();
+
+        for (int i = 0; i < rawBindManufacturers.size(); i++) {
+            manufacturers.add(techniqueBaseRawManufacturerMapper.getById(rawBindManufacturers.get(i).getManufacturerId()));
+        }
+        return manufacturers;
     }
 
 

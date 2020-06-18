@@ -5,6 +5,7 @@ import com.jinchi.common.domain.TechniqueBaseRawMaterial;
 import com.jinchi.common.domain.TestItem;
 import com.jinchi.common.dto.CommonBatchNumberDTO;
 import com.jinchi.common.dto.RawStandardDTO;
+import com.jinchi.common.dto.technique.TechniqueBaseRawManufacturerDTO;
 import com.jinchi.common.dto.technique.TechniqueRawStandardRecordDTO;
 
 import java.util.List;
@@ -39,10 +40,11 @@ public interface TechniqueRawStandardRecordService {
 
     /**
      * 新增原料厂家
+     *
      * @param newValue 厂家实体
      * @return
      */
-    TechniqueBaseRawManufacturer addNewRawManufacturer(TechniqueBaseRawManufacturer newValue);
+    TechniqueBaseRawManufacturer addNewRawManufacturer(TechniqueBaseRawManufacturerDTO newValue);
 
 
 
@@ -89,10 +91,17 @@ public interface TechniqueRawStandardRecordService {
      */
     List<String> lastStandard(Integer rawId, String materialName, String manufacturerName);
 
-    TechniqueBaseRawMaterial addRowExtra(String materialName,Integer[] ids);
+    TechniqueBaseRawMaterial addRowExtra(String materialName, Integer[] ids);
 
     List getItemsByRawId(Integer rawId);
 
     List<RawStandardDTO> getCurrentRawStandard();
 
+    int deleteRawExtra(Integer materialId);
+
+    List<TechniqueBaseRawManufacturer> baseRawManufacturerById(Integer rawMaterialId);
+
+    int deleteManufacturer(Integer manufacturerId);
+
+    TechniqueBaseRawMaterial updateRaw(TechniqueBaseRawMaterial rawMaterial);
 }

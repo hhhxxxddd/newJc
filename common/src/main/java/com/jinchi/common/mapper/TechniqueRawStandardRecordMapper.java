@@ -19,6 +19,7 @@ public interface TechniqueRawStandardRecordMapper {
 
     /**
      * 新增
+     *
      * @param techniqueRawStandardRecord 原材料标准实体
      * @return
      */
@@ -26,12 +27,14 @@ public interface TechniqueRawStandardRecordMapper {
 
     /**
      * 更新 仅时间
+     *
      * @param techniqueRawStandardRecord 原材料标准实体
      */
     void update(TechniqueRawStandardRecord techniqueRawStandardRecord);
 
     /**
      * 查询
+     *
      * @param id 主键
      * @return
      */
@@ -39,6 +42,7 @@ public interface TechniqueRawStandardRecordMapper {
 
     /**
      * 查询
+     *
      * @param batchNumberId 批号id
      * @return
      */
@@ -46,19 +50,31 @@ public interface TechniqueRawStandardRecordMapper {
 
     /**
      * 根据工厂id和原料id查询
+     *
      * @param materialId
      * @param factoryId
      * @return
      */
-    List<TechniqueRawStandardRecord> byMaterialIdAndFactoryId(@Param("materialId") Integer materialId,@Param("factoryId")Integer factoryId);
+    List<TechniqueRawStandardRecord> byMaterialIdAndFactoryId(@Param("materialId") Integer materialId, @Param("factoryId") Integer factoryId);
+
+    //byFactoryId
+
+    /**
+     * 根据工厂id查询
+     *
+     * @param factoryId
+     * @return
+     */
+    List<TechniqueRawStandardRecord> byFactoryId(@Param("factoryId") Integer factoryId);
 
     /**
      * 查询最新标准
+     *
      * @param materialId 原料id
-     * @param factoryId 工厂id
+     * @param factoryId  工厂id
      * @return
      */
-    TechniqueRawStandardRecord lastedStandard(@Param("materialId") Integer materialId,@Param("factoryId")Integer factoryId);
+    TechniqueRawStandardRecord lastedStandard(@Param("materialId") Integer materialId, @Param("factoryId") Integer factoryId);
 
 
     List<TechniqueRawStandardRecord> getAll();
