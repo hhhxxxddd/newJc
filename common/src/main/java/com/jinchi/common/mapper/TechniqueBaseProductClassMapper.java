@@ -24,17 +24,26 @@ public interface TechniqueBaseProductClassMapper {
 
     /**
      * 更新型号
+     *
      * @param techniqueBaseProductClass 型号实体
      */
     void update(TechniqueBaseProductClass techniqueBaseProductClass);
 
     /**
+     * 更新型号名称
+     *
+     * @param techniqueBaseProductClass 型号实体
+     */
+    void updateName(TechniqueBaseProductClass techniqueBaseProductClass);
+
+    /**
      * 查询所有型号
-     * @param name 型号名称
+     *
+     * @param name     型号名称
      * @param parentId 父id
      * @return
      */
-    List<TechniqueBaseProductClass> nameLikeAndParentIs(@Param("name") String name,@Param("parentId") Integer parentId);
+    List<TechniqueBaseProductClass> nameLikeAndParentIs(@Param("name") String name, @Param("parentId") Integer parentId);
 
     /**
      * 根据id查询
@@ -43,4 +52,5 @@ public interface TechniqueBaseProductClassMapper {
      */
     TechniqueBaseProductClass findById(@Param("id") Integer id);
 
+    void deleteById(@Param("id") Integer id);
 }

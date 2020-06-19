@@ -41,6 +41,8 @@ public class TechniqueProductServiceImp implements TechniqueProductService {
     TechniqueBaseProductClassMapper techniqueBaseProductClassMapper;
     @Autowired
     AuthUserService authUserService;
+    @Autowired
+    TechniqueBaseProductBindManufacturerMapper productBindManufacturerMapper;
 
     @Override
     public void add(String productName) {
@@ -298,5 +300,30 @@ public class TechniqueProductServiceImp implements TechniqueProductService {
             ans.add(standards.get(i).getTestItemId());
         }
         return ans;
+    }
+
+    @Override
+    public TechniqueBaseProductMaterial editProductName(TechniqueBaseProductMaterial techniqueBaseProductMaterial) {
+        TechniqueBaseProductMaterialExample example = new TechniqueBaseProductMaterialExample();
+        example.createCriteria().andIdEqualTo(techniqueBaseProductMaterial.getId());
+        techniqueBaseProductMaterialMapper.updateByExampleSelective(techniqueBaseProductMaterial, example);
+        return techniqueBaseProductMaterial;
+    }
+
+    @Override
+    public Integer deleteById(Integer productId) {
+        TechniqueBaseProductBindManufacturerExample example = new TechniqueBaseProductBindManufacturerExample();
+        example.createCriteria().andProductIdEqualTo(productId);
+        List<TechniqueBaseProductBindManufacturer> list = productBindManufacturerMapper.selectByExample(example);
+
+        if (list.size() > 0) {
+            return -1;
+        }
+
+        TechniqueBaseProductMaterialExample example1 = new TechniqueBaseProductMaterialExample();
+        example1.createCriteria().andIdEqualTo(productId);
+        techniqueBaseProductMaterialMapper.deleteByExample(example1);
+
+        return 0;
     }
 }

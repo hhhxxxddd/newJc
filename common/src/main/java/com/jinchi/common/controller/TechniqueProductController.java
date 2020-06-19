@@ -1,5 +1,6 @@
 package com.jinchi.common.controller;
 
+import com.jinchi.common.domain.TechniqueBaseProductMaterial;
 import com.jinchi.common.domain.TestItemsPlus;
 import com.jinchi.common.dto.Result;
 import com.jinchi.common.service.TechniqueProductService;
@@ -21,20 +22,36 @@ public class TechniqueProductController {
 
     @PostMapping
     @ApiOperation(value = "新增成品")
-    public Result add(@RequestParam String productName){
+    public Result add(@RequestParam String productName) {
         techniqueProductService.add(productName);
+        return ResultUtil.success();
+    }
+
+    @PostMapping(value = "editProductName")
+    @ApiOperation(value = "编辑成品名称")
+    public Result editProductName(@RequestBody TechniqueBaseProductMaterial techniqueBaseProductMaterial) {
+        return ResultUtil.success(techniqueProductService.editProductName(techniqueBaseProductMaterial));
+    }
+
+    @DeleteMapping("deleteById")
+    @ApiOperation(value = "删除成品")
+    public Result add(@RequestParam Integer productId) {
+        Integer value = techniqueProductService.deleteById(productId);
+        if (value == -1) {
+            return ResultUtil.error("存在成品型号，请先删除成品下的所有型号");
+        }
         return ResultUtil.success();
     }
 
     @GetMapping
     @ApiOperation(value = "根据成品物料id查询检测项目")
-    public Result getItemsByProductId(@RequestParam Integer id){
+    public Result getItemsByProductId(@RequestParam Integer id) {
         return ResultUtil.success(techniqueProductService.getItemsByProductId(id));
     }
 
     @PostMapping(value = "addStandard")
     @ApiOperation(value = "新增成品标准")
-    public Result addProductStandard(@ApiParam(name = "productId",value = "产品id") @RequestParam Integer productId,
+    public Result addProductStandard(@ApiParam(name = "productId", value = "产品id") @RequestParam Integer productId,
                                      @ApiParam(name = "classId",value = "型号id") @RequestParam Integer classId,
                                      @ApiParam(name = "createUser",value = "创建人") @RequestParam Integer createUser,
                                      @ApiParam(name = "items",value = "检测项目") @RequestBody List<TestItemsPlus> items,

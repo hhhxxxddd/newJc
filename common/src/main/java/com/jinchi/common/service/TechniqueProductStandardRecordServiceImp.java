@@ -5,6 +5,7 @@ import com.jinchi.common.constant.BatchTypeEnum;
 import com.jinchi.common.domain.*;
 import com.jinchi.common.dto.AuthUserDTO;
 import com.jinchi.common.dto.CommonBatchNumberDTO;
+import com.jinchi.common.dto.technique.TechniqueBaseProductClassDTO;
 import com.jinchi.common.dto.technique.TechniqueProductStandardRecordDTO;
 import com.jinchi.common.dto.technique.TechniqueProductTestItemDTO;
 import com.jinchi.common.mapper.*;
@@ -45,16 +46,23 @@ public class TechniqueProductStandardRecordServiceImp implements TechniqueProduc
     private TestItemMapper testItemMapper;
     @Autowired
     private RepoBaseSerialNumberMapper repoBaseSerialNumberMapper;
+    @Autowired
+    private TechniqueBaseProductBindManufacturerMapper productBindManufacturerMapper;
+    @Autowired
+    private TechniqueProductNewStandardRecordMapper productNewStandardRecordMapper;
 
     /**
      * 新增型号
      *
-     * @param techniqueBaseProductClass 型号实体
+     * @param techniqueBaseProductClassDTO 型号实体
      * @return
      */
     @Override
     @Transactional
-    public TechniqueBaseProductClass newClass(TechniqueBaseProductClass techniqueBaseProductClass) {
+    public TechniqueBaseProductClass newClass(TechniqueBaseProductClassDTO techniqueBaseProductClassDTO) {
+
+        TechniqueBaseProductClass techniqueBaseProductClass = techniqueBaseProductClassDTO.getTechniqueBaseProductClass();
+
         //判断是否为父子节点
         Integer parentId = techniqueBaseProductClass.getParent();
 
@@ -62,6 +70,12 @@ public class TechniqueProductStandardRecordServiceImp implements TechniqueProduc
         if (null == parentId || parentId.equals(-1)) {
             techniqueBaseProductClass.setParent(-1);
             techniqueBaseProductClassMapper.insert(techniqueBaseProductClass);
+
+            TechniqueBaseProductBindManufacturer bind = new TechniqueBaseProductBindManufacturer();
+            bind.setProductId(techniqueBaseProductClassDTO.getProductId());
+            bind.setClassId(techniqueBaseProductClass.getId());
+            productBindManufacturerMapper.insertSelective(bind);
+
             return techniqueBaseProductClass;
         }
         TechniqueBaseProductClass parentClass = techniqueBaseProductClassMapper.findById(parentId);
@@ -92,7 +106,44 @@ public class TechniqueProductStandardRecordServiceImp implements TechniqueProduc
         return techniqueBaseProductClasses;
     }
 
-//=======================================================================================================
+    @Override
+    public List<TechniqueBaseProductClass> byProductId(Integer productId) {
+        TechniqueBaseProductBindManufacturerExample example = new TechniqueBaseProductBindManufacturerExample();
+        example.createCriteria().andProductIdEqualTo(productId);
+        List<TechniqueBaseProductBindManufacturer> list = productBindManufacturerMapper.selectByExample(example);
+
+        List<TechniqueBaseProductClass> res = new ArrayList<>();
+        for (int i = 0; i < list.size(); i++) {
+            res.add(techniqueBaseProductClassMapper.findById(list.get(i).getClassId()));
+        }
+        return res;
+    }
+
+    @Override
+    public TechniqueBaseProductClass editClass(TechniqueBaseProductClass techniqueBaseProductClass) {
+        techniqueBaseProductClassMapper.updateName(techniqueBaseProductClass);
+        return techniqueBaseProductClass;
+    }
+
+    @Override
+    public Integer deleteClass(Integer classId) {
+        TechniqueProductNewStandardRecordExample example = new TechniqueProductNewStandardRecordExample();
+        example.createCriteria().andProductClassIdEqualTo(classId);
+        List<TechniqueProductNewStandardRecord> recordList = productNewStandardRecordMapper.selectByExample(example);
+
+        if (recordList.size() > 0) {
+            return -1;
+        }
+
+        TechniqueBaseProductBindManufacturerExample example1 = new TechniqueBaseProductBindManufacturerExample();
+        example1.createCriteria().andClassIdEqualTo(classId);
+        productBindManufacturerMapper.deleteByExample(example1);
+
+        techniqueBaseProductClassMapper.deleteById(classId);
+        return 0;
+    }
+
+    //=======================================================================================================
 
     /**
      * 新增/迭代   成品标准

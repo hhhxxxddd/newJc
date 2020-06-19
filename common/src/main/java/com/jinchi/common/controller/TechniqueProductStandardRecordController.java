@@ -3,6 +3,7 @@ package com.jinchi.common.controller;
 import com.jinchi.common.domain.TechniqueBaseProductClass;
 import com.jinchi.common.dto.CommonBatchNumberDTO;
 import com.jinchi.common.dto.Result;
+import com.jinchi.common.dto.technique.TechniqueBaseProductClassDTO;
 import com.jinchi.common.dto.technique.TechniqueProductStandardRecordDTO;
 import com.jinchi.common.service.TechniqueProductStandardRecordService;
 import com.jinchi.common.utils.ResultUtil;
@@ -33,19 +34,47 @@ public class TechniqueProductStandardRecordController {
      */
     @PostMapping(value = "/newClass")
     @ApiOperation(value = "新增型号")
-    public Result<TechniqueBaseProductClass> addClass(@Valid @RequestBody TechniqueBaseProductClass techniqueBaseProductClass){
-       return ResultUtil.success(techniqueProductStandardRecordService.newClass(techniqueBaseProductClass)) ;
+    public Result<TechniqueBaseProductClass> addClass(@Valid @RequestBody TechniqueBaseProductClassDTO techniqueBaseProductClass) {
+        return ResultUtil.success(techniqueProductStandardRecordService.newClass(techniqueBaseProductClass));
     }
 
+
+    /**
+     * 编辑型号
+     */
+    @PostMapping(value = "/editClass")
+    @ApiOperation(value = "新增型号")
+    public Result<TechniqueBaseProductClass> addClass(@Valid @RequestBody TechniqueBaseProductClass techniqueBaseProductClass) {
+        return ResultUtil.success(techniqueProductStandardRecordService.editClass(techniqueBaseProductClass));
+    }
+
+    /**
+     * 删除型号
+     */
+    @DeleteMapping(value = "/deleteClass")
+    @ApiOperation(value = "删除型号")
+    public Result<TechniqueBaseProductClass> deleteClass(@Valid @RequestParam Integer classId) {
+        Integer value = techniqueProductStandardRecordService.deleteClass(classId);
+        if (value == -1) {
+            return ResultUtil.error("存在成品标准，不可删除");
+        }
+        return ResultUtil.success();
+    }
 
     /**
      * 查询所有型号
      */
     @GetMapping(value = "/allClasses")
-    @ApiOperation(value = "查询所有型号",notes = "根据名称模糊,需要输入父型号")
-    public Result<List<TechniqueBaseProductClass>> allClasses(@ApiParam(name = "name",value = "型号名称") @RequestParam(required = false) String name,
-                                                              @ApiParam(name = "parentId",value = "父型号id") @RequestParam(required = false) Integer parentId){
-        return ResultUtil.success(techniqueProductStandardRecordService.findAllClass(name,parentId));
+    @ApiOperation(value = "查询所有型号", notes = "根据名称模糊,需要输入父型号")
+    public Result<List<TechniqueBaseProductClass>> allClasses(@ApiParam(name = "name", value = "型号名称") @RequestParam(required = false) String name,
+                                                              @ApiParam(name = "parentId", value = "父型号id") @RequestParam(required = false) Integer parentId) {
+        return ResultUtil.success(techniqueProductStandardRecordService.findAllClass(name, parentId));
+    }
+
+    @GetMapping(value = "/getClassesById")
+    @ApiOperation(value = "根据成品 ID 查询对应的型号")
+    public Result<List<TechniqueBaseProductClass>> getClassesById(@ApiParam(name = "productId", value = "成品id") @RequestParam Integer productId) {
+        return ResultUtil.success(techniqueProductStandardRecordService.byProductId(productId));
     }
 
     /**
@@ -53,7 +82,7 @@ public class TechniqueProductStandardRecordController {
      */
     @PostMapping
     @ApiOperation(value = "新增标准")
-    public Result<CommonBatchNumberDTO> newProductStandard(@Valid @RequestBody CommonBatchNumberDTO<TechniqueProductStandardRecordDTO> commonBatchNumberDTO){
+    public Result<CommonBatchNumberDTO> newProductStandard(@Valid @RequestBody CommonBatchNumberDTO<TechniqueProductStandardRecordDTO> commonBatchNumberDTO) {
         return ResultUtil.success(techniqueProductStandardRecordService.newProductStandard(commonBatchNumberDTO));
     }
 

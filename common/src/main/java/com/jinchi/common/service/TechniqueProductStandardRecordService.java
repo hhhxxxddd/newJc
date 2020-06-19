@@ -2,6 +2,7 @@ package com.jinchi.common.service;
 
 import com.jinchi.common.domain.TechniqueBaseProductClass;
 import com.jinchi.common.dto.CommonBatchNumberDTO;
+import com.jinchi.common.dto.technique.TechniqueBaseProductClassDTO;
 import com.jinchi.common.dto.technique.TechniqueProductStandardRecordDTO;
 
 import java.util.List;
@@ -15,10 +16,11 @@ import java.util.List;
 public interface TechniqueProductStandardRecordService {
     /**
      * 新增型号
-     * @param techniqueBaseProductClass
+     *
+     * @param techniqueBaseProductClassDTO
      * @return
      */
-    TechniqueBaseProductClass newClass(TechniqueBaseProductClass techniqueBaseProductClass);
+    TechniqueBaseProductClass newClass(TechniqueBaseProductClassDTO techniqueBaseProductClassDTO);
 
     /**
      * 查询所有型号
@@ -52,13 +54,20 @@ public interface TechniqueProductStandardRecordService {
     /**
      * 查询所有  根据创建人名称模糊 和产品id 和型号id
      */
-    List<CommonBatchNumberDTO> byNameLikeAndMaterialIdAndClassId(String name,Integer productId,Integer classId);
+    List<CommonBatchNumberDTO> byNameLikeAndMaterialIdAndClassId(String name, Integer productId, Integer classId);
 
     /**
      * 查询最新标准
-     * @param productId 产品id
+     *
+     * @param productId   产品id
      * @param testItemIds 需要查询的项目标准
      * @return
      */
-    List<String> lastStandard(Integer productId,List<Integer> testItemIds);
+    List<String> lastStandard(Integer productId, List<Integer> testItemIds);
+
+    List<TechniqueBaseProductClass> byProductId(Integer productId);
+
+    TechniqueBaseProductClass editClass(TechniqueBaseProductClass techniqueBaseProductClass);
+
+    Integer deleteClass(Integer classId);
 }

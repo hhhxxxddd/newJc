@@ -14,8 +14,15 @@
         WHERE id = #{id}
     </update>
 
+    <!--更新名称-->
+    <update id="updateName" parameterType="TechniqueBaseProductClass">
+        UPDATE jc_integration_db.technique_base_product_class
+        SET name = #{name}
+        WHERE id = #{id}
+    </update>
+
     <!--根据名称和父id查询-->
-    <select id="nameLikeAndParentIs" resultType="TechniqueBaseProductClass" >
+    <select id="nameLikeAndParentIs" resultType="TechniqueBaseProductClass">
         SELECT * FROM jc_integration_db.technique_base_product_class as tbpc
         WHERE 1=1
         <if test="name!=null and name!=''">
@@ -27,8 +34,13 @@
     </select>
 
     <!--根据id查询-->
-    <select id="findById" resultType="TechniqueBaseProductClass" >
+    <select id="findById" resultType="TechniqueBaseProductClass">
         SELECT * FROM jc_integration_db.technique_base_product_class as tbpc
         WHERE id = #{id}
     </select>
+
+    <delete id="deleteById" parameterType="java.lang.Integer">
+        DELETE FROM jc_integration_db.technique_base_product_class
+        WHERE id = #{id}
+    </delete>
 </mapper>

@@ -19,11 +19,15 @@ public interface TechniqueProductService {
 
     List<TechniqueProductStandardDTO> getAllProductCommonBatch();
 
-    List<ProductStandardDTO> getAllStandardByPIdandCId(Integer productId, Integer classId,String userName,Integer page,Integer size);
+    List<ProductStandardDTO> getAllStandardByPIdandCId(Integer productId, Integer classId, String userName, Integer page, Integer size);
 
     List<TechniqueBaseProductMaterial> getAllProduct();
 
-    Integer updateByCommonBatchId(Integer commonBatchId,String effTime, List<TestItemsPlus> items);
+    Integer updateByCommonBatchId(Integer commonBatchId, String effTime, List<TestItemsPlus> items);
 
     List getItemsByProductStandardId(Integer standardId);
+
+    TechniqueBaseProductMaterial editProductName(TechniqueBaseProductMaterial techniqueBaseProductMaterial);
+
+    Integer deleteById(Integer productId);
 }
