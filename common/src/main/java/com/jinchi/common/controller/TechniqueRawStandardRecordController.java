@@ -82,14 +82,22 @@ public class TechniqueRawStandardRecordController {
         return ResultUtil.success(techniqueRawStandardRecordService.addNewRawManufacturer(techniqueBaseRawManufacturerDTO));
     }
 
+
+    @PostMapping(value = "/editManufacturer")
+    @ApiOperation(value = "编辑工厂名称")
+    public Result<TechniqueBaseRawManufacturer> editManufacturer(@Valid @RequestBody TechniqueBaseRawManufacturer techniqueBaseRawManufacturer) {
+        return ResultUtil.success(techniqueRawStandardRecordService.editManufacturer(techniqueBaseRawManufacturer));
+    }
+
     /**
      * 查询所有原料
+     *
      * @param name 名称模糊
      * @return
      */
     @GetMapping(value = "/raw")
     @ApiOperation(value = "查询所有原料")
-    public Result<List<TechniqueBaseRawMaterial>> allRaw(@ApiParam(name = "name",value = "原料名称") @RequestParam(required = false) String name){
+    public Result<List<TechniqueBaseRawMaterial>> allRaw(@ApiParam(name = "name", value = "原料名称") @RequestParam(required = false) String name) {
         return ResultUtil.success(techniqueRawStandardRecordService.baseRawMaterialNameLike(name));
     }
 

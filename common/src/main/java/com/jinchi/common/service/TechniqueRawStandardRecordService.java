@@ -104,4 +104,6 @@ public interface TechniqueRawStandardRecordService {
     int deleteManufacturer(Integer manufacturerId);
 
     TechniqueBaseRawMaterial updateRaw(TechniqueBaseRawMaterial rawMaterial);
+
+    TechniqueBaseRawManufacturer editManufacturer(TechniqueBaseRawManufacturer techniqueBaseRawManufacturer);
 }

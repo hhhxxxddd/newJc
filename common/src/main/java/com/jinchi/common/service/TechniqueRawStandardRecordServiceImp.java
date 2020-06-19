@@ -190,6 +190,12 @@ public class TechniqueRawStandardRecordServiceImp implements TechniqueRawStandar
     }
 
     @Override
+    public TechniqueBaseRawManufacturer editManufacturer(TechniqueBaseRawManufacturer techniqueBaseRawManufacturer) {
+        techniqueBaseRawManufacturerMapper.updateName(techniqueBaseRawManufacturer);
+        return techniqueBaseRawManufacturer;
+    }
+
+    @Override
     public List<TechniqueBaseRawManufacturer> baseRawManufacturerById(Integer rawMaterialId) {
 
         TechniqueBaseRawBindManufacturerExample example = new TechniqueBaseRawBindManufacturerExample();

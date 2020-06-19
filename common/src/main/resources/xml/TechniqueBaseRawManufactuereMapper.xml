@@ -55,6 +55,13 @@
         WHERE id = #{id}
     </update>
 
+    <!--更新名称-->
+    <update id="updateName" parameterType="TechniqueBaseRawManufacturer">
+        UPDATE jc_integration_db.technique_base_raw_manufacturer
+        SET name = #{name}
+        WHERE id = #{id}
+    </update>
+
     <!--根据代号查询-->
     <select id="byCode" parameterType="String" resultType="TechniqueBaseRawManufacturer">
         SELECT * FROM jc_integration_db.technique_base_raw_manufacturer

@@ -32,6 +32,13 @@ public interface TechniqueBaseRawManufacturerMapper {
     void update(TechniqueBaseRawManufacturer techniqueBaseRawManufacturer);
 
     /**
+     * 更新名称
+     *
+     * @param techniqueBaseRawManufacturer
+     */
+    void updateName(TechniqueBaseRawManufacturer techniqueBaseRawManufacturer);
+
+    /**
      * 根据id删除
      *
      * @param id
