@@ -41,7 +41,7 @@ public class PrecursorGoodInController {
         return ResultUtil.success(goodInService.addComfirm(periodId, lineName, startTime, endTime));
     }
 
-    @GetMapping(value = "update")
+    @PostMapping(value = "update")
     @ApiOperation(value = "更新")
     public Result update(@RequestBody GoodsInProcessStatisticHead head) {
         return ResultUtil.success(goodInService.update(head));
