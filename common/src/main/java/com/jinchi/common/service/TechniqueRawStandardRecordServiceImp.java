@@ -118,8 +118,8 @@ public class TechniqueRawStandardRecordServiceImp implements TechniqueRawStandar
      * @return
      */
     @Override
-    public List<TechniqueBaseRawManufacturer> baseRawManufacturerNameLike(String name) {
-        return techniqueBaseRawManufacturerMapper.getByNameLike(name);
+    public List<TechniqueBaseRawManufacturer> baseRawManufacturerNameLike(String name, Integer matreialId) {
+        return techniqueBaseRawManufacturerMapper.getByNameLike(name, matreialId);
     }
 
 

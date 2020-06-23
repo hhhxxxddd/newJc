@@ -100,9 +100,9 @@ public class TechniqueProductStandardRecordServiceImp implements TechniqueProduc
      * @return
      */
     @Override
-    public List<TechniqueBaseProductClass> findAllClass(String name, Integer parentId) {
+    public List<TechniqueBaseProductClass> findAllClass(String name, Integer parentId, Integer productId) {
         if (null == parentId || parentId.equals(-1)) parentId = -1;
-        List<TechniqueBaseProductClass> techniqueBaseProductClasses = techniqueBaseProductClassMapper.nameLikeAndParentIs(name, parentId);
+        List<TechniqueBaseProductClass> techniqueBaseProductClasses = techniqueBaseProductClassMapper.nameLikeAndParentIs(name, parentId, parentId);
         return techniqueBaseProductClasses;
     }
 

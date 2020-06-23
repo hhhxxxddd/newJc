@@ -103,13 +103,15 @@ public class TechniqueRawStandardRecordController {
 
     /**
      * 查询所有工厂
+     *
      * @param name 名称模糊
      * @return
      */
     @GetMapping(value = "/manufacturers")
-    @ApiOperation(value = "查询所有原料")
-    public Result<List<TechniqueBaseRawManufacturer>> allRawManufacturer(@ApiParam(name = "name", value = "工厂名称") @RequestParam(required = false) String name) {
-        return ResultUtil.success(techniqueRawStandardRecordService.baseRawManufacturerNameLike(name));
+    @ApiOperation(value = "查询工厂")
+    public Result<List<TechniqueBaseRawManufacturer>> allRawManufacturer(@ApiParam(name = "name", value = "工厂名称") @RequestParam(required = false) String name,
+                                                                         @ApiParam(name = "materialId", value = "原材料id") @RequestParam Integer materialId) {
+        return ResultUtil.success(techniqueRawStandardRecordService.baseRawManufacturerNameLike(name, materialId));
     }
 
     @GetMapping(value = "/manufacturerByRawId")

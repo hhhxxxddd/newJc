@@ -31,6 +31,10 @@
         <if test="parentId!=null">
             AND tbpc.parent = #{parentId}
         </if>
+        <if test="productId != null and parentId == '1'.toString()">
+            AND tbpc.id IN (SELECT class_id FROM technique_base_product_bind_manufacturer WHERE product_id =
+            #{productId})
+        </if>
     </select>
 
     <!--根据id查询-->

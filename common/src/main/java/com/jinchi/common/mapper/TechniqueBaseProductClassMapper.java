@@ -43,7 +43,7 @@ public interface TechniqueBaseProductClassMapper {
      * @param parentId 父id
      * @return
      */
-    List<TechniqueBaseProductClass> nameLikeAndParentIs(@Param("name") String name, @Param("parentId") Integer parentId);
+    List<TechniqueBaseProductClass> nameLikeAndParentIs(@Param("name") String name, @Param("parentId") Integer parentId, @Param("productId") Integer productId);
 
     /**
      * 根据id查询

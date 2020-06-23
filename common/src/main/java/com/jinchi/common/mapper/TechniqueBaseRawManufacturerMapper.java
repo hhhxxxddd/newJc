@@ -73,10 +73,11 @@ public interface TechniqueBaseRawManufacturerMapper {
 
     /**
      * 模糊查询
+     *
      * @param name 工厂名称
      * @return
      */
-    List<TechniqueBaseRawManufacturer> getByNameLike(@Param("name") String name);
+    List<TechniqueBaseRawManufacturer> getByNameLike(@Param("name") String name, @Param("materialId") Integer materialId);
 
     /**
      * 根据代号全称查询

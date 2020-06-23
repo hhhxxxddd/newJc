@@ -36,8 +36,9 @@
     <!--根据名字模糊查询-->
     <select id="getByNameLike" parameterType="String" resultType="TechniqueBaseRawManufacturer">
         SELECT * FROM jc_integration_db.technique_base_raw_manufacturer as tbrm
+        WHERE tbrm.id IN (SELECT manufacturer_id FROM technique_base_raw_bind_manufacturer WHERE raw_id = #{materialId})
         <if test="name!=null and name!=''">
-            WHERE name LIKE '${name}%'
+            and name LIKE '${name}%'
         </if>
     </select>
 

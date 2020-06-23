@@ -67,8 +67,9 @@ public class TechniqueProductStandardRecordController {
     @GetMapping(value = "/allClasses")
     @ApiOperation(value = "查询所有型号", notes = "根据名称模糊,需要输入父型号")
     public Result<List<TechniqueBaseProductClass>> allClasses(@ApiParam(name = "name", value = "型号名称") @RequestParam(required = false) String name,
-                                                              @ApiParam(name = "parentId", value = "父型号id") @RequestParam(required = false) Integer parentId) {
-        return ResultUtil.success(techniqueProductStandardRecordService.findAllClass(name, parentId));
+                                                              @ApiParam(name = "parentId", value = "父型号id") @RequestParam(required = false) Integer parentId,
+                                                              @ApiParam(name = "productId", value = "成品id") @RequestParam(required = false) Integer productId) {
+        return ResultUtil.success(techniqueProductStandardRecordService.findAllClass(name, parentId, productId));
     }
 
     @GetMapping(value = "/getClassesById")

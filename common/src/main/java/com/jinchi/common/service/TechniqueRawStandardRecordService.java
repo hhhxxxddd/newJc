@@ -33,10 +33,11 @@ public interface TechniqueRawStandardRecordService {
 
     /**
      * 查询所有原料厂家
+     *
      * @param name 厂家名称模糊
      * @return
      */
-    List<TechniqueBaseRawManufacturer> baseRawManufacturerNameLike(String name);
+    List<TechniqueBaseRawManufacturer> baseRawManufacturerNameLike(String name, Integer materialId);
 
     /**
      * 新增原料厂家

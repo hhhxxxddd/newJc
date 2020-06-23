@@ -24,11 +24,12 @@ public interface TechniqueProductStandardRecordService {
 
     /**
      * 查询所有型号
-     * @param name 型号名称
+     *
+     * @param name     型号名称
      * @param parentId 父id -1为最上层
      * @return
      */
-    List<TechniqueBaseProductClass> findAllClass(String name,Integer parentId);
+    List<TechniqueBaseProductClass> findAllClass(String name, Integer parentId, Integer productId);
 
     /**
      * 新增/迭代
