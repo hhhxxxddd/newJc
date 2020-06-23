@@ -42,4 +42,9 @@ public class AnodeStatPeriodServiceImp implements AnodeStatPeriodService {
         example.createCriteria();
         return periodMapper.selectByExample(example);
     }
+
+    @Override
+    public String getNameById(Integer id) {
+        return periodMapper.selectByPrimaryKey(id).getName();
+    }
 }

@@ -30,6 +30,12 @@ public class AnodeCostAccountController {
         return ResultUtil.success(costAccountService.getDate(periodId));
     }
 
+    @GetMapping(value = "getStatRecord")
+    @ApiOperation(value = "查询")
+    public Result getStatRecord(@RequestParam Integer periodId, @RequestParam Integer periods) {
+        return ResultUtil.success(costAccountService.getRecordByPeriod(periodId, periods));
+    }
+
     @GetMapping(value = "confirm")
     @ApiOperation(value = "确定")
     public Result confirm(@RequestParam Integer lineCode, @RequestParam Integer periodId, @RequestParam Integer periods) {

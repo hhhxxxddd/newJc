@@ -77,6 +77,29 @@ public class AnodeCostAccountServiceImp implements AnodeCostAccountService {
     }
 
     @Override
+    public Map getRecordByPeriod(Integer periodId, Integer periods) {
+        AnodeCostAccountingStatisticHeadExample example = new AnodeCostAccountingStatisticHeadExample();
+        example.createCriteria().andPeriodCodeEqualTo(periodId).andPeriodsEqualTo(periods);
+        List<AnodeCostAccountingStatisticHead> headList = costHeadMapper.selectByExample(example);
+
+        if (headList.size() == 0) {
+            return new HashMap();
+        } else {
+            String format = "yyyy-MM-dd HH:mm:ss";
+            Map<String, String> map = new HashMap<>();
+
+            AnodeCostAccountingStatisticHead temp = headList.get(0);
+
+            map.put("periodName", anodeStatPeriodService.getNameById(temp.getPeriodCode()));
+            map.put("periods", String.valueOf(temp.getPeriods()));
+            map.put("startTime", ComUtil.dateToString(temp.getBeginTime(), format));
+            map.put("endTime", ComUtil.dateToString(temp.getEndTime(), format));
+
+            return map;
+        }
+    }
+
+    @Override
     public List confirm(Integer lineCode, Integer periodId, Integer periods) {
 
         List<Map<String, Object>> res = new ArrayList<>();

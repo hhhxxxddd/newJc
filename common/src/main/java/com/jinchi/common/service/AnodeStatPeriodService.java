@@ -13,4 +13,6 @@ public interface AnodeStatPeriodService {
     BasicInfoAnodePeriod update(BasicInfoAnodePeriod anodePeriod);
 
     List getAll();
+
+    String getNameById(Integer id);
 }
