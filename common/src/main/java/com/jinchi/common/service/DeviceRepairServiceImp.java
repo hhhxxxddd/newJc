@@ -213,20 +213,23 @@ public class DeviceRepairServiceImp implements DeviceRepairService {
         dateSet.add("报修时间");
         dateSet.add("完成时间");
         dateSet.add("接单时间");
-        if(!startTime.equals("")) {
+        if (!startTime.equals("")) {
             startTime += " 00:00:00";
             endTime += " 23:59:59";
-        }
-        else{
+        } else {
             startTime = null;
             endTime = null;
         }
         condition += "%";
-        List<Map<String,Object>> doc = deviceRepairApplicationMapper.getDoneJson(repairStatus,secondDeptCode,condition,startTime,endTime);
-        List<Map<String,Object>> afterHandler = new ArrayList<>();
-        for(int i=0;i<doc.size();i++){
-            Map<String,Object> map = doc.get(i);
-            Map<String,Object> handleMap = new HashMap<>();
+        List<Map<String, Object>> doc = deviceRepairApplicationMapper.getDoneJson(repairStatus, secondDeptCode, condition, startTime, endTime);
+
+        if (doc.size() == 0) {
+            return "该时间区间内没有维修记录,请重新选择时间";
+        }
+        List<Map<String, Object>> afterHandler = new ArrayList<>();
+        for (int i = 0; i < doc.size(); i++) {
+            Map<String, Object> map = doc.get(i);
+            Map<String, Object> handleMap = new HashMap<>();
 
             //处理维修配件
             Long repairId = Long.parseLong(map.get("维修编号").toString());
