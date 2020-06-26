@@ -224,7 +224,7 @@ public class DeviceRepairServiceImp implements DeviceRepairService {
         List<Map<String, Object>> doc = deviceRepairApplicationMapper.getDoneJson(repairStatus, secondDeptCode, condition, startTime, endTime);
 
         if (doc.size() == 0) {
-            return "该时间区间内没有维修记录,请重新选择时间";
+            return "";
         }
         List<Map<String, Object>> afterHandler = new ArrayList<>();
         for (int i = 0; i < doc.size(); i++) {
