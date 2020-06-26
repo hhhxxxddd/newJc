@@ -6,6 +6,8 @@ import com.baomidou.mybatisplus.extension.service.IService;
 import com.jc.api.entity.SwmsStockInLedgersDayReports;
 import com.jc.api.entity.SwmsStockOutRecordDetail;
 
+import java.util.List;
+
 /**
  * <p>
  * 物料入库日台账表 服务类
@@ -17,6 +19,8 @@ import com.jc.api.entity.SwmsStockOutRecordDetail;
 public interface ISwmsStockInLedgersDayReportsService extends IService<SwmsStockInLedgersDayReports> {
 
     IPage<SwmsStockInLedgersDayReports> selectByPage(Page page, Integer typeId, Integer subTypeId, Integer supplierId, String startTime, String endTime);
+
+    List<String> getByBatchLike(String batch);
 
     void updateByIds(Long[] ids, Integer status);
 

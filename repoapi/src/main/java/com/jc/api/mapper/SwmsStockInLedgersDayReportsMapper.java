@@ -8,6 +8,8 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.springframework.stereotype.Repository;
 
+import java.util.List;
+
 /**
  * <p>
  * 物料入库日台账表 Mapper 接口
@@ -28,4 +30,6 @@ public interface SwmsStockInLedgersDayReportsMapper extends BaseMapper<SwmsStock
                                                      @Param(value = "endTime") String endTime);
 
     void updateById(@Param(value = "id") Long id, @Param(value = "status") Integer status);
+
+    List<String> selectByBatchLike(@Param(value = "batch") String batch);
 }

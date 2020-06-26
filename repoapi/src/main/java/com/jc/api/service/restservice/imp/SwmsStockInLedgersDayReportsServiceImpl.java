@@ -13,6 +13,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
+
 /**
  * <p>
  * 物料入库日台账表 服务实现类
@@ -31,6 +33,12 @@ public class SwmsStockInLedgersDayReportsServiceImpl extends ServiceImpl<SwmsSto
     @Override
     public IPage<SwmsStockInLedgersDayReports> selectByPage(Page page, Integer typeId, Integer subTypeId, Integer supplierId, String startTime, String endTime) {
         return reportsMapper.selectPageVo(page, typeId, subTypeId, supplierId, startTime, endTime);
+    }
+
+    @Override
+    public List<String> getByBatchLike(String batch) {
+
+        return reportsMapper.selectByBatchLike(batch);
     }
 
     @Override

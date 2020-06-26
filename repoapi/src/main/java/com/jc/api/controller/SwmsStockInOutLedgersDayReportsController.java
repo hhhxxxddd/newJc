@@ -35,6 +35,13 @@ public class SwmsStockInOutLedgersDayReportsController {
         return Result.success(reportsService.selectByPage(page, typeId, subTypeId, supplierId, startTime, endTime));
     }
 
+    @ApiOperation(value = "待检主原料批号模糊查询", notes = "待检主原料批号模糊查询")
+    @ApiResponses(@ApiResponse(code = 200, message = "处理成功", response = Result.class))
+    @PostMapping(value = "/byBatchLike")
+    public Result byBatchLike(@RequestParam(defaultValue = "") String batch) {
+        return Result.success(reportsService.getByBatchLike(batch));
+    }
+
     @ApiOperation(value = "出库日报-条件/分页", notes = "出库日报-条件/分页")
     @ApiResponses(@ApiResponse(code = 200, message = "处理成功", response = Result.class))
     @PostMapping(value = "/pagesOut")

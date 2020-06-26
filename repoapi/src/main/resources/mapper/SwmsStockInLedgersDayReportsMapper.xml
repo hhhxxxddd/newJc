@@ -41,4 +41,19 @@
 			SET check_status = #{status}
 		WHERE id = #{id}
 	</update>
+
+    <select id="selectByBatchLike" parameterType="java.lang.String" resultType="java.util.Map">
+        SELECT
+        id , material_batch as materialBatch
+        FROM `swms_stock_in_ledgers_day_reports`
+        WHERE
+        check_status = 0
+        AND material_type_id IN (SELECT id FROM swms_basic_material_type WHERE type_code LIKE 'RA%')
+        <if test="batch != null and batch != ''">
+            AND material_batch LIKE #{batch}"%"
+        </if>
+        <if test="batch == ''">
+            order by created_day DESC , id limit 0,10
+        </if>
+    </select>
 </mapper>
