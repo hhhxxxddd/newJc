@@ -6,7 +6,7 @@ primary:
       platform: mysql
       url: jdbc:mysql://125.94.71.249:3306/jc_integration_db?userUnicode=true&characterEncoding=UTF8&useSSL=false&useAffectedRows=true&useLegacyDatetimeCode=false&serverTimezone=CTT
       username: root
-      password: jinchi123456
+      password: fuckJC@2020
       druid:
         test-on-borrow: true
         validationQuery: SELECT 1

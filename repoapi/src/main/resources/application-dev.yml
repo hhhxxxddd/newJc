@@ -15,7 +15,7 @@ spring:
     platform: mysql
     url: jdbc:mysql://125.94.71.249:3306/jc_repo_db?userUnicode=true&characterEncoding=UTF8&useSSL=false&useAffectedRows=true&useLegacyDatetimeCode=false&serverTimezone=CTT
     username: root
-    password: jinchi123456
+    password: fuckJC@2020
   application:
     name: REPOAPI-SERVICE
 
