@@ -1,6 +1,5 @@
 package com.jinchi.common.service;
 
-import com.jinchi.common.aspect.ControllerAspect;
 import com.jinchi.common.domain.*;
 import com.jinchi.common.dto.Page;
 import com.jinchi.common.dto.anode.*;
@@ -529,6 +528,7 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                         mat.setProcessCode(process.getPeriodId());
                         mat.setFeedstock(info.getReceive());
                         mat.setBalance(info.getBalance());
+                        mat.setConsume(info.getConsum()); //在线原料 需要输入消耗量
                         onlineRawMaterialMapper.insertSelective(mat);
                     } else {
                         AnodeGoodsInProcessStatisticSingleMaterialWeights mat = new AnodeGoodsInProcessStatisticSingleMaterialWeights();
@@ -1320,6 +1320,11 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                     totalBal += mat1.getBalance();
                     totalCon += mat1.getConsume();
                     totalFee += mat1.getFeedstock();
+                }
+                if (!info.getFlag()) {
+                    //根据物料code来判断要不要插表
+//                    singleMaterialWeightsMapper
+
                 }
             }
 

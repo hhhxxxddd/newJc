@@ -298,7 +298,7 @@
     </if>
   </update>
 
-  <select id="selectByCondition" resultType="com.jinchi.app.domain.DeviceMaintenanceRecordHead">
+  <select id="selectByCondition" resultMap="BaseResultMap">
     ${sql}
   </select>
 </mapper>
