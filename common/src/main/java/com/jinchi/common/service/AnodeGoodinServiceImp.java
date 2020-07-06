@@ -703,8 +703,8 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                         mat.setFeedstock(info.getReceive());
                         packageMapper.insertSelective(mat);
                     } else {
-                        //烧结料（成品）,产成品待入库
-                        if (info.getCode() == 47 || info.getCode() == 50) {
+                        //仓库四种物料,产成品待入库
+                        if (info.getCode() == 63 || info.getCode() == 64 || info.getCode() == 65 || info.getCode() == 66 || info.getCode() == 50) {
                             AnodeGoodsInProcessStatisticSingleMaterialWeights mat = new AnodeGoodsInProcessStatisticSingleMaterialWeights();
                             mat.setStatisticCode(id);
                             mat.setLineCode(head.getLineCode());
@@ -1277,7 +1277,7 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                     counts.setCounts(info.getValue().intValue());
                     singleMaterialCountsMapper.insertSelective(counts);
                 }
-                if (info.getCode() == 47 || info.getCode() == 50) {
+                if (info.getCode() == 63 || info.getCode() == 64 || info.getCode() == 65 || info.getCode() == 66 || info.getCode() == 50) {
                     AnodeGoodsInProcessStatisticSingleMaterialWeights weights = new AnodeGoodsInProcessStatisticSingleMaterialWeights();
                     weights.setLineCode(head.getLineCode());
                     weights.setStatisticCode(id);
@@ -1322,9 +1322,15 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                     totalFee += mat1.getFeedstock();
                 }
                 if (!info.getFlag()) {
-                    //根据物料code来判断要不要插表
-//                    singleMaterialWeightsMapper
-
+                    AnodeGoodsInProcessStatisticSingleMaterialWeights weights = new AnodeGoodsInProcessStatisticSingleMaterialWeights();
+                    weights.setStatisticCode(id);
+                    weights.setLineCode(head.getLineCode());
+                    weights.setMaterialCode(info.getCode());
+                    weights.setTypeCode(head.getTypeCode());
+                    weights.setProcessCode(8);
+                    weights.setWeights(info.getValue());
+                    singleMaterialWeightsMapper.insertSelective(weights);
+                    totalBal += weights.getWeights();
                 }
             }
 
