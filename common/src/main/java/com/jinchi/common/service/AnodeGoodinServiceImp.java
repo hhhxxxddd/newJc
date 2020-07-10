@@ -81,6 +81,8 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
     BasicInfoAnodeMaterialPlcMapMapper mapMapper;
     @Autowired
     private RestTemplate restTemplate;
+    @Autowired
+    private BasicInfoAnodeBurningLossRateMapper burningLossRateMapper;
 
     @Override
     public Map<String, Object> addComfirm(AnodeGoodsInProcessStatisticHead head) {
@@ -93,11 +95,11 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
         AnodeGoodsInProcessStatisticHeadExample example = new AnodeGoodsInProcessStatisticHeadExample();
         example.createCriteria().andPeriodCodeEqualTo(periodId).andPeriodsEqualTo(periods);
         List<AnodeGoodsInProcessStatisticHead> heads = headMapper.selectByExample(example);
-        if(heads.size() != 0){
-            if(heads.get(0).getBeginTime().getTime() != head.getBeginTime().getTime()){
+        if (heads.size() != 0) {
+            if (heads.get(0).getBeginTime().getTime() != head.getBeginTime().getTime()) {
                 ans.put("message", "本周期类型的统计数据时间不正确");
-                ans.put("startTime",ComUtil.dateToString(heads.get(0).getBeginTime(),"yyyy-MM-dd HH:mm:ss"));
-                ans.put("endTime",ComUtil.dateToString(heads.get(0).getEndTime(),"yyyy-MM-dd HH:mm:ss"));
+                ans.put("startTime", ComUtil.dateToString(heads.get(0).getBeginTime(), "yyyy-MM-dd HH:mm:ss"));
+                ans.put("endTime", ComUtil.dateToString(heads.get(0).getEndTime(), "yyyy-MM-dd HH:mm:ss"));
                 ans.put("code", -2);
                 return ans;
             }
@@ -110,8 +112,8 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
             ans.put("code", head.getCode());
             return ans;
         }
-        ans.put("message","本期数据已存在");
-        ans.put("code",-1);
+        ans.put("message", "本期数据已存在");
+        ans.put("code", -1);
         return ans;
     }
 
@@ -122,39 +124,64 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
         {//在线
             AnodeProcess onlineProcess = ans.getProcesses().get(0);
             List<AnodeMaterial> mats = onlineProcess.getMaterials();
+            AnodeGoodsInProcessStatisticOnlineRawMaterialExample example = new AnodeGoodsInProcessStatisticOnlineRawMaterialExample();
             for (int i = 0; i < mats.size(); i++) {
-                if(mats.get(i).getCode() == 1){
-                   AnodeGoodsInProcessStatisticOnlineRawMaterialExample example = new AnodeGoodsInProcessStatisticOnlineRawMaterialExample();
-                   example.createCriteria().andStatisticCodeEqualTo(id).andMaterialCodeEqualTo(1);
-                   List<AnodeGoodsInProcessStatisticOnlineRawMaterial> temp = onlineRawMaterialMapper.selectByExample(example);
-                   if(temp.size()!=0){
-                       mats.get(i).setReceive(temp.get(0).getFeedstock());
-                   }
+                example.clear();
+
+                if (mats.get(i).getCode() == 1) {
+                    example.createCriteria().andStatisticCodeEqualTo(id).andMaterialCodeEqualTo(1);
                 }
-                if(mats.get(i).getCode() == 2){
-                    AnodeGoodsInProcessStatisticOnlineRawMaterialExample example = new AnodeGoodsInProcessStatisticOnlineRawMaterialExample();
+
+                if (mats.get(i).getCode() == 2) {
                     example.createCriteria().andStatisticCodeEqualTo(id).andMaterialCodeEqualTo(2);
-                    List<AnodeGoodsInProcessStatisticOnlineRawMaterial> temp = onlineRawMaterialMapper.selectByExample(example);
-                    if(temp.size()!=0){
-                        mats.get(i).setReceive(temp.get(0).getFeedstock());
-                    }
                 }
-                if (mats.get(i).getCode() == 3) {//预混料
-                    AnodeGoodsInProcessStatisticSingleMaterialWeightsExample example = new AnodeGoodsInProcessStatisticSingleMaterialWeightsExample();
-                    example.createCriteria().andStatisticCodeEqualTo(id).andMaterialCodeEqualTo(3);
-                    List<AnodeGoodsInProcessStatisticSingleMaterialWeights> temp = singleMaterialWeightsMapper.selectByExample(example);
-                    if (temp.size() != 0) {
-                        mats.get(i).setValue(temp.get(0).getWeights());
-                    }
+
+                //仓库预混料
+                if (mats.get(i).getCode() == 67) {
+                    example.createCriteria().andStatisticCodeEqualTo(id).andMaterialCodeEqualTo(67);
                 }
-                if (mats.get(i).getCode() == 4) {//烧结料
-                    AnodeGoodsInProcessStatisticSingleMaterialWeightsExample example = new AnodeGoodsInProcessStatisticSingleMaterialWeightsExample();
-                    example.createCriteria().andStatisticCodeEqualTo(id).andMaterialCodeEqualTo(4);
-                    List<AnodeGoodsInProcessStatisticSingleMaterialWeights> temp = singleMaterialWeightsMapper.selectByExample(example);
-                    if (temp.size() != 0) {
-                        mats.get(i).setValue(temp.get(0).getWeights());
-                    }
+
+                //仓库烧结料
+                if (mats.get(i).getCode() == 68) {
+                    example.createCriteria().andStatisticCodeEqualTo(id).andMaterialCodeEqualTo(68);
                 }
+
+                //仓库布袋料
+                if (mats.get(i).getCode() == 69) {
+                    example.createCriteria().andStatisticCodeEqualTo(id).andMaterialCodeEqualTo(69);
+                }
+
+                //仓库重加工
+                if (mats.get(i).getCode() == 70) {
+                    example.createCriteria().andStatisticCodeEqualTo(id).andMaterialCodeEqualTo(70);
+                }
+
+                //仓库半成品
+                if (mats.get(i).getCode() == 71) {
+                    example.createCriteria().andStatisticCodeEqualTo(id).andMaterialCodeEqualTo(71);
+                }
+
+                List<AnodeGoodsInProcessStatisticOnlineRawMaterial> temp = onlineRawMaterialMapper.selectByExample(example);
+                if (temp.size() != 0) {
+                    mats.get(i).setReceive(temp.get(0).getFeedstock());
+                    mats.get(i).setConsum(temp.get(0).getConsume());
+                }
+//                if (mats.get(i).getCode() == 3) {//预混料
+//                    AnodeGoodsInProcessStatisticSingleMaterialWeightsExample example = new AnodeGoodsInProcessStatisticSingleMaterialWeightsExample();
+//                    example.createCriteria().andStatisticCodeEqualTo(id).andMaterialCodeEqualTo(3);
+//                    List<AnodeGoodsInProcessStatisticSingleMaterialWeights> temp = singleMaterialWeightsMapper.selectByExample(example);
+//                    if (temp.size() != 0) {
+//                        mats.get(i).setValue(temp.get(0).getWeights());
+//                    }
+//                }
+//                if (mats.get(i).getCode() == 4) {//烧结料
+//                    AnodeGoodsInProcessStatisticSingleMaterialWeightsExample example = new AnodeGoodsInProcessStatisticSingleMaterialWeightsExample();
+//                    example.createCriteria().andStatisticCodeEqualTo(id).andMaterialCodeEqualTo(4);
+//                    List<AnodeGoodsInProcessStatisticSingleMaterialWeights> temp = singleMaterialWeightsMapper.selectByExample(example);
+//                    if (temp.size() != 0) {
+//                        mats.get(i).setValue(temp.get(0).getWeights());
+//                    }
+//                }
             }
             onlineProcess.setMaterials(mats);
             ans.getProcesses().set(0, onlineProcess);
@@ -209,7 +236,7 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
             pExample.createCriteria().andStatisticCodeEqualTo(id);
             List<AnodeGoodsInProcessStatisticLineProcessProductions> ps = lineProcessProductionsMapper.selectByExample(pExample);
             //List<AnodeMaterial> others = onlineProcess.getOthers();
-            if(ps.size()!=0){
+            if (ps.size() != 0) {
                 //others.get(0).setValue(ps.get(0).getBagCounts().floatValue());
                 mats.get(6).setValue(ps.get(0).getBagCounts().floatValue()); //第六个就是包装袋数
                 mats.get(7).setValue(ps.get(0).getProductionStorage()); //第七个就是产成品入库
@@ -343,7 +370,7 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                     if (info.getDateType() == new Integer(0).byteValue()) {//dcs数据,犁刀混全是dcs数据
                         //Float temp1 = getDcsValue(info.getCode(), head.getLineCode(), "已混量", head.getEndTime());
                         Float temp2 = getDcsValue(info.getCode(), head.getLineCode(), "结存量", head.getEndTime());
-                        Integer temp3 = getDcsCount(info.getCode(),head.getLineCode(),head.getPeriodCode(),head.getEndTime());
+                        Integer temp3 = getDcsCount(info.getCode(), head.getLineCode(), head.getPeriodCode(), head.getEndTime());
                         //fixme 物料有两个plc地址，无法对应出来
                         info.setMix(0f);
                         info.setBalance(temp2);
@@ -373,7 +400,7 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                     if (info.getDateType() == new Integer(0).byteValue()) {//dcs数据,预烧部分是dcs数据
                         Float temp1 = getDcsValue(info.getCode(), head.getLineCode(), "入炉排数", head.getEndTime());
                         Float temp2 = getDcsValue(info.getCode(), head.getLineCode(), "出炉排数", head.getEndTime());
-                       // Float weight = getDcsValue(info.getCode(), head.getLineCode(), "重量", head.getEndTime());
+                        // Float weight = getDcsValue(info.getCode(), head.getLineCode(), "重量", head.getEndTime());
                         //fixme
                         if (info.getFlag()) {
                             info.setIntoFurnace(temp1.intValue());
@@ -392,7 +419,7 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                     if (info.getDateType() == new Integer(0).byteValue()) {//dcs数据,粉碎全是是dcs数据
                         Float temp1 = getDcsValue(info.getCode(), head.getLineCode(), "进料量", head.getEndTime());
                         Float temp2 = getDcsValue(info.getCode(), head.getLineCode(), "结存量", head.getEndTime());
-                        Integer temp3 = getDcsCount(info.getCode(), head.getLineCode(), head.getPeriodCode(),head.getEndTime());
+                        Integer temp3 = getDcsCount(info.getCode(), head.getLineCode(), head.getPeriodCode(), head.getEndTime());
                         //fixme
                         if (info.getFlag()) {
                             info.setReceive(temp1);
@@ -451,7 +478,7 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                         Float temp2 = getDcsValue(info.getCode(), head.getLineCode(), "结存量", head.getEndTime());
                         Integer temp3 = getDcsCount(info.getCode(), head.getLineCode(), head.getPeriodCode(), head.getEndTime());
                         //fixme
-                        if(info.getCode() == 39){
+                        if (info.getCode() == 39) {
                             info.setReceive(temp1);
                         }
                         if (info.getFlag()) {
@@ -460,8 +487,8 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                             info.setValue(temp3.floatValue());
                         }
                     }
-                    if(info.getDateType() == new Integer(2).byteValue()){//智能仓库数据，专为产成品
-                        Float temp4 = getValueByNameByTime(info.getMaterialName(),head.getBeginTime(),head.getEndTime());
+                    if (info.getDateType() == new Integer(2).byteValue()) {//智能仓库数据，专为产成品
+                        Float temp4 = getValueByNameByTime(info.getMaterialName(), head.getBeginTime(), head.getEndTime());
                         info.setValue(temp4);
                     }
                     infos.add(info);
@@ -474,7 +501,7 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
             if (process.getCode() == 9) {
                 for (int l = 0; l < materials.size(); l++) {
                     AnodeMaterial info = new AnodeMaterial(materials.get(l));
-                   // Float weight = getDcsValue(info.getCode(), head.getLineCode(), "重量", head.getEndTime());
+                    // Float weight = getDcsValue(info.getCode(), head.getLineCode(), "重量", head.getEndTime());
                     info.setValue(0f);
                     infos.add(info);
                 }
@@ -483,7 +510,7 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
             if (process.getCode() == 10) {
                 for (int l = 0; l < materials.size(); l++) {
                     AnodeMaterial info = new AnodeMaterial(materials.get(l));
-                   // Float weight = getDcsValue(info.getCode(), head.getLineCode(), "重量", head.getEndTime());
+                    // Float weight = getDcsValue(info.getCode(), head.getLineCode(), "重量", head.getEndTime());
                     info.setValue(0f);
                     infos.add(info);
                 }
@@ -688,9 +715,9 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                 AnodeMaterial ccp = new AnodeMaterial();
                 for (int l = 0; l < infos.size(); l++) {
                     AnodeMaterial info = infos.get(l);
-                    if(info.getCode() == 45)
+                    if (info.getCode() == 45)
                         bags = info;
-                    if(info.getCode() == 46)
+                    if (info.getCode() == 46)
                         ccp = info;
                     if (info.getFlag() && info.getCode() != 45 && info.getCode() != 46) {
                         AnodeGoodsInProcessStatisticPackage mat = new AnodeGoodsInProcessStatisticPackage();
@@ -786,22 +813,40 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
             lastHead = lastHeads.get(0);
 
         BasicInfoAnodeCalculateCoefficient rate = coefficientMapper.selectByPrimaryKey(new Integer(1).byteValue());
-        Float precursor = rate.getMatchingCoefficientPrecursors();
-        Float lith = rate.getMatchingCoefficientLithiumCarbonate();
-        Float xy[] = new Float[2];
-        xy[0] = precursor / (precursor + lith); //前驱体配比系数[x/(x+y)]
-        xy[1] = lith / (precursor + lith);//碳酸锂配比系数[y/(x+y)]
+//        Float precursor = rate.getMatchingCoefficientPrecursors();
+//        Float lith = rate.getMatchingCoefficientLithiumCarbonate();
+//        Float xy[] = new Float[2];
+//        xy[0] = precursor / (precursor + lith); //前驱体配比系数[x/(x+y)]
+//        xy[1] = lith / (precursor + lith);//碳酸锂配比系数[y/(x+y)]
         Float bWeight = rate.getBowlFillWeight(); //装钵重量
         Float bNum = rate.getBowlNum().floatValue(); //每排钵数
-        Float burnRate = rate.getBurningLossRate(); //烧损系数
+//        Float burnRate = rate.getBurningLossRate(); //烧损系数
+
+        Float colPerTime = rate.getBurningLossRate(); //基础数据 烧损系数 改为犁刀混每次混料量 2020-07-09
+
         Float burnAnodeWeight = rate.getPresinteringWeight(); //预烧正压输送每罐重量
         Float smashAnodeWeight = rate.getSmashWeight(); //粉碎正压输每罐重量
         Float secondBurn = rate.getSecondSinteringWeight(); //二烧正压输送每罐重量
         Float highMix = rate.getHighMixingMachineWeight(); //高混机每批进料量
-        Float bags = rate.getMatchingCoefficientHopPocket(); //预混配比系数布袋料
+//        Float bags = rate.getMatchingCoefficientHopPocket(); //预混配比系数布袋料
         Float lastValue = 0f;
 
-        AnodeProcess premixCol = data.getProcesses().get(1);
+        BasicInfoAnodeBurningLossRateExample burningLossRateExample = new BasicInfoAnodeBurningLossRateExample();
+        burningLossRateExample.createCriteria().andProductionCodeEqualTo(data.getHead().getTypeCode());
+        List<BasicInfoAnodeBurningLossRate> lossRates = burningLossRateMapper.selectByExample(burningLossRateExample);
+
+        BasicInfoAnodeBurningLossRate lossRate = lossRates.size() > 0 ? lossRates.get(0) : new BasicInfoAnodeBurningLossRate();
+
+        //对应窑炉及其烧损系数
+        Map<Integer, Float> map = new HashMap<>();
+        map.put(11, lossRate.getLossrate1());
+        map.put(12, lossRate.getLossrate2());
+        map.put(13, lossRate.getLossrate3());
+        map.put(14, lossRate.getLossrate4());
+        map.put(15, lossRate.getLossrate5());
+        map.put(16, lossRate.getLossrate6());
+        map.put(36, lossRate.getLossrate7());
+        map.put(37, lossRate.getLossrate8());
 
         {//在线，预混（犁刀混），预混（暂存仓）
             AnodeProcess online = data.getProcesses().get(0);
@@ -821,11 +866,11 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
 
             List<Float> mixed = new ArrayList<>();
 
-            Float colEachMix = precursor + lith;
+//            Float colEachMix = precursor + lith;
             for (int i = 0; i < online.getMaterials().size(); i++) {
                 AnodeMaterial info = online.getMaterials().get(i);
                 if (!info.getFlag()) {
-                    colEachMix += info.getValue();
+//                    colEachMix += info.getValue();
                     AnodeGoodsInProcessStatisticSingleMaterialWeights weights = new AnodeGoodsInProcessStatisticSingleMaterialWeights();
                     weights.setLineCode(head.getLineCode());
                     weights.setStatisticCode(id);
@@ -841,7 +886,10 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                 AnodeMaterial info = col.getMaterials().get(i);
                 if (info.getFlag()) {
                     AnodeGoodsInProcessStatisticPremixColter mat = new AnodeGoodsInProcessStatisticPremixColter();
-                    Float mix = info.getValue() * colEachMix;
+//                    Float mix = info.getValue() * colEachMix;
+                    // 犁刀混每次混料量为基础数据表中其他基本信息中的一项基础数据。2020-07-09
+                    Float mix = info.getValue() * colPerTime;
+
                     mixed.add(mix);//用于预混暂存仓
                     mat.setStatisticCode(id);
                     mat.setLineCode(head.getLineCode());
@@ -877,7 +925,9 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                     mat.setTypeCode(head.getTypeCode());
                     mat.setMaterialCode(info.getCode());
                     mat.setProcessCode(1);
-                    mat.setConsume((totalColMix + totalColBal) * xy[i]);
+//                    mat.setConsume((totalColMix + totalColBal) * xy[i]);
+                    // 消耗量为手工输入数据 不是计算值 2020-07-09
+                    mat.setConsume(info.getConsum());
                     mat.setFeedstock(info.getReceive());
                     mat.setBalance(mat.getFeedstock() - mat.getConsume());
                     onlineRawMaterialMapper.insertSelective(mat);
@@ -937,6 +987,7 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
 
         {//预烧
             AnodeProcess preBurn = data.getProcesses().get(3);
+
             Float preBurnBalance = 0f;
             Float preBurnConsumer = 0f;
             Float preBurnReceive = 0f;
@@ -955,8 +1006,8 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                     mat.setOutFurnaceNum(info.getOutFurnace().intValue());
                     mat.setBalance(info.getBalance());
                     /**
-                     * 进料量=入炉排数*每排钵数*装钵重量*烧损系数
-                     * 消耗量=出炉排数*每排钵数*装钵重量*烧损系数
+                     * 进料量=入炉排数*每排钵数*装钵重量
+                     * 消耗量=出炉排数*每排钵数*装钵重量
                      * 结存量=(上期入炉排数+本期入炉排数-本期出炉排数)*每排钵数*装钵重量
                      */
                     if (lastHead != null) {
@@ -964,12 +1015,14 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                         presinteringExample.createCriteria().andStatisticCodeEqualTo(lastHead.getCode()).andMaterialCodeEqualTo(info.getCode());
                         lastIntoFurnace = presinteringMapper.selectByExample(presinteringExample).get(0).getIntoFurnaceNum().floatValue();
                     }
-                    Float receive = mat.getIntoFurnaceNum() * bNum * bWeight * burnRate;
-                    Float consum = mat.getOutFurnaceNum() * bNum * bWeight * burnRate;
+                    Float receive = mat.getIntoFurnaceNum() * bNum * bWeight;
+                    Float consum = mat.getOutFurnaceNum() * bNum * bWeight;
                     Float balance = (lastIntoFurnace + mat.getIntoFurnaceNum() - mat.getOutFurnaceNum()) * bNum * bWeight;
-                    preBurnBalance += balance;
-                    preBurnConsumer += consum;
-                    preBurnReceive += receive;
+
+
+                    preBurnBalance += balance * map.get(info.getCode());
+                    preBurnConsumer += consum * map.get(info.getCode());
+                    preBurnReceive += receive * map.get(info.getCode());
                     presinteringMapper.insertSelective(mat);
                 } else {
                     preBurnBalance += info.getValue();
@@ -1197,9 +1250,9 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                     mat.setFeedstock(info.getIntoFurnace() * bNum * bWeight);
                     mat.setBalance((lastIntoFurnace + info.getIntoFurnace() - info.getOutFurnace()) * bNum * bWeight);
                     secondSinteringMapper.insertSelective(mat);
-                    totalBalance += mat.getBalance();
-                    totalConsum += mat.getConsume();
-                    totalReceive += mat.getFeedstock();
+                    totalBalance += mat.getBalance() * map.get(info.getCode());
+                    totalConsum += mat.getConsume() * map.get(info.getCode());
+                    totalReceive += mat.getFeedstock() * map.get(info.getCode());
                 }
                 if (!info.getFlag()) {
                     totalBalance += info.getValue();
@@ -1231,7 +1284,7 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
             AnodeMaterial cal1 = new AnodeMaterial(); //1#6方固气分离仓
             AnodeMaterial s1 = new AnodeMaterial(); //1烧
             AnodeMaterial s2 = new AnodeMaterial(); //2烧
-            AnodeMaterial sj = new AnodeMaterial(); //烧结
+//            AnodeMaterial sj = new AnodeMaterial(); //烧结
             AnodeMaterial cpdrk = new AnodeMaterial(); //产品待入库
             AnodeMaterial bzds = new AnodeMaterial(); //包装袋数
             AnodeMaterial ccp = new AnodeMaterial(); //产成品
@@ -1249,9 +1302,6 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                 if (info.getCode() == 39) {
                     cal1 = info;
                 }
-                if (info.getCode() == 47) {
-                    sj = info;
-                }
                 if (info.getCode() == 48) {
                     s1 = info;
                 }
@@ -1261,10 +1311,10 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                 if (info.getCode() == 50) {
                     cpdrk = info;
                 }
-                if(info.getCode() == 45){
+                if (info.getCode() == 45) {
                     bzds = info;
                 }
-                if(info.getCode() == 46){
+                if (info.getCode() == 46) {
                     ccp = info;
                 }
                 if (info.getCode() == 48 || info.getCode() == 49) {
@@ -1297,7 +1347,7 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
             mat.setProcessCode(8);
             mat.setBalance(cal1.getBalance());
             mat.setFeedstock((s1.getValue() + s2.getValue()) * secondBurn);
-            mat.setConsume(ccp.getValue() + sj.getValue() + cpdrk.getValue());
+            mat.setConsume(ccp.getValue() + cpdrk.getValue());  // 去掉烧结料 2020-07-09
             pWeight = ccp.getValue();
             packageMapper.insertSelective(mat);
             totalCon += mat.getConsume();
@@ -1568,7 +1618,7 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
                 info.setTypeName(typeMapper.selectByPrimaryKey(heads.get(i).getPeriodCode()).getName());
                 info.setProcessName(processNameMapper.selectByPrimaryKey(totals.get(l).getProcessCode()).getProcessName());
                 AnodeGoodsInProcessStatisticByProcessTotals total = totals.get(l);
-                info.setComment(total==null?"null":total.getBalanceTotals());
+                info.setComment(total == null ? "null" : total.getBalanceTotals());
                 info.setTotals(total);
                 if (totals.get(l).getFlag()) {
                     AnodeGoodsInProcessStatisticOnlineRawMaterialExample example2 = new AnodeGoodsInProcessStatisticOnlineRawMaterialExample();
@@ -1810,7 +1860,7 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
         }
         if (totals.getProcessCode() == 7) {//二烧
             Float tMix = 0f, tCon = 0f, tBal = 0f, tFee = 0f;
-            Integer tIn = 0,tOut = 0;
+            Integer tIn = 0, tOut = 0;
             AnodeGoodsInProcessStatisticSecondSinteringExample example = new AnodeGoodsInProcessStatisticSecondSinteringExample();
             example.createCriteria().andStatisticCodeEqualTo(id);
             AnodeGoodsInProcessStatisticSingleMaterialWeightsExample example1 = new AnodeGoodsInProcessStatisticSingleMaterialWeightsExample();
@@ -2299,70 +2349,70 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
     @Override
     public List lineCompare(Integer periodId, String startTime, String endTime, Integer dataFlag, Integer materialFlag) {
         AnodeGoodsInProcessStatisticHeadExample example = new AnodeGoodsInProcessStatisticHeadExample();
-        example.createCriteria().andBeginTimeBetween(ComUtil.getDate(startTime,"yyyy-MM-dd HH:mm:ss"),ComUtil.getDate(endTime,"yyyy-MM-dd HH:mm:ss")).andPeriodCodeEqualTo(periodId).andFlagEqualTo(true);
+        example.createCriteria().andBeginTimeBetween(ComUtil.getDate(startTime, "yyyy-MM-dd HH:mm:ss"), ComUtil.getDate(endTime, "yyyy-MM-dd HH:mm:ss")).andPeriodCodeEqualTo(periodId).andFlagEqualTo(true);
         List<AnodeGoodsInProcessStatisticHead> heads = headMapper.selectByExample(example);
         Set<Integer> periods = new HashSet<>();
-        for(int i=0;i<heads.size();i++){
+        for (int i = 0; i < heads.size(); i++) {
             periods.add(heads.get(i).getPeriods());
         }
         List<Integer> periodss = new ArrayList<>();
-        for(Integer key:periods)
+        for (Integer key : periods)
             periodss.add(key);
         periodss.sort(null);
 
-        List<Map<String,Object>> ans = new ArrayList<>();
+        List<Map<String, Object>> ans = new ArrayList<>();
 
-        if(dataFlag == 0 || dataFlag == 1){
-            for(int i=0;i<periodss.size();i++){
-                Map<String,Object> map = new HashMap<>();
+        if (dataFlag == 0 || dataFlag == 1) {
+            for (int i = 0; i < periodss.size(); i++) {
+                Map<String, Object> map = new HashMap<>();
                 List<BasicInfoAnodeProductionLine> lines = new ArrayList<>();
                 List<Float> values = new ArrayList<>();
                 AnodeGoodsInProcessStatisticByLineDetailsExample example1 = new AnodeGoodsInProcessStatisticByLineDetailsExample();
                 example1.createCriteria().andPeriodsEqualTo(periodss.get(i)).andPeriodCodeEqualTo(periodId);
                 List<AnodeGoodsInProcessStatisticByLineDetails> details = lineDetailsMapper.selectByExample(example1);
-                for(int l=0;l<details.size();l++){
+                for (int l = 0; l < details.size(); l++) {
                     AnodeGoodsInProcessStatisticOnlineRawMaterialExample example2 = new AnodeGoodsInProcessStatisticOnlineRawMaterialExample();
                     example2.createCriteria().andStatisticCodeEqualTo(details.get(l).getStatisticCode()).andMaterialCodeEqualTo(materialFlag);
                     List<AnodeGoodsInProcessStatisticOnlineRawMaterial> materials = onlineRawMaterialMapper.selectByExample(example2);
                     lines.add(lineMapper.selectByPrimaryKey(details.get(l).getLineCode()));
-                    if(dataFlag == 0){
+                    if (dataFlag == 0) {
                         values.add(materials.get(0).getFeedstock());
-                    }else{
+                    } else {
                         values.add(materials.get(0).getBalance());
                     }
-                    if(l == 0){
-                        map.put("time",ComUtil.dateToString(headMapper.selectByPrimaryKey(details.get(0).getStatisticCode()).getBeginTime(),"yyyy-MM-dd"));
+                    if (l == 0) {
+                        map.put("time", ComUtil.dateToString(headMapper.selectByPrimaryKey(details.get(0).getStatisticCode()).getBeginTime(), "yyyy-MM-dd"));
                     }
                 }
-                map.put("value",values);
-                map.put("lines",lines);
+                map.put("value", values);
+                map.put("lines", lines);
                 ans.add(map);
             }
-        }else{
-            for(int i=0;i<periodss.size();i++){
-                Map<String,Object> map = new HashMap<>();
+        } else {
+            for (int i = 0; i < periodss.size(); i++) {
+                Map<String, Object> map = new HashMap<>();
                 List<BasicInfoAnodeProductionLine> lines = new ArrayList<>();
                 List<Float> values = new ArrayList<>();
                 AnodeGoodsInProcessStatisticByLineDetailsExample example1 = new AnodeGoodsInProcessStatisticByLineDetailsExample();
                 example1.createCriteria().andPeriodsEqualTo(periodss.get(i)).andPeriodCodeEqualTo(periodId);
                 List<AnodeGoodsInProcessStatisticByLineDetails> details = lineDetailsMapper.selectByExample(example1);
-                for(int l=0;l<details.size();l++){
-                   lines.add(lineMapper.selectByPrimaryKey(details.get(l).getLineCode()));
-                   if(dataFlag == 2){
+                for (int l = 0; l < details.size(); l++) {
+                    lines.add(lineMapper.selectByPrimaryKey(details.get(l).getLineCode()));
+                    if (dataFlag == 2) {
                         values.add(details.get(l).getFirstProcess());
-                   }
-                    if(dataFlag == 3){
+                    }
+                    if (dataFlag == 3) {
                         values.add(details.get(l).getSecondProces());
                     }
-                    if(dataFlag == 4){
+                    if (dataFlag == 4) {
                         values.add(details.get(l).getProduct());
                     }
-                    if(l == 0){
-                        map.put("time",ComUtil.dateToString(headMapper.selectByPrimaryKey(details.get(0).getStatisticCode()).getBeginTime(),"yyyy-MM-dd"));
+                    if (l == 0) {
+                        map.put("time", ComUtil.dateToString(headMapper.selectByPrimaryKey(details.get(0).getStatisticCode()).getBeginTime(), "yyyy-MM-dd"));
                     }
                 }
-                map.put("value",values);
-                map.put("lines",lines);
+                map.put("value", values);
+                map.put("lines", lines);
                 ans.add(map);
             }
         }
@@ -2453,34 +2503,34 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
         BasicInfoAnodeMaterialPlcMapExample example = new BasicInfoAnodeMaterialPlcMapExample();
         example.createCriteria().andMaterialCodeEqualTo(matId).andLineCodeEqualTo(lineCode).andMaterialAttEqualTo(attName);
         List<BasicInfoAnodeMaterialPlcMap> temp = mapMapper.selectByExample(example);
-        if(temp.size() == 0)
+        if (temp.size() == 0)
             return 0f;
         Integer plc = temp.get(0).getPlcCode();
         BasicInfoAnodePlcAddress address = addressMapper.selectByPrimaryKey(plc);
         logger.info("Get " + address.getDescription() + " info");
-        Float ans = RealTimeUtil.dcsForAnode("http://192.168.190.162:10086/api/History",address.getPlcAddress(),date);
-        return ans==null?0f:ans;
+        Float ans = RealTimeUtil.dcsForAnode("http://192.168.190.162:10086/api/History", address.getPlcAddress(), date);
+        return ans == null ? 0f : ans;
     }
 
-    private Integer getDcsCount(Integer matId,Integer lineCode,Integer periodCode,Date date){
+    private Integer getDcsCount(Integer matId, Integer lineCode, Integer periodCode, Date date) {
         String attName = "";
-        if(periodCode == 1){
+        if (periodCode == 1) {
             attName = "白班次数";
-        }else if(periodCode == 2){
+        } else if (periodCode == 2) {
             attName = "晚班次数";
-        }else{
+        } else {
             return 0;
         }
         BasicInfoAnodeMaterialPlcMapExample example = new BasicInfoAnodeMaterialPlcMapExample();
         example.createCriteria().andMaterialCodeEqualTo(matId).andLineCodeEqualTo(lineCode).andMaterialAttEqualTo(attName);
         List<BasicInfoAnodeMaterialPlcMap> temp = mapMapper.selectByExample(example);
-        if(temp.size() == 0)
+        if (temp.size() == 0)
             return 0;
         Integer plc = temp.get(0).getPlcCode();
         BasicInfoAnodePlcAddress address = addressMapper.selectByPrimaryKey(plc);
         logger.info("Get " + address.getDescription() + " info");
-        Float ans = RealTimeUtil.dcsForAnode("http://192.168.190.162:10086/api/History",address.getPlcAddress(),date);
-        return ans==null?0:ans.intValue();
+        Float ans = RealTimeUtil.dcsForAnode("http://192.168.190.162:10086/api/History", address.getPlcAddress(), date);
+        return ans == null ? 0 : ans.intValue();
     }
 }
 
