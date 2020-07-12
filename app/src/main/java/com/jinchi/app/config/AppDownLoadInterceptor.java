@@ -18,10 +18,10 @@ public class AppDownLoadInterceptor implements HandlerInterceptor {
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
         //插表
         AppDownloadInfo info = new AppDownloadInfo();
-        info.setAppName(request.getPathInfo());
+        info.setAppName(request.getRequestURI());
         info.setDate(new Date());
         info.setHost(request.getRemoteHost());
         infoMapper.insert(info);
-        return false;
+        return true;
     }
 }
