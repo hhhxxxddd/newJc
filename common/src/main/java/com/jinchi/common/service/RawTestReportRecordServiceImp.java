@@ -1,7 +1,6 @@
 package com.jinchi.common.service;
 
 
-import com.alibaba.druid.util.MySqlUtils;
 import com.jinchi.common.constant.BatchStatusEnum;
 import com.jinchi.common.constant.BatchTypeEnum;
 import com.jinchi.common.constant.QualitySampleStatusEnum;
@@ -56,6 +55,8 @@ public class RawTestReportRecordServiceImp implements RawTestReportRecordService
     private TechniqueRawStandardRecordMapper rawStandardRecordMapper;
     @Autowired
     private TechniqueBaseRawMaterialMapper rawMaterialMapper;
+    @Autowired
+    QualitySampleDeliveringBatchMapper qualitySampleDeliveringBatchMapper;
 
     /**
      * 查询所有原材料检测项目
@@ -146,6 +147,9 @@ public class RawTestReportRecordServiceImp implements RawTestReportRecordService
         } else {
             rawTestReportDTO.setTester(authUserDTO.getName());
         }
+
+        rawTestReportDTO.setBatch(getBatchBySampleId(id));
+
         return rawTestReportDTO;
     }
 
@@ -222,9 +226,11 @@ public class RawTestReportRecordServiceImp implements RawTestReportRecordService
             dto.setSampleDeliveringRecord(record);
             dto.setCommonBatchNumber(commonBatchNumber);
             dto.setDeliverer(authUserDTO1.getName());
-            dto.setDeliveryFactoryName(deliveryFactory==null?"":deliveryFactory.getName());
-            dto.setSerialNumber(repoBaseSerialNumber==null?"":repoBaseSerialNumber.getMaterialName());
+            dto.setDeliveryFactoryName(deliveryFactory == null ? "" : deliveryFactory.getName());
+            dto.setSerialNumber(repoBaseSerialNumber == null ? "" : repoBaseSerialNumber.getMaterialName());
             dto.setTestItemString(itemNames);
+
+            dto.setBatch(getBatchBySampleId(record.getId()));//2020-07-12
 
             dtoList.add(dto);
         }
@@ -234,6 +240,12 @@ public class RawTestReportRecordServiceImp implements RawTestReportRecordService
         return pageBean;
     }
 
+    private String getBatchBySampleId(Integer id) {
+        QualitySampleDeliveringBatchExample example = new QualitySampleDeliveringBatchExample();
+        example.createCriteria().andSampleIdEqualTo(id).andMainIdIsNull();
+        List<QualitySampleDeliveringBatch> list = qualitySampleDeliveringBatchMapper.selectByExample(example);
+        return list.size() == 0 ? "" : list.get(0).getNumber();
+    }
 
     /**
      * 详情（根据批号id查）
