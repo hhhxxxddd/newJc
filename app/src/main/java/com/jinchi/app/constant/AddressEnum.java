@@ -17,7 +17,8 @@ public enum AddressEnum {
     EQUIPMENT_ARCHIVE_ABS_ADDRESS(1,"ARCHIVE_ABS","/equipmentArchive/"), //设备档案
     EQUIPMENT_INSTRUCTOR_ABS_ADDRESS(2,"GUIDE_ABS","/equipmentInstructor/"), //设备指导
     DEVICE_SPOTCHECK_PHOTO(3,"SPOTPHOTO_ABS","/spotCheck/model"),//设备点检模板
-    DEVICE_SPOTCHECK_RECORD(4,"SPOTRECORD_ABS","/spotCheck/record");//设备点检模板
+    DEVICE_SPOTCHECK_RECORD(4,"SPOTRECORD_ABS","/spotCheck/record"),//设备点检模板
+    APP_PACKAGE(5,"APP_PACKAGE","/appPackage");//app存放目录
     Integer code;
     String name;
     String path;

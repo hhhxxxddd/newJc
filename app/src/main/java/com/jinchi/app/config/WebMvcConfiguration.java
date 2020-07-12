@@ -1,5 +1,6 @@
 package com.jinchi.app.config;
 
+import com.jinchi.app.constant.AddressEnum;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -43,12 +44,15 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
         registry.addResourceHandler("/webjars/**")
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
 
-        super.addResourceHandlers(registry);
+        registry.addResourceHandler("/appDownLoad/**")
+                .addResourceLocations("file:" + AddressEnum.getCurrentPath(AddressEnum.APP_PACKAGE.getCode()));
+
+        System.out.println("file:" + AddressEnum.getCurrentPath(AddressEnum.APP_PACKAGE.getCode()));
     }
 
     @Override
     protected void addInterceptors(InterceptorRegistry registry) {
         InterceptorRegistration registration = registry.addInterceptor(new AppDownLoadInterceptor());
-        registration.addPathPatterns("/*.apk");
+        registration.addPathPatterns("/appDownLoad/**");
     }
 }
