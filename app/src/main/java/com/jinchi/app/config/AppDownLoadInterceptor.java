@@ -3,12 +3,14 @@ package com.jinchi.app.config;
 import com.jinchi.app.domain.AppDownloadInfo;
 import com.jinchi.app.mapper.AppDownloadInfoMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.HandlerInterceptor;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.util.Date;
 
+@Component
 public class AppDownLoadInterceptor implements HandlerInterceptor {
     @Autowired
     AppDownloadInfoMapper infoMapper;

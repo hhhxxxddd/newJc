@@ -1,6 +1,7 @@
 package com.jinchi.app.config;
 
 import com.jinchi.app.constant.AddressEnum;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
 import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
@@ -16,6 +17,9 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupp
  */
 @Configuration
 public class WebMvcConfiguration extends WebMvcConfigurationSupport {
+    @Autowired
+    AppDownLoadInterceptor interceptor;
+
     private static final String[] CLASSPATH_RESOURCE_LOCATIONS = {
             "classpath:/resources/",
             "classpath:/static/"};
@@ -52,7 +56,7 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
 
     @Override
     protected void addInterceptors(InterceptorRegistry registry) {
-        InterceptorRegistration registration = registry.addInterceptor(new AppDownLoadInterceptor());
+        InterceptorRegistration registration = registry.addInterceptor(interceptor);
         registration.addPathPatterns("/appDownLoad/**");
     }
 }
