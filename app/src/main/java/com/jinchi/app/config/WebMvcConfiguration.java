@@ -1,6 +1,8 @@
 package com.jinchi.app.config;
 
 import org.springframework.context.annotation.Configuration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistration;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ResourceHandlerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurationSupport;
 
@@ -42,5 +44,12 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
                 .addResourceLocations("classpath:/META-INF/resources/webjars/");
 
         super.addResourceHandlers(registry);
+    }
+
+    @Override
+    protected void addInterceptors(InterceptorRegistry registry) {
+        InterceptorRegistration registration = registry.addInterceptor(new AppDownLoadInterceptor());
+        registration.addPathPatterns("/**.app");
+        super.addInterceptors(registry);
     }
 }
