@@ -49,7 +49,6 @@ public class WebMvcConfiguration extends WebMvcConfigurationSupport {
     @Override
     protected void addInterceptors(InterceptorRegistry registry) {
         InterceptorRegistration registration = registry.addInterceptor(new AppDownLoadInterceptor());
-        registration.addPathPatterns("/**.app");
-        super.addInterceptors(registry);
+        registration.addPathPatterns("/*.apk");
     }
 }
