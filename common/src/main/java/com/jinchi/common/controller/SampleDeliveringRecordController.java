@@ -2,6 +2,7 @@ package com.jinchi.common.controller;
 
 import com.jinchi.common.dto.PageBean;
 import com.jinchi.common.dto.Result;
+import com.jinchi.common.dto.SampleDeliveringBatchDTO;
 import com.jinchi.common.dto.SampleDeliveringRecordDTO;
 import com.jinchi.common.service.SampleDeliveringRecordService;
 import com.jinchi.common.utils.ResultUtil;
@@ -38,12 +39,19 @@ public class SampleDeliveringRecordController {
         return ResultUtil.success(sampleDeliveringRecordService.add(sampleDeliveringRecordDTO));
     }
 
+    @PostMapping(value = "new")
+    @ApiOperation(value = "新增接口")
+    public Result newAdd(@Valid @RequestBody SampleDeliveringBatchDTO batchDTO) {
+        return ResultUtil.success(sampleDeliveringRecordService.newAdd(batchDTO));
+    }
+
+
     @PostMapping(value = "/custom")
     @ApiOperation(value = "自定义送检")
     public Result<String> customSample(@ApiParam(value = "检测项目集合") @RequestParam Integer[] ids,
-                                       @ApiParam(value = "用户id")@RequestParam Integer userId,
-                                       @ApiParam(value = "批次")@RequestParam String batch){
-        return ResultUtil.success(sampleDeliveringRecordService.customSample(Arrays.asList(ids),userId,batch));
+                                       @ApiParam(value = "用户id") @RequestParam Integer userId,
+                                       @ApiParam(value = "批次") @RequestParam String batch) {
+        return ResultUtil.success(sampleDeliveringRecordService.customSample(Arrays.asList(ids), userId, batch));
     }
 
 

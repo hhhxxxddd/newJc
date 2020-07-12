@@ -6,15 +6,11 @@ import com.jinchi.common.constant.BatchTypeEnum;
 import com.jinchi.common.constant.QualitySampleStatusEnum;
 import com.jinchi.common.constant.QualitySampleTypeEnum;
 import com.jinchi.common.domain.*;
-import com.jinchi.common.dto.AuthUserDTO;
-import com.jinchi.common.dto.Page;
-import com.jinchi.common.dto.PageBean;
-import com.jinchi.common.dto.SampleDeliveringRecordDTO;
+import com.jinchi.common.dto.*;
 import com.jinchi.common.mapper.*;
 import com.jinchi.common.model.factorypattern.CommonBatchFactory;
 import com.jinchi.common.utils.NumberGenerator;
 import com.jinchi.common.utils.TestItemUtil;
-import com.sun.org.apache.bcel.internal.generic.NEW;
 import io.jsonwebtoken.lang.Assert;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -67,6 +63,8 @@ public class SampleDeliveringRecordServiceImp implements SampleDeliveringRecordS
     TechniqueProductNewStandardRecordMapper newStandardRecordMapper;
     @Autowired
     TechniqueRawStandardRecordMapper rawStandardRecordMapper;
+    @Autowired
+    QualitySampleDeliveringBatchMapper qualitySampleDeliveringBatchMapper;
 
     /**
      * 新增样品送检
@@ -467,15 +465,22 @@ public class SampleDeliveringRecordServiceImp implements SampleDeliveringRecordS
 
         sampleDeliveringRecordDTO
                 .setDeliverer(authUserDTO)
-                .setSerialNumberName(repoBaseSerialNumber==null?"":repoBaseSerialNumber.getSerialNumber())
+                .setSerialNumberName(repoBaseSerialNumber == null ? "" : repoBaseSerialNumber.getSerialNumber())
                 .setDeliveryFactory(deliveryFactory)
                 .setTestItemString(itemNames)
-                .setBatch(qualityCommonBatchNumberExtra.size()==0?"":qualityCommonBatchNumberExtra.get(0).getBatch());
-
+                .setBatch(sampleDeliveringRecord.getType() == 1 ? getBatchBySampleId(sampleDeliveringRecord.getId()) :
+                        (qualityCommonBatchNumberExtra.size() == 0 ? "" : qualityCommonBatchNumberExtra.get(0).getBatch()));
         //设置详情
         sampleDeliveringRecordDTO.setSampleDeliveringRecord(sampleDeliveringRecord);
 
         return sampleDeliveringRecordDTO;
+    }
+
+    private String getBatchBySampleId(Integer id) {
+        QualitySampleDeliveringBatchExample example = new QualitySampleDeliveringBatchExample();
+        example.createCriteria().andSampleIdEqualTo(id).andMainIdIsNull();
+        List<QualitySampleDeliveringBatch> list = qualitySampleDeliveringBatchMapper.selectByExample(example);
+        return list.size() == 0 ? "" : list.get(0).getNumber();
     }
 
     /**
@@ -512,20 +517,42 @@ public class SampleDeliveringRecordServiceImp implements SampleDeliveringRecordS
     @Override
     public Integer count(String batch) {
         QualityCommonBatchNumberExtraExample example = new QualityCommonBatchNumberExtraExample();
-        example.createCriteria().andBatchLike(batch+"%");
+        example.createCriteria().andBatchLike(batch + "%");
         return qualityCommonBatchNumberExtraMapper.countByExample(example);
     }
 
     @Override
+    public SampleDeliveringBatchDTO newAdd(SampleDeliveringBatchDTO batchDTO) {
+
+        QualitySampleDeliveringBatch record = new QualitySampleDeliveringBatch();
+        record.setSampleId(batchDTO.getSampleId());
+        record.setNumber(batchDTO.getMainBatch());
+        qualitySampleDeliveringBatchMapper.insertSelective(record);
+
+        List<String> subBatches = batchDTO.getSubBatches();
+
+        Integer mainId = record.getId();
+
+        for (int i = 0; i < subBatches.size(); i++) {
+            QualitySampleDeliveringBatch subRecord = new QualitySampleDeliveringBatch();
+            subRecord.setSampleId(batchDTO.getSampleId());
+            subRecord.setNumber(subBatches.get(i));
+            subRecord.setMainId(mainId);
+            qualitySampleDeliveringBatchMapper.insertSelective(subRecord);
+        }
+        return batchDTO;
+    }
+
+    @Override
     public Page getPageByBatch(String batch, Integer page, Integer size) {
-        ValueOperations<String,SampleDeliveringRecordDTO> op = redisTemplate.opsForValue();
+        ValueOperations<String, SampleDeliveringRecordDTO> op = redisTemplate.opsForValue();
         QualityCommonBatchNumberExtraExample extraExample = new QualityCommonBatchNumberExtraExample();
-        extraExample.createCriteria().andBatchLike(batch+"%");
+        extraExample.createCriteria().andBatchLike(batch + "%");
         List<QualityCommonBatchNumberExtra> extras = qualityCommonBatchNumberExtraMapper.selectByExample(extraExample);
 
         List<SampleDeliveringRecordDTO> sampleDeliveringRecordDTOS = new ArrayList<>();
 
-        List<SampleDeliveringRecord> sampleDeliveringRecords = sampleDeliveringRecordMapper.selectByBatch(batch+"%",(page-1)*size,size);
+        List<SampleDeliveringRecord> sampleDeliveringRecords = sampleDeliveringRecordMapper.selectByBatch(batch + "%", (page - 1) * size, size);
         //System.out.println(sampleDeliveringRecords);
         sampleDeliveringRecords.stream().forEach(e -> {
             String key = "sample_de_re_"+e.getId();

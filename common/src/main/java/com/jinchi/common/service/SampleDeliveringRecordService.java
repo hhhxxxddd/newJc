@@ -2,6 +2,7 @@ package com.jinchi.common.service;
 
 import com.jinchi.common.dto.Page;
 import com.jinchi.common.dto.PageBean;
+import com.jinchi.common.dto.SampleDeliveringBatchDTO;
 import com.jinchi.common.dto.SampleDeliveringRecordDTO;
 import org.springframework.stereotype.Service;
 
@@ -86,6 +87,7 @@ public interface SampleDeliveringRecordService {
 
     /**
      * 根据编号id 查询标准
+     *
      * @param serialNumberId 编号id
      * @return
      */
@@ -93,5 +95,7 @@ public interface SampleDeliveringRecordService {
 
     Integer count(String batch);
 
-    Page getPageByBatch(String batch,Integer page,Integer size);
+    Page getPageByBatch(String batch, Integer page, Integer size);
+
+    SampleDeliveringBatchDTO newAdd(SampleDeliveringBatchDTO batchDTO);
 }
