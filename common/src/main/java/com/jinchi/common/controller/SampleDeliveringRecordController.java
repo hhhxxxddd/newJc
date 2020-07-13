@@ -154,8 +154,9 @@ public class SampleDeliveringRecordController {
     @ApiOperation(value = "根据批号模糊分页查询")
     public Result getPageByBatch(@ApiParam(name = "batch", value = "批号") @RequestParam(defaultValue = "") String batch,
                                  @ApiParam(name = "page", value = "页码") @RequestParam(name = "page", defaultValue = "1") Integer page,
-                                 @ApiParam(name = "size", value = "条目数") @RequestParam(name = "size", defaultValue = "10") Integer size){
-        return ResultUtil.success(sampleDeliveringRecordService.getPageByBatch(batch,page,size));
+                                 @ApiParam(name = "size", value = "条目数") @RequestParam(name = "size", defaultValue = "10") Integer size,
+                                 @ApiParam(name = "type", value = "类型") @RequestParam(name = "type", defaultValue = "1") Integer type) {
+        return ResultUtil.success(sampleDeliveringRecordService.getPageByBatch(batch, page, size, type));
     }
 
 }

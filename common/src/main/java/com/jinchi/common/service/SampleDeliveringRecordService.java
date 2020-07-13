@@ -95,7 +95,7 @@ public interface SampleDeliveringRecordService {
 
     Integer count(String batch);
 
-    Page getPageByBatch(String batch, Integer page, Integer size);
+    Page getPageByBatch(String batch, Integer page, Integer size, Integer type);
 
     SampleDeliveringBatchDTO newAdd(SampleDeliveringBatchDTO batchDTO);
 }

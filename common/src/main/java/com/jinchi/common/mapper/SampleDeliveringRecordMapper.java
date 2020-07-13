@@ -80,5 +80,5 @@ public interface SampleDeliveringRecordMapper {
                      @Param("factoryName") String factoryName);
 
 
-    List<SampleDeliveringRecord> selectByBatch(@Param("batch") String batch,@Param("start")Integer start,@Param("end")Integer end);
+    List<SampleDeliveringRecord> selectByBatch(@Param("batch") String batch, @Param("start") Integer start, @Param("end") Integer end, @Param("type") Integer type);
 }

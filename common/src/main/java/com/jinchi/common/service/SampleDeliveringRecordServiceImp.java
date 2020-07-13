@@ -544,7 +544,7 @@ public class SampleDeliveringRecordServiceImp implements SampleDeliveringRecordS
     }
 
     @Override
-    public Page getPageByBatch(String batch, Integer page, Integer size) {
+    public Page getPageByBatch(String batch, Integer page, Integer size, Integer type) {
         ValueOperations<String, SampleDeliveringRecordDTO> op = redisTemplate.opsForValue();
         QualityCommonBatchNumberExtraExample extraExample = new QualityCommonBatchNumberExtraExample();
         extraExample.createCriteria().andBatchLike(batch + "%");
@@ -552,7 +552,7 @@ public class SampleDeliveringRecordServiceImp implements SampleDeliveringRecordS
 
         List<SampleDeliveringRecordDTO> sampleDeliveringRecordDTOS = new ArrayList<>();
 
-        List<SampleDeliveringRecord> sampleDeliveringRecords = sampleDeliveringRecordMapper.selectByBatch(batch + "%", (page - 1) * size, size);
+        List<SampleDeliveringRecord> sampleDeliveringRecords = sampleDeliveringRecordMapper.selectByBatch(batch + "%", (page - 1) * size, size, type);
         //System.out.println(sampleDeliveringRecords);
         sampleDeliveringRecords.stream().forEach(e -> {
             String key = "sample_de_re_"+e.getId();

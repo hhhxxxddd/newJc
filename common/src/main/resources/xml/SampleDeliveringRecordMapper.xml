@@ -139,7 +139,7 @@
 
     <select id="selectByBatch" resultType="com.jinchi.common.domain.SampleDeliveringRecord">
     select s.* from quality_sample_delivering_record as s ,quality_common_batch_number_extra as c
-    where s.id = c.common_batch_id and c.batch like #{batch}
+    where s.id = c.common_batch_id and s.type = #{type} and c.batch like #{batch}
     order by s.sample_delivering_date desc
     limit #{start},#{end}
   </select>
