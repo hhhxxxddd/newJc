@@ -805,6 +805,14 @@ public class AnodeGoodinServiceImp implements AnodeGoodinService {
         deleteCascade(id);
         AnodeGoodsInProcessStatisticHead head = headMapper.selectByPrimaryKey(id);
 
+
+        //在制品重量合计
+        Float processTotals = 0f;
+
+        //产品重量合计
+        Float productTotals = 0f;
+
+
         AnodeGoodsInProcessStatisticHeadExample example = new AnodeGoodsInProcessStatisticHeadExample();
         example.createCriteria().andLineCodeEqualTo(head.getLineCode()).andPeriodCodeEqualTo(head.getPeriodCode()).andPeriodsEqualTo(head.getPeriods() - 1);
         List<AnodeGoodsInProcessStatisticHead> lastHeads = headMapper.selectByExample(example);
