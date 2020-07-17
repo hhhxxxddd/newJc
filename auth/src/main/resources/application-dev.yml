@@ -5,7 +5,7 @@ spring:
     platform: mysql
     url: jdbc:mysql://125.94.71.249:3306/jc_auth_db?userUnicode=true&characterEncoding=UTF8&useSSL=false&useAffectedRows=true&useLegacyDatetimeCode=false&serverTimezone=CTT
     username: root
-    password: fuckJC@2020
+    password: SB!Wantbitcoin?
     # 初始化，最小，最大连接数
     initialSize: 3
     minidle: 3
