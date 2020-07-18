@@ -93,6 +93,12 @@ public class DataTaskRecordServiceImp implements DataTaskRecordService {
         CommonBatchNumber commonBatchNumber = commonBatchNumberMapper.byId(dataId);
         Assert.notNull(commonBatchNumber, "找不到送审数据的批号!");
 
+        //把状态变成 审核中
+        CommonBatchNumber ans = new CommonBatchNumber();
+        ans.setId(commonBatchNumber.getId());
+        ans.setStatus(1);
+        commonBatchNumberMapper.update(ans);
+
         //送审前处理
         String messageBeforeAudit = this.handleBeforeAudit(commonBatchNumber, isUrgent);
         logger.info("handleBeforeAudit=>{}", messageBeforeAudit);
