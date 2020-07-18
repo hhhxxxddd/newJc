@@ -146,9 +146,9 @@ public class MiddleProductionDetectionServiceImp implements MiddleProductionDete
      * @return
      */
     @Override
-    public RawTestReportDTO update(RawTestReportDTO rawTestReportDTO) {
+    public RawTestReportDTO update(RawTestReportDTO rawTestReportDTO, Integer flag) {
         //数据变化，删除缓存
-        redisTemplate.delete("middle_pro_de_"+rawTestReportDTO.getSampleDeliveringRecord().getId());
+        redisTemplate.delete("middle_pro_de_" + rawTestReportDTO.getSampleDeliveringRecord().getId());
         SampleDeliveringRecord sampleDeliveringRecord = sampleDeliveringRecordMapper.getById(rawTestReportDTO.getSampleDeliveringRecord().getId());
         Assert.isTrue(null != sampleDeliveringRecord
                 && sampleDeliveringRecord.getType().equals(QualitySampleTypeEnum.SAMPLE_INTERMEDIATE.get())
@@ -167,6 +167,10 @@ public class MiddleProductionDetectionServiceImp implements MiddleProductionDete
                 .setJudger(rawTestReportDTO.getTestReportRecord().getJudger())
                 .setJudgeDate(new Date());
         CommonBatchNumber commonBatchNumber = commonBatchNumberMapper.byId(lastId);
+
+        if (flag == 1) {
+            commonBatchNumber.setStatus(1);
+        }
         testReportRecordMapper.update(lastRecord);
 
         List<TestDTO> testDTOS = rawTestReportDTO.getTestDTOS();

@@ -18,7 +18,7 @@ public interface MiddleProductionDetectionService {
 
     RawTestReportDTO findDetailsById(Integer id);
 
-    RawTestReportDTO update(RawTestReportDTO rawTestReportDTO);
+    RawTestReportDTO update(RawTestReportDTO rawTestReportDTO, Integer flag);
 
     PageBean<RawTestReportDTO> findByFactoryNameByPage(String factoryName, PageBean pageBean);
 

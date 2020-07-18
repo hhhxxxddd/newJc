@@ -49,11 +49,11 @@ public class MiddleProductionDetectionController {
 
     @PutMapping
     @ApiOperation(value = "保存")
-    public Result<RawTestReportDTO> update(@Valid @RequestBody RawTestReportDTO rawTestReportDTO, BindingResult bindingResult) {
+    public Result<RawTestReportDTO> update(@Valid @RequestBody RawTestReportDTO rawTestReportDTO, BindingResult bindingResult, @RequestParam(name = "flag", required = false) Integer flag) {
         if (bindingResult.hasErrors()) {
             return ResultUtil.error(bindingResult.getFieldError().getDefaultMessage());
         }
-        return ResultUtil.success(middleProductionDetectionService.update(rawTestReportDTO));
+        return ResultUtil.success(middleProductionDetectionService.update(rawTestReportDTO, flag));
     }
 
     @PostMapping
