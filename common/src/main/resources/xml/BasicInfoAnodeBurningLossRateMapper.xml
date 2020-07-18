@@ -380,7 +380,7 @@
         basic_info_anode_production_type b
         ON a.production_code = b.CODE
         <where>
-            <if test="condition != null and batch != ''">
+            <if test="condition != null and condition != ''">
                 and b.name like #{condition}"%"
             </if>
         </where>
