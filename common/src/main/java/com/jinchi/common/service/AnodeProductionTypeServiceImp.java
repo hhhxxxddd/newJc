@@ -54,4 +54,11 @@ public class AnodeProductionTypeServiceImp implements AnodeProductionTypeService
     public void delete(Integer id) {
         typeMapper.deleteByPrimaryKey(id);
     }
+
+    @Override
+    public void deleteByIds(Integer[] ids) {
+        for (Integer id : ids) {
+            delete(id);
+        }
+    }
 }

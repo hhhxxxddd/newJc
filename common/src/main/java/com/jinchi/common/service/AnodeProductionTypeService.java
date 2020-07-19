@@ -17,4 +17,6 @@ public interface AnodeProductionTypeService {
     void delete(Integer id);
 
     Page page(String condition, Integer page, Integer size);
+
+    void deleteByIds(Integer[] ids);
 }

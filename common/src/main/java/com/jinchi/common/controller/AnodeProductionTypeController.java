@@ -37,6 +37,13 @@ public class AnodeProductionTypeController {
         return ResultUtil.success();
     }
 
+    @DeleteMapping(value = "ids")
+    @ApiOperation(value = "批量删除")
+    public Result deleteByIds(@RequestBody Integer[] ids) {
+        typeService.deleteByIds(ids);
+        return ResultUtil.success();
+    }
+
     @PutMapping(value = "update")
     @ApiOperation(value = "编辑")
     public Result update(@RequestBody BasicInfoAnodeProductionType type) {
