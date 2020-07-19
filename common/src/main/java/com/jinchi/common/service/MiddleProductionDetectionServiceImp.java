@@ -156,7 +156,6 @@ public class MiddleProductionDetectionServiceImp implements MiddleProductionDete
 
         //更新审批记录
         TestReportRecord testReportRecord = testReportRecordMapper.getBySampleDeliveringRecordId(sampleDeliveringRecord.getId());
-
         //==========================================================>
         Integer batchNumberId = testReportRecord.getBatchNumberId();
         Integer lastId = commonBatchUtil.lastId(batchNumberId);
@@ -167,10 +166,6 @@ public class MiddleProductionDetectionServiceImp implements MiddleProductionDete
                 .setJudger(rawTestReportDTO.getTestReportRecord().getJudger())
                 .setJudgeDate(new Date());
         CommonBatchNumber commonBatchNumber = commonBatchNumberMapper.byId(lastId);
-
-        if (flag == 1) {
-            commonBatchNumber.setStatus(1);
-        }
         testReportRecordMapper.update(lastRecord);
 
         List<TestDTO> testDTOS = rawTestReportDTO.getTestDTOS();

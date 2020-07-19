@@ -43,10 +43,10 @@ public class AnodeProductionTypeController {
         return ResultUtil.success(typeService.update(type));
     }
 
-    @GetMapping(value = "all")
-    @ApiOperation(value = "查询所有")
-    public Result getAll() {
-        return ResultUtil.success(typeService.getAll());
+    @GetMapping(value = "page")
+    @ApiOperation(value = "分页")
+    public Result page(@ApiParam(name = "condition", value = "条件") @RequestParam(defaultValue = "", required = false) String condition, @ApiParam(name = "page", value = "页数", defaultValue = "1") @RequestParam Integer page, @ApiParam(name = "size", value = "每页数量", defaultValue = "10") @RequestParam Integer size) {
+        return ResultUtil.success(typeService.page(condition, page, size));
     }
 
 }

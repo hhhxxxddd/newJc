@@ -3,6 +3,7 @@ package com.jinchi.common.service;
 
 import com.jinchi.common.domain.BasicInfoAnodeProductionType;
 import com.jinchi.common.domain.BasicInfoAnodeProductionTypeExample;
+import com.jinchi.common.dto.Page;
 import com.jinchi.common.mapper.BasicInfoAnodeProductionTypeMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -38,10 +39,15 @@ public class AnodeProductionTypeServiceImp implements AnodeProductionTypeService
     }
 
     @Override
-    public List getAll() {
+    public List getAll(String condition) {
         BasicInfoAnodeProductionTypeExample example = new BasicInfoAnodeProductionTypeExample();
-        example.createCriteria();
+        example.createCriteria().andNameLike(condition + "%");
         return typeMapper.selectByExample(example);
+    }
+
+    @Override
+    public Page page(String condition, Integer page, Integer size) {
+        return new Page(getAll(condition), page, size);
     }
 
     @Override
