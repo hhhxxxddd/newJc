@@ -50,6 +50,12 @@ public class AnodeProductionTypeController {
         return ResultUtil.success(typeService.update(type));
     }
 
+    @GetMapping(value = "all")
+    @ApiOperation(value = "查询所有")
+    public Result all() {
+        return ResultUtil.success(typeService.getAll(""));
+    }
+
     @GetMapping(value = "page")
     @ApiOperation(value = "分页")
     public Result page(@ApiParam(name = "condition", value = "查询条件") @RequestParam(name = "condition", defaultValue = "", required = false) String condition,
