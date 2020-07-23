@@ -131,10 +131,10 @@ public class TechniqueRawStandardRecordServiceImp implements TechniqueRawStandar
      */
     @Override
     public TechniqueBaseRawManufacturer addNewRawManufacturer(TechniqueBaseRawManufacturerDTO newValue) {
-        String manufacturer = newValue.getTechniqueBaseRawManufacturer().getName();
-        TechniqueBaseRawManufacturer oldValue = techniqueBaseRawManufacturerMapper.getByName(manufacturer);
-        TechniqueBaseRawManufacturer oldValueByCode = techniqueBaseRawManufacturerMapper.byCode(newValue.getTechniqueBaseRawManufacturer().getCode());
-        Assert.isTrue(null == oldValue && null == oldValueByCode, "新增失败,存在名称或代号相同的原材料");
+//        String manufacturer = newValue.getTechniqueBaseRawManufacturer().getName();
+//        TechniqueBaseRawManufacturer oldValue = techniqueBaseRawManufacturerMapper.getByName(manufacturer);
+//        TechniqueBaseRawManufacturer oldValueByCode = techniqueBaseRawManufacturerMapper.byCode(newValue.getTechniqueBaseRawManufacturer().getCode());
+//        Assert.isTrue(null == oldValue && null == oldValueByCode, "新增失败,存在名称或代号相同的原材料");
         techniqueBaseRawManufacturerMapper.insert(newValue.getTechniqueBaseRawManufacturer());
         int manufacturerId = newValue.getTechniqueBaseRawManufacturer().getId();
 
