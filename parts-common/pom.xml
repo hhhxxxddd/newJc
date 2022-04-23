@@ -13,7 +13,7 @@
     </modules>
     <!--依赖版本-->
     <properties>
-            <spring.core.version>5.1.6.RELEASE</spring.core.version>
+            <spring.core.version>5.3.19</spring.core.version>
             <common-lang>2.6</common-lang>
             <lombok.version>1.18.10</lombok.version>
             <junit.version>4.12</junit.version>
